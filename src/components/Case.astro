@@ -1,0 +1,920 @@
+---
+import { getImage } from 'astro:assets';
+import store from '../assets/work/stc-desktop.png';
+
+// Captura real de la portada de la tienda (1965×943, sin retocar; solo se
+// ha recortado el marco del navegador). Ancho máximo 68rem: se sirve a ~1.8×
+// con la imagen original, sin ampliarla.
+const sizes = '(max-width: 48rem) 120vw, 68rem';
+const [wide, fallback] = await Promise.all([
+	getImage({ src: store, widths: [800, 1200, 1600, 1965], format: 'avif', quality: 72 }),
+	getImage({
+		src: store,
+		widths: [800, 1200, 1600, 1965],
+		format: 'webp',
+		quality: 78,
+		loading: 'lazy',
+		decoding: 'async',
+	}),
+]);
+
+// «Lo que vi», como proceso: el mismo producto pasa por cuatro estados antes
+// de poder entrar en la tienda. Abstracto a propósito: se entiende sin saber
+// nada de cartas ni de Shopify. Detrás del primero, la cola: llegan muchos y
+// a todos les toca lo mismo.
+const steps = ['Producto nuevo', 'Entender qué es', 'Clasificarlo', 'Estructurarlo', 'Listo para la tienda'];
+
+// Información sin ordenar: trozos de distinta longitud, torcidos y
+// desalineados (ancho, giro, desplazamiento)
+const scraps = [
+	[62, -5, 10],
+	[38, 4, 34],
+	[74, 2, -2],
+	[44, -6, 30],
+];
+
+// Clasificar: en cada nivel, entre muchas opciones, una (ancho en cqw)
+const shelves = [
+	{ chips: [16, 22, 14, 19], pick: 1 },
+	{ chips: [12, 18, 15, 11, 13], pick: 3 },
+	{ chips: [20, 13, 17, 21], pick: 0 },
+];
+
+// El caso es la diferencia entre las dos columnas, no la tecnología
+const automated = [
+	'Clasifica cada producto.',
+	'Genera el título y la descripción.',
+	'Añade las etiquetas.',
+	'Lo prepara y lo crea en la tienda.',
+];
+const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesita criterio humano.'];
+---
+
+<section id="trabajo" class="case" aria-labelledby="case-title">
+	<header class="intro" data-reveal>
+		<p class="eyebrow" data-reveal-item>Un caso real · IA aplicada a una tienda online</p>
+		<h2 id="case-title" class="title" data-reveal-item>
+			<span>No automaticé todo.</span>{' '}
+			<span>Automaticé lo que <span class="accent">tenía sentido</span>.</span>
+		</h2>
+	</header>
+
+	<!-- 01 · Texto breve y, debajo, la tienda con presencia, desplazada a la derecha -->
+	<div class="found">
+		<div class="found-text" data-reveal>
+			<h3 class="eyebrow" data-reveal-item><span class="step">01</span> Lo que me encontré</h3>
+			<p class="say" data-reveal-item>
+				Un negocio de cartas coleccionables que estaba dando el salto a su propia tienda online.
+			</p>
+		</div>
+		<figure class="store" data-reveal>
+			<div class="window" data-reveal-item="clip">
+				<picture>
+					<source type="image/avif" srcset={wide.srcSet.attribute} sizes={sizes} />
+					<img
+						src={fallback.src}
+						srcset={fallback.srcSet.attribute}
+						sizes={sizes}
+						alt="Portada de Spain Trading Cards: menú con Pokémon, One Piece, Dragon Ball, Naruto, otros TCG y otros productos"
+						{...fallback.attributes}
+					/>
+				</picture>
+			</div>
+			<figcaption class="caption" data-reveal-item>Spain Trading Cards · Shopify</figcaption>
+		</figure>
+	</div>
+
+	<!-- 02 · Lo que había que hacer con cada producto antes de que entrara en
+	     la tienda, y cuántos llegaban -->
+	<div class="seen">
+		<div class="seen-head" data-reveal>
+			<h3 class="eyebrow" data-reveal-item><span class="step">02</span> Lo que vi</h3>
+			<p class="say" data-reveal-item>
+				Un catálogo grande y que no para de crecer. Clasificar cada producto a mano iba a ser lento y fácil de
+				equivocarse.
+			</p>
+		</div>
+
+		<figure
+			class="process"
+			data-reveal="sequence"
+			aria-label="Esquema: cada producto nuevo tiene que entenderse, clasificarse y estructurarse antes de entrar en la tienda. Y llegan muchos."
+		>
+			<div class="process-steps">
+				{
+					steps.map((label, i) => (
+						<>
+							{i > 0 && <span class="process-arrow" data-reveal-line aria-hidden="true" />}
+							<div class="process-step" data-reveal-item>
+								<div class:list={['card-slot', { queue: i === 0 }]} aria-hidden="true">
+									{i === 0 && (
+										<>
+											<span class="ghost" />
+											<span class="ghost" />
+											<span class="ghost" />
+										</>
+									)}
+									<div class="card">
+										<div class="card-in">
+											{i < 4 && <span class:list={['thumb', { focus: i === 1 }]} />}
+
+											{i === 0 &&
+												scraps.map(([w, r, x]) => (
+													<span class="bar scrap" style={`--w: ${w}%; --r: ${r}deg; --x: ${x}%`} />
+												))}
+
+											{i === 1 && (
+												<>
+													<span class="bar dark" style="--w: 58%" />
+													<span class="bar" style="--w: 84%" />
+													<span class="bar" style="--w: 66%" />
+												</>
+											)}
+
+											{i === 2 &&
+												shelves.map(({ chips, pick }) => (
+													<span class="shelf">
+														{chips.map((w, j) => (
+															<span class:list={['chip', { on: j === pick }]} style={`--w: ${w}cqw`} />
+														))}
+													</span>
+												))}
+
+											{i === 3 && (
+												<>
+													<span class="bar dark title-bar" style="--w: 78%" />
+													<span class="bar thin" style="--w: 100%" />
+													<span class="bar thin" style="--w: 72%" />
+													<span class="tags">
+														<span class="tag" style="--w: 18cqw" />
+														<span class="tag" style="--w: 24cqw" />
+														<span class="tag" style="--w: 15cqw" />
+													</span>
+												</>
+											)}
+
+											{i === 4 && (
+												<span class="store-grid">
+													{[true, false, false, false].map((ours) => (
+														<span class:list={['tile', { ours }]}>
+															<span class="tile-thumb" />
+															<span class="bar thin" style="--w: 86%" />
+															<span class="bar thin" style="--w: 54%" />
+														</span>
+													))}
+												</span>
+											)}
+										</div>
+									</div>
+								</div>
+								<p class="eyebrow process-label">{label}</p>
+							</div>
+						</>
+					))
+				}
+			</div>
+			<figcaption class="caption process-caption" data-reveal-item>
+				Cada producto, en su sitio exacto. Y el catálogo sigue creciendo.
+			</figcaption>
+		</figure>
+	</div>
+
+	<!-- 03 · La decisión, en grande; después, el flujo y las dos columnas -->
+	<div class="decision">
+		<h3 class="giant" data-reveal>
+			<span class="eyebrow giant-step" data-reveal-item><span class="step">03</span> Lo que decidí</span>{' '}
+			<span class="giant-text" data-reveal-item="scale">No todo necesitaba automatizarse.</span>
+		</h3>
+
+		<div class="flow" data-reveal="sequence">
+			<div class="node" data-reveal-item>
+				<span class="eyebrow">Telegram</span>
+				<p>Un mensaje desde el móvil.</p>
+			</div>
+			<span class="link" data-reveal-line aria-hidden="true"></span>
+			<div class="node node-ai" data-reveal-item>
+				<span class="eyebrow">IA</span>
+				<p>Lo entiende, lo clasifica y lo escribe.</p>
+			</div>
+			<span class="link" data-reveal-line aria-hidden="true"></span>
+			<div class="node" data-reveal-item>
+				<span class="eyebrow">Shopify</span>
+				<p>El producto, creado en la tienda.</p>
+			</div>
+		</div>
+
+		<div class="split" data-reveal>
+			<div class="column system" data-reveal-item>
+				<h4 class="eyebrow column-title">Lo hace el sistema</h4>
+				<ul class="list">
+					{automated.map((item) => <li>{item}</li>)}
+				</ul>
+			</div>
+			<div class="column human" data-reveal-item>
+				<h4 class="eyebrow column-title">Lo revisa él</h4>
+				<ul class="list">
+					{human.map((item) => <li>{item}</li>)}
+				</ul>
+			</div>
+			<p class="inside" data-reveal-item>Por dentro: Telegram, Gemini, n8n y la API de Shopify.</p>
+		</div>
+	</div>
+
+	<!-- 04 · Qué cambió -->
+	<div class="changed" data-reveal>
+		<h3 class="eyebrow" data-reveal-item><span class="step">04</span> Qué cambió</h3>
+		<p class="changed-title" data-reveal-item="scale">Del móvil a la tienda.</p>
+		<div class="changed-text" data-reveal-item>
+			<p class="say">Dar de alta un producto ya no empieza delante del ordenador. Empieza desde el móvil.</p>
+			<p class="say muted">
+				La parte repetitiva sigue una estructura definida. Lo que necesita criterio sigue bajo control humano.
+			</p>
+		</div>
+	</div>
+
+	<!-- Cierre: la idea del caso, sin explicación -->
+	<p class="closing" data-reveal>
+		<span data-reveal-item="scale">
+			<span>Automatizar más</span> <span>no siempre significa</span> <span>automatizar mejor.</span>
+		</span>
+	</p>
+</section>
+
+<style>
+	/* Acto 03. El caso: la prueba de que el Insight es una forma de trabajar.
+	   Una historia con ritmo, no una ficha: cada momento tiene su propia
+	   composición y su propia escala.
+
+	     01  texto breve a la izquierda; la tienda, grande, abriéndose a la derecha
+	     02  el proceso de cada producto: entender, clasificar, estructurar,
+	         dejarlo listo; y detrás, la cola de los que siguen llegando
+	     03  la decisión en grande → el flujo (la IA en el centro) → lo que hace
+	         el sistema y lo que revisa él
+	     04  «Del móvil a la tienda.» y el cambio, en dos frases
+	     ··  cierre centrado: la idea del caso, el único tamaño grande de verdad
+
+	   Dos ejes: el borde del marco (titulares, etiquetas) y la columna del
+	   texto (--label-col + --col-gap), como en la auditoría. El único coral es
+	   el subrayado de «tenía sentido» (el gesto de «adecuada») y el punto que
+	   marca la IA en el flujo. */
+
+	.case {
+		--axis: calc(var(--label-col) + var(--col-gap));
+		--beat: clamp(6rem, 18svh, 11rem);
+
+		width: var(--frame);
+		margin-inline: auto;
+		/* Arriba, lo justo: la escena del Insight ya termina con aire debajo
+		   de la frase (la mitad inferior del escenario, donde estaba la masa) */
+		padding: clamp(3.5rem, 10svh, 6.5rem) var(--frame-pad) clamp(4rem, 12svh, 8rem);
+		scroll-margin-top: calc(var(--nav-top) + var(--nav-height));
+	}
+
+	.step {
+		margin-right: 0.6em;
+		color: var(--text);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.say {
+		max-width: 30em;
+		margin: 0;
+		font-size: clamp(1.25rem, 0.85rem + 1.15vw, 2rem);
+		line-height: 1.25;
+		letter-spacing: -0.02em;
+		text-wrap: pretty;
+	}
+
+	.say + .say {
+		margin-top: 0.8em;
+	}
+
+	.muted {
+		color: var(--text-muted);
+	}
+
+	/* ---------- Titular ---------- */
+
+	.title {
+		margin: clamp(1.25rem, 3svh, 2rem) 0 0;
+		/* Móvil: la línea más ancha («No automaticé todo.») ocupa 9.8em; la
+		   segunda se parte en «Automaticé lo que / tenía sentido.» */
+		font-size: clamp(1.5rem, (100vw - 2 * var(--gutter) - 2 * var(--frame-pad)) / 10, 3.25rem);
+		font-weight: 400;
+		line-height: 1.06;
+		letter-spacing: -0.035em;
+	}
+
+	.title > span {
+		display: block;
+	}
+
+	@media (min-width: 48rem) {
+		.title {
+			font-size: clamp(2.75rem, min(5.6vw, 9svh), 5.25rem);
+		}
+	}
+
+	.accent {
+		position: relative;
+		white-space: nowrap;
+	}
+
+	/* El subrayado de «adecuada», aquí bajo «tenía sentido» */
+	.accent::after {
+		content: "";
+		position: absolute;
+		left: 0.02em;
+		right: 0.02em;
+		bottom: -0.02em;
+		height: max(2px, 0.05em);
+		border-radius: 1em;
+		background: var(--accent);
+	}
+
+	/* ---------- 01 · Lo que me encontré ---------- */
+
+	/* El texto en los dos ejes (etiqueta | frase) y la tienda debajo,
+	   grande y alineada a la derecha del marco: asimétrica respecto al texto */
+	.found {
+		margin-top: var(--beat);
+	}
+
+	.found-text,
+	.seen-head {
+		display: grid;
+		grid-template-columns: var(--label-col) minmax(0, 1fr);
+		column-gap: var(--col-gap);
+		align-items: baseline;
+	}
+
+	.store {
+		max-width: 68rem;
+		margin: clamp(2.5rem, 7svh, 4rem) 0 0 auto;
+	}
+
+	.window {
+		aspect-ratio: 1965 / 943;
+	}
+
+	.caption {
+		margin-top: 0.9rem;
+		font-size: 0.875rem;
+		line-height: 1.45;
+		color: var(--text-muted);
+	}
+
+	/* ---------- 02 · Lo que vi ---------- */
+
+	.seen {
+		margin-top: var(--beat);
+	}
+
+	/* El proceso: cinco fichas del mismo tamaño, una por estado del mismo
+	   producto, unidas por flechas que se trazan. Todo es abstracto (barras,
+	   bloques) y se mide en cqw, así cada ficha escala con su columna. El
+	   melocotón es siempre el producto; el negro, lo que ya está decidido. */
+	.process {
+		margin: clamp(3.5rem, 10svh, 6rem) 0 0;
+	}
+
+	/* Fichas y flechas en la fila 1; los nombres, alineados en la fila 2 */
+	.process-steps {
+		display: grid;
+		grid-auto-flow: column;
+		grid-template-rows: auto auto;
+		grid-template-columns: repeat(4, minmax(0, 1fr) clamp(1.5rem, 3vw, 3rem)) minmax(0, 1fr);
+		column-gap: clamp(0.5rem, 1.2vw, 1.25rem);
+	}
+
+	.process-step {
+		grid-row: span 2;
+		display: grid;
+		grid-template-rows: subgrid;
+	}
+
+	.process-label {
+		margin-top: 1.1rem;
+	}
+
+	.process-arrow {
+		grid-row: 1;
+		align-self: center;
+		position: relative;
+		height: 1px;
+		background: var(--text);
+		transform: scaleX(var(--line, 1));
+		transform-origin: left center;
+	}
+
+	.process-arrow::after {
+		content: "";
+		position: absolute;
+		right: 0;
+		top: -3px;
+		width: 7px;
+		height: 7px;
+		border-top: 1px solid var(--text);
+		border-right: 1px solid var(--text);
+		transform: rotate(45deg);
+	}
+
+	.card-slot {
+		position: relative;
+	}
+
+	.card,
+	.ghost {
+		aspect-ratio: 1;
+		border-radius: clamp(0.5rem, 0.9vw, 0.875rem);
+		background: #fff;
+	}
+
+	.card {
+		position: relative;
+		container-type: inline-size;
+		box-shadow:
+			0 1px 2px rgb(23 23 23 / 0.05),
+			0 18px 40px -24px rgb(23 23 23 / 0.3);
+	}
+
+	/* La cola: más productos esperando detrás del primero */
+	.ghost {
+		position: absolute;
+		inset: 0;
+		box-shadow:
+			0 0 0 1px rgb(23 23 23 / 0.06),
+			0 10px 24px -18px rgb(23 23 23 / 0.25);
+	}
+
+	.ghost:nth-child(1) {
+		translate: 18% -14%;
+		opacity: 0.45;
+	}
+
+	.ghost:nth-child(2) {
+		translate: 12% -9.5%;
+		opacity: 0.7;
+	}
+
+	.ghost:nth-child(3) {
+		translate: 6% -5%;
+	}
+
+	.card-in {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 5cqw;
+		padding: 8cqw;
+	}
+
+	.card-in > * {
+		flex: none;
+	}
+
+	.thumb {
+		position: relative;
+		height: 40cqw;
+		margin-bottom: 2cqw;
+		border-radius: 4cqw;
+		background: var(--accent-soft);
+	}
+
+	/* Entender qué es: el producto, enfocado (cuatro esquinas de visor) */
+	.thumb.focus::after {
+		--c: var(--text);
+		--l: 9cqw;
+		--t: max(1.5px, 0.9cqw);
+
+		content: "";
+		position: absolute;
+		inset: -3.5cqw;
+		background:
+			linear-gradient(var(--c) 0 0) top left / var(--l) var(--t),
+			linear-gradient(var(--c) 0 0) top left / var(--t) var(--l),
+			linear-gradient(var(--c) 0 0) top right / var(--l) var(--t),
+			linear-gradient(var(--c) 0 0) top right / var(--t) var(--l),
+			linear-gradient(var(--c) 0 0) bottom left / var(--l) var(--t),
+			linear-gradient(var(--c) 0 0) bottom left / var(--t) var(--l),
+			linear-gradient(var(--c) 0 0) bottom right / var(--l) var(--t),
+			linear-gradient(var(--c) 0 0) bottom right / var(--t) var(--l);
+		background-repeat: no-repeat;
+	}
+
+	.bar {
+		width: var(--w);
+		height: 4cqw;
+		border-radius: 4cqw;
+		background: rgb(23 23 23 / 0.12);
+	}
+
+	.bar.dark {
+		background: var(--text);
+	}
+
+	.bar.thin {
+		height: 3cqw;
+	}
+
+	.title-bar {
+		height: 5.5cqw;
+	}
+
+	/* Producto nuevo: la información llega desordenada */
+	.scrap {
+		translate: var(--x) 0;
+		rotate: var(--r);
+	}
+
+	/* Clasificarlo: en cada nivel, una opción entre varias */
+	.shelf {
+		display: flex;
+		gap: 2.5cqw;
+	}
+
+	.chip {
+		width: var(--w);
+		height: 5cqw;
+		border-radius: 5cqw;
+		background: rgb(23 23 23 / 0.1);
+	}
+
+	.chip.on {
+		background: var(--text);
+	}
+
+	/* Estructurarlo: título, descripción y etiquetas, cada cosa en su sitio */
+	.tags {
+		display: flex;
+		gap: 2.5cqw;
+		margin-top: 1cqw;
+	}
+
+	.tag {
+		width: var(--w);
+		height: 7cqw;
+		border-radius: 7cqw;
+		box-shadow: inset 0 0 0 max(1px, 0.5cqw) rgb(23 23 23 / 0.35);
+	}
+
+	/* Listo para la tienda: ya es uno más del escaparate */
+	.store-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 6cqw 5cqw;
+	}
+
+	.tile {
+		display: grid;
+		gap: 2.5cqw;
+	}
+
+	.tile-thumb {
+		aspect-ratio: 16 / 10;
+		margin-bottom: 1cqw;
+		border-radius: 3cqw;
+		background: rgb(23 23 23 / 0.07);
+	}
+
+	.tile .bar {
+		background: rgb(23 23 23 / 0.08);
+	}
+
+	.tile.ours .tile-thumb {
+		background: var(--accent-soft);
+	}
+
+	.tile.ours .bar {
+		background: var(--text);
+	}
+
+	.process-caption {
+		margin-top: 1.75rem;
+	}
+
+	/* ---------- 03 · La decisión ---------- */
+
+	.decision {
+		margin-top: var(--beat);
+	}
+
+	.giant {
+		margin: 0;
+		font-weight: 400;
+	}
+
+	.giant-step {
+		display: block;
+		margin-bottom: clamp(1rem, 2.5svh, 1.5rem);
+	}
+
+	.giant-text {
+		display: block;
+		max-width: 12em;
+		/* Contenida: el tamaño grande de verdad es para el cierre del caso */
+		font-size: clamp(1.5rem, 0.4rem + 4.3vw, 4.5rem);
+		line-height: 1.02;
+		letter-spacing: -0.04em;
+		text-wrap: balance;
+		transform-origin: 0 50%;
+	}
+
+	/* El flujo: tres pasos y dos líneas que se trazan entre ellos */
+	.flow {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) clamp(2rem, 6vw, 6rem) minmax(0, 1fr) clamp(2rem, 6vw, 6rem) minmax(0, 1fr);
+		align-items: start;
+		gap: clamp(0.75rem, 1.5vw, 1.25rem);
+		margin: clamp(3.5rem, 10svh, 6rem) 0 0 var(--axis);
+	}
+
+	.node p {
+		margin: 0.6rem 0 0;
+		font-size: clamp(1.125rem, 0.9rem + 0.6vw, 1.5rem);
+		line-height: 1.25;
+		letter-spacing: -0.015em;
+		text-wrap: balance;
+	}
+
+	/* La IA, marcada con un punto coral: es el paso que hace el trabajo */
+	.node-ai .eyebrow {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5em;
+		color: var(--text);
+	}
+
+	.node-ai .eyebrow::before {
+		content: "";
+		width: 0.5rem;
+		height: 0.5rem;
+		border-radius: 50%;
+		background: var(--accent);
+	}
+
+	.link {
+		position: relative;
+		height: 1px;
+		margin-top: 0.55rem;
+		background: var(--text);
+		transform: scaleX(var(--line, 1));
+		transform-origin: left center;
+	}
+
+	/* Punta de flecha */
+	.link::after {
+		content: "";
+		position: absolute;
+		right: 0;
+		top: -3px;
+		width: 7px;
+		height: 7px;
+		border-top: 1px solid var(--text);
+		border-right: 1px solid var(--text);
+		transform: rotate(45deg);
+	}
+
+	/* Dos bloques que no se parecen: lo que hace el sistema, en una caja gris
+	   y en voz baja (es repetitivo, va por debajo); lo que revisa él, sin caja,
+	   en negro y más grande (es el criterio). Apilados en móvil, la diferencia
+	   se sigue leyendo sin necesidad de columnas. */
+	.split {
+		--pad: clamp(1.25rem, 2.4vw, 2rem);
+
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1.5rem clamp(2rem, 4vw, 3.5rem);
+		align-items: start;
+		max-width: 56rem;
+		margin: clamp(3.5rem, 9svh, 5.5rem) 0 0 var(--axis);
+	}
+
+	.column-title {
+		padding-bottom: 0.9rem;
+		border-bottom: 1px solid var(--rule);
+	}
+
+	.list {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.list li {
+		border-bottom: 1px solid var(--rule);
+		letter-spacing: -0.01em;
+	}
+
+	.list li:last-child {
+		border-bottom: 0;
+	}
+
+	.system {
+		padding: var(--pad);
+		border-radius: clamp(0.75rem, 1vw, 1rem);
+		background: rgb(23 23 23 / 0.04);
+	}
+
+	.system .list li {
+		padding-block: 0.7rem;
+		font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+		line-height: 1.4;
+		color: var(--text-muted);
+	}
+
+	/* Arriba, alineado con la caja de al lado */
+	.human {
+		padding-top: var(--pad);
+	}
+
+	.human .column-title {
+		color: var(--text);
+		border-bottom: 2px solid var(--text);
+	}
+
+	.human .list li {
+		padding-block: 0.75rem;
+		font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+		line-height: 1.25;
+		letter-spacing: -0.02em;
+	}
+
+	/* La tecnología, en letra pequeña: es la consecuencia, no el titular */
+	.inside {
+		grid-column: 1 / -1;
+		margin: 0;
+		font-size: 0.875rem;
+		line-height: 1.5;
+		color: var(--text-muted);
+	}
+
+	/* ---------- 04 · Qué cambió ---------- */
+
+	.changed {
+		display: grid;
+		grid-template-columns: var(--label-col) minmax(0, 1fr);
+		column-gap: var(--col-gap);
+		margin-top: var(--beat);
+	}
+
+	.changed .eyebrow {
+		padding-top: 0.9em;
+	}
+
+	.changed-title {
+		margin: 0;
+		font-size: clamp(1.375rem, 0.6rem + 2.85vw, 3.25rem);
+		line-height: 1.05;
+		letter-spacing: -0.035em;
+		transform-origin: 0 50%;
+	}
+
+	.changed-text {
+		grid-column: 2;
+		margin-top: clamp(1.5rem, 4svh, 2.25rem);
+	}
+
+	/* ---------- Cierre ---------- */
+
+	.closing {
+		margin: calc(var(--beat) * 1.2) 0 0;
+		text-align: center;
+		/* Móvil: la línea más ancha («no siempre significa») manda */
+		font-size: clamp(1.5rem, (100vw - 2 * var(--gutter) - 2 * var(--frame-pad)) / 9.6, 6.25rem);
+		line-height: 1.04;
+		letter-spacing: -0.045em;
+	}
+
+	.closing > span,
+	.closing span span {
+		display: block;
+	}
+
+	/* El cierre conceptual del caso: el titular más grande de la sección */
+	@media (min-width: 48rem) {
+		.closing {
+			font-size: clamp(3.25rem, min(7.6vw, 12svh), 7rem);
+		}
+	}
+
+	/* ---------- Móvil ---------- */
+
+	@media (max-width: 48rem) {
+		.found-text,
+		.seen-head {
+			grid-template-columns: 1fr;
+			row-gap: 1rem;
+		}
+
+		/* La tienda a todo el ancho del marco y entera, sin recortar: en 16:10
+		   el recorte cortaba el banner por los lados y parecía accidental */
+		.store {
+			margin-inline: calc(-1 * var(--frame-pad));
+		}
+
+		.store .window {
+			border-radius: 0.625rem;
+		}
+
+		.store .caption {
+			padding-inline: var(--frame-pad);
+		}
+
+		.flow,
+		.split {
+			margin-left: 0;
+		}
+
+		/* El proceso en vertical: cada ficha con su nombre al lado, y las
+		   flechas bajan */
+		.process-steps {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.process-step {
+			grid-template-columns: 6.25rem minmax(0, 1fr);
+			grid-template-rows: none;
+			column-gap: 1.5rem;
+			align-items: center;
+		}
+
+		.process-label {
+			margin: 0;
+		}
+
+		.process-arrow {
+			align-self: flex-start;
+			width: 1px;
+			height: 1.75rem;
+			margin: 0.75rem 0 0.75rem 3.125rem;
+			transform: scaleY(var(--line, 1));
+			transform-origin: center top;
+		}
+
+		.process-arrow::after {
+			top: auto;
+			bottom: 0;
+			right: -3px;
+			transform: rotate(135deg);
+		}
+
+		/* La cola, más recogida: en móvil no hay margen a la derecha */
+		.ghost:nth-child(1) {
+			translate: 12% -10%;
+		}
+
+		.ghost:nth-child(2) {
+			translate: 8% -6.5%;
+		}
+
+		.ghost:nth-child(3) {
+			translate: 4% -3.25%;
+		}
+
+		/* El flujo, en vertical: las líneas bajan */
+		.flow {
+			grid-template-columns: 1fr;
+			gap: 1rem;
+		}
+
+		.link {
+			width: 1px;
+			height: 2rem;
+			margin: 0 0 0 0.25rem;
+			transform: scaleY(var(--line, 1));
+			transform-origin: center top;
+		}
+
+		.link::after {
+			top: auto;
+			bottom: 0;
+			right: -3px;
+			transform: rotate(135deg);
+		}
+
+		.split {
+			grid-template-columns: 1fr;
+			gap: 2.5rem;
+		}
+
+		.human {
+			padding-top: 0;
+		}
+
+		.changed {
+			grid-template-columns: 1fr;
+		}
+
+		.changed .eyebrow {
+			padding-top: 0;
+			margin-bottom: 1rem;
+		}
+
+		.changed-text {
+			grid-column: 1;
+		}
+	}
+</style>

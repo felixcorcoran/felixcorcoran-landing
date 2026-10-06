@@ -1,0 +1,63 @@
+---
+/**
+ * Escena de scroll que agrupa varios actos (ahora: Hero + Problema + Insight).
+ *
+ * Sin JS, con movimiento reducido o en pantallas bajas (ver scripts/motion.ts),
+ * sus hijos se leen en flujo normal. Si no,
+ * el script añade .scene-on: el contenedor gana altura de recorrido y el
+ * escenario se queda fijo (sticky) mientras la timeline avanza con el scroll.
+ */
+---
+
+<div class="scene" data-scene>
+	<div class="stage" data-scene-part="stage">
+		<slot />
+	</div>
+</div>
+
+<style>
+	.scene {
+		/* Recorrido de scroll de la escena (además de la pantalla del escenario):
+		   22.4 unidades de timeline, ~16svh cada una (ver scripts/scene/scene.ts) */
+		--scene-length: 360svh;
+	}
+
+	/* overflow: clip (no hidden): recorta lo que sobresale del escenario (luz,
+	   canvas) sin crear un contenedor de scroll, así el sticky sigue funcionando */
+	.scene:global(.scene-on) {
+		height: calc(100svh + var(--scene-length));
+		overflow: clip;
+	}
+
+	/* Escenario fijo. Opaco y con su propio grano: al ser sticky crea un
+	   contexto de apilamiento, y el grano tiene que quedar por encima de la
+	   masa (z-index -2) y por debajo del texto. */
+	.scene:global(.scene-on) .stage {
+		position: sticky;
+		top: 0;
+		height: 100svh;
+		overflow-x: clip;
+		background: var(--bg);
+	}
+
+	.scene:global(.scene-on) .stage::before {
+		content: "";
+		position: absolute;
+		inset: 0 0 auto;
+		/* lvh: cubre también la franja que deja la barra de iOS al ocultarse */
+		height: 100lvh;
+		z-index: -1;
+		pointer-events: none;
+		opacity: var(--grain);
+		background-image: var(--grain-image);
+	}
+</style>
+
+<script>
+	import { cinematic } from '../scripts/motion';
+	import { initScene } from '../scripts/scene/scene';
+
+	const scene = document.querySelector<HTMLElement>('[data-scene]');
+
+	if (scene && cinematic()) initScene(scene);
+</script>

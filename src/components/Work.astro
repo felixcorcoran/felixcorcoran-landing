@@ -1,0 +1,266 @@
+---
+import { getImage } from 'astro:assets';
+import pilarDesktop from '../assets/work/pilar-desktop.jpg';
+import pilarMobile from '../assets/work/pilar-mobile.jpg';
+import paolaDesktop from '../assets/work/paola-desktop.jpg';
+import paolaMobile from '../assets/work/paola-mobile.jpg';
+import avilaDesktop from '../assets/work/avila-desktop.jpg';
+import avilaMobile from '../assets/work/avila-mobile.jpg';
+import kaloaiDesktop from '../assets/work/kaloai-desktop.jpg';
+import kaloaiMobile from '../assets/work/kaloai-mobile.jpg';
+
+// Prueba de que sé construir (el caso ya ha enseñado cómo decido qué
+// construir). Cada trabajo dice qué es, sin resultados que no estén
+// documentados. Los cuatro, con el mismo peso y el mismo tratamiento.
+//
+// Capturas reales, sin retocar: la portada en escritorio (1440 px a 2×,
+// 2880×1620, recortada a 16:10) y, en móvil, la portada en móvil (390 px a 3×,
+// 1170×2100).
+const projects = [
+	{
+		kind: 'Web + sistema de reservas',
+		name: 'Peluquería Pilar',
+		text: 'Web bilingüe, servicios y sistema de solicitud y gestión de citas.',
+		url: 'https://pilarpeluqueria.com/inicio.html',
+		image: pilarDesktop,
+		mobile: pilarMobile,
+	},
+	{
+		kind: 'Web',
+		name: 'Reformas y Mantenimientos Paola',
+		text: 'Web bilingüe y sistema de solicitud de presupuestos.',
+		url: 'https://reformasymantenimientospaola.com/inicio',
+		image: paolaDesktop,
+		mobile: paolaMobile,
+	},
+	{
+		kind: 'Web',
+		name: 'Ávila Secretaria Online',
+		text: 'Web bilingüe de un servicio de secretaría online: qué hace, cuánto cuesta y consulta gratuita.',
+		url: 'https://avilasecretariaonline.com/inicio.html',
+		image: avilaDesktop,
+		mobile: avilaMobile,
+	},
+	{
+		kind: 'Aplicación web con IA',
+		name: 'KaloAI',
+		text: 'Aplicación web con IA de nutrición: usuarios, nutricionistas, administración, seguimiento, planificación y generación personalizada de recetas.',
+		url: 'https://kaloai.infinityfreeapp.com/index.php',
+		image: kaloaiDesktop,
+		mobile: kaloaiMobile,
+	},
+];
+
+// Escritorio: 18rem. Móvil: la columna estrecha junto al texto.
+const mobileWidth = 'clamp(5.5rem, 26vw, 7rem)';
+const previews = await Promise.all(
+	projects.map(async ({ image, mobile }) => {
+		const [desktop, phone] = await Promise.all([
+			getImage({ src: image, widths: [240, 480, 720, 960], format: 'webp', quality: 74 }),
+			getImage({ src: mobile, widths: [240, 360, 480], format: 'webp', quality: 74 }),
+		]);
+		return { desktop, phone };
+	}),
+);
+---
+
+<section class="work" aria-labelledby="work-title">
+	<header class="intro" data-reveal>
+		<p class="eyebrow" data-reveal-item>Más trabajo</p>
+		<h2 id="work-title" class="title" data-reveal-item>Otras cosas que he construido.</h2>
+		<p class="lead" data-reveal-item>
+			El caso enseña cómo decido qué construir. Estos trabajos enseñan que sé construirlo.
+		</p>
+	</header>
+
+	<ul class="list">
+		{
+			projects.map(({ kind, name, text, url }, i) => {
+				const { desktop, phone } = previews[i];
+				return (
+					<li class="row" data-reveal>
+						<p class="eyebrow" data-reveal-item>
+							{kind}
+						</p>
+						<div class="body" data-reveal-item>
+							<div>
+								<h3 class="name">{name}</h3>
+								<p class="text">{text}</p>
+								<a class="live" href={url} target="_blank" rel="noopener">
+									Ver la web<span class="sr-only">: {name} (se abre en una pestaña nueva)</span>
+									<svg viewBox="0 0 12 12" aria-hidden="true" focusable="false">
+										<path d="M3 9 9 3M4 3h5v5" />
+									</svg>
+								</a>
+							</div>
+							{/* La captura también lleva a la web (para el ratón y el dedo; el
+							    teclado y los lectores ya tienen «Ver la web») */}
+							<a class="preview-link" href={url} target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+								<div class="window preview">
+									<picture>
+										<source media="(max-width: 48rem)" srcset={phone.srcSet.attribute} sizes={mobileWidth} />
+										<img
+											src={desktop.src}
+											srcset={desktop.srcSet.attribute}
+											sizes={`(max-width: 48rem) ${mobileWidth}, 18rem`}
+											alt=""
+											width={desktop.attributes.width}
+											height={desktop.attributes.height}
+											loading="lazy"
+											decoding="async"
+										/>
+									</picture>
+								</div>
+							</a>
+						</div>
+						<span class="row-rule" data-reveal-line aria-hidden="true" />
+					</li>
+				);
+			})
+		}
+	</ul>
+</section>
+
+<style>
+	/* Acto 05. Más trabajo: evidencia secundaria, compacta. Un índice (la
+	   misma fila que el caso y la auditoría), no una galería: qué tipo de
+	   trabajo, qué es y la web. Las capturas son pequeñas a propósito:
+	   demuestran que existe, no compiten con el caso. Los cuatro proyectos,
+	   idénticos en estructura, tamaños y entrada. */
+
+	.work {
+		width: var(--frame);
+		margin-inline: auto;
+		padding: clamp(5rem, 16svh, 10rem) var(--frame-pad) 0;
+	}
+
+	.title {
+		margin: clamp(1.25rem, 3svh, 2rem) 0 0;
+		font-size: clamp(1.75rem, 1rem + 2.6vw, 3.5rem);
+		font-weight: 400;
+		line-height: 1.06;
+		letter-spacing: -0.035em;
+		text-wrap: balance;
+	}
+
+	.lead {
+		max-width: 34em;
+		margin: clamp(1rem, 3svh, 1.75rem) 0 0;
+		font-size: clamp(1.0625rem, 0.95rem + 0.4vw, 1.3125rem);
+		line-height: 1.45;
+		color: var(--text-muted);
+		text-wrap: pretty;
+	}
+
+	.list {
+		margin: clamp(2.5rem, 7svh, 4.5rem) 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.list .row {
+		padding-block: clamp(1.5rem, 4svh, 2.25rem);
+	}
+
+	/* Texto a la izquierda; la captura, pequeña, a la derecha */
+	.body {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 18rem;
+		gap: clamp(1.5rem, 4vw, 3.5rem);
+		align-items: start;
+	}
+
+	.name {
+		margin: 0;
+		font-size: clamp(1.25rem, 0.95rem + 0.9vw, 1.875rem);
+		font-weight: 400;
+		line-height: 1.15;
+		letter-spacing: -0.025em;
+	}
+
+	.text {
+		max-width: 38em;
+		margin: 0.6rem 0 0;
+		font-size: 1rem;
+		line-height: 1.55;
+		color: var(--text-muted);
+		text-wrap: pretty;
+	}
+
+	/* Secundario: texto pequeño subrayado, no un botón */
+	.live {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
+		min-height: 2.75rem;
+		margin-top: 0.25rem;
+		font-size: 0.9375rem;
+		color: var(--text);
+		text-decoration: underline;
+		text-decoration-color: rgb(23 23 23 / 0.25);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.3em;
+		transition: text-decoration-color 0.3s var(--ease-out);
+	}
+
+	.live:hover {
+		text-decoration-color: currentColor;
+	}
+
+	.live svg {
+		width: 0.7em;
+		height: 0.7em;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.4;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		transition: translate 0.3s var(--ease-out);
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.live:hover svg {
+			translate: 0.1em -0.1em;
+		}
+	}
+
+	.preview-link {
+		display: block;
+	}
+
+	.preview {
+		aspect-ratio: 16 / 10;
+		border-radius: 0.625rem;
+		box-shadow:
+			0 1px 2px rgb(23 23 23 / 0.04),
+			0 18px 40px -24px rgb(23 23 23 / 0.25);
+	}
+
+	.preview picture {
+		display: block;
+		height: 100%;
+	}
+
+	/* Al pasar el ratón, el canto de la captura se marca un poco más */
+	.preview::after {
+		transition: box-shadow 0.3s var(--ease-out);
+	}
+
+	.preview-link:hover .preview::after {
+		box-shadow: inset 0 0 0 1px rgb(23 23 23 / 0.22);
+	}
+
+	/* Móvil: la captura en móvil, estrecha y al lado del texto (una fila de
+	   índice, no una galería) */
+	@media (max-width: 48rem) {
+		.body {
+			grid-template-columns: minmax(0, 1fr) clamp(5.5rem, 26vw, 7rem);
+			gap: 1.25rem;
+		}
+
+		.preview {
+			aspect-ratio: 1170 / 2100;
+			border-radius: 0.75rem;
+		}
+	}
+</style>

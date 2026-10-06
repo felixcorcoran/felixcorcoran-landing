@@ -1,0 +1,279 @@
+---
+import { contact } from '../data/contact';
+---
+
+<form class="form" data-contact-form data-email={contact.email}>
+	<div class="field">
+		<label for="contact-name">Nombre</label>
+		<input
+			id="contact-name"
+			name="name"
+			type="text"
+			autocomplete="name"
+			autocapitalize="words"
+			required
+			aria-describedby="contact-name-error"
+		/>
+		<p id="contact-name-error" class="error"></p>
+	</div>
+
+	<div class="field">
+		<label for="contact-email">Email</label>
+		<input
+			id="contact-email"
+			name="email"
+			type="email"
+			autocomplete="email"
+			spellcheck="false"
+			required
+			aria-describedby="contact-email-error"
+		/>
+		<p id="contact-email-error" class="error"></p>
+	</div>
+
+	<div class="field">
+		<label for="contact-phone">Teléfono <span class="optional">— opcional, si prefieres que te llame</span></label>
+		<input id="contact-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" />
+	</div>
+
+	<div class="field">
+		<label for="contact-business">Tu negocio <span class="optional">— nombre, web o ficha de Google</span></label>
+		<input id="contact-business" name="business" type="text" autocomplete="organization" />
+	</div>
+
+	<div class="field">
+		<label for="contact-message">¿Qué te gustaría mejorar?</label>
+		<p id="contact-message-hint" class="hint">
+			Dónde se te va el tiempo, dónde se atascan tus clientes… Con tus palabras: no hace falta saber qué
+			tecnología necesitas.
+		</p>
+		<textarea
+			id="contact-message"
+			name="message"
+			rows="4"
+			required
+			aria-describedby="contact-message-hint contact-message-error"></textarea>
+		<p id="contact-message-error" class="error"></p>
+	</div>
+
+	<div class="submit-row">
+		<button class="submit" type="submit">
+			<span data-button-label>Solicitar auditoría</span>
+			<svg viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 9 9 3M4 3h5v5" /></svg>
+		</button>
+		<p class="status" role="status" data-form-status></p>
+		<p class="privacy">
+			Solo usaré estos datos para responder a tu solicitud. Puedes pedir que los corrija o los borre cuando
+			quieras: los detalles, en la <a href="/privacidad">política de privacidad</a>.
+		</p>
+	</div>
+</form>
+
+<style>
+	/* El formulario de contacto. Sin tarjeta ni fondo: texto sobre el papel,
+	   con una línea bajo cada campo. El único coral es el botón (la acción) y
+	   el acento de los errores. La lógica está en scripts/contact/form.ts. */
+
+	.form {
+		--line: rgb(23 23 23 / 0.42);
+		--lh: 1.6em;
+
+		display: grid;
+		gap: clamp(2rem, 5svh, 2.75rem);
+	}
+
+	.field {
+		display: grid;
+		gap: 0.35rem;
+	}
+
+	label {
+		font-size: 0.8125rem;
+		font-weight: 500;
+		letter-spacing: 0.01em;
+		color: var(--text-muted);
+	}
+
+	.optional {
+		font-weight: 400;
+	}
+
+	.hint {
+		margin: 0;
+		font-size: 0.875rem;
+		line-height: 1.45;
+		color: var(--text-muted);
+	}
+
+	.privacy {
+		max-width: 32em;
+		margin: 0;
+		font-size: 0.8125rem;
+		line-height: 1.5;
+		color: var(--text-muted);
+	}
+
+	.privacy a {
+		color: inherit;
+		text-decoration: underline;
+		text-decoration-color: rgb(23 23 23 / 0.3);
+		text-underline-offset: 0.25em;
+	}
+
+	.privacy a:hover {
+		color: var(--text);
+	}
+
+	/* El campo es una línea: fina (3:1 sobre el crema, se distingue sin ser
+	   un borde de caja). Texto a 18 px: cómodo, y sin zoom en iOS. */
+	input,
+	textarea {
+		width: 100%;
+		margin: 0;
+		padding: 0.55rem 0.1rem 0.65rem;
+		border: 0;
+		border-radius: 0;
+		background: transparent;
+		box-shadow: inset 0 -1px 0 var(--line);
+		font: inherit;
+		font-size: 1.125rem;
+		line-height: 1.4;
+		color: var(--text);
+		transition:
+			box-shadow 0.25s var(--ease-out),
+			background-color 0.25s var(--ease-out);
+	}
+
+	/* Foco: la línea pasa a ser oscura y el doble de gruesa, y el campo se
+	   tiñe de melocotón. Claro con teclado y con ratón. */
+	input:focus,
+	textarea:focus {
+		outline: none;
+		box-shadow: inset 0 -2px 0 var(--text);
+		background-color: rgb(255 214 204 / 0.3);
+	}
+
+	/* Error: línea coral y el mensaje escrito debajo (no solo color) */
+	[aria-invalid="true"] {
+		box-shadow: inset 0 -2px 0 var(--accent);
+	}
+
+	[aria-invalid="true"]:focus {
+		box-shadow:
+			inset 0 -2px 0 var(--text),
+			inset 0 -4px 0 var(--accent);
+	}
+
+	/* Mensaje: renglones muy suaves que siguen al texto al escribir. Sin
+	   relleno abajo: el último renglón coincide con la línea del campo. */
+	textarea {
+		padding-bottom: 0;
+		min-height: calc(var(--lh) * 4 + 0.55rem);
+		line-height: var(--lh);
+		resize: vertical;
+		background-image: linear-gradient(transparent calc(var(--lh) - 1px), rgb(23 23 23 / 0.08) calc(var(--lh) - 1px));
+		background-size: 100% var(--lh);
+		background-origin: content-box;
+		background-attachment: local;
+	}
+
+	.error {
+		margin: 0.25rem 0 0;
+		font-size: 0.875rem;
+		line-height: 1.4;
+		color: var(--text);
+	}
+
+	.error:empty {
+		display: none;
+	}
+
+	/* ---------- Enviar ---------- */
+
+	.submit-row {
+		display: grid;
+		justify-items: start;
+		gap: 1rem;
+		margin-top: 0.5rem;
+	}
+
+	/* La acción: píldora coral, como «Solicitar auditoría gratuita» */
+	.submit {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5em;
+		min-height: 3.5rem;
+		padding: 0 1.75rem;
+		border: 0;
+		border-radius: 999px;
+		background: var(--accent);
+		color: var(--text);
+		font: inherit;
+		font-size: 1rem;
+		font-weight: 500;
+		cursor: pointer;
+		transition: box-shadow 0.4s var(--ease-out);
+	}
+
+	.submit:hover {
+		box-shadow: 0 0 0 0.4rem var(--accent-soft);
+	}
+
+	.submit[aria-disabled="true"] {
+		cursor: progress;
+	}
+
+	.submit svg {
+		width: 0.75em;
+		height: 0.75em;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.4;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	.status {
+		max-width: 32em;
+		margin: 0;
+		font-size: 0.9375rem;
+		line-height: 1.5;
+	}
+
+	.status:empty {
+		display: none;
+	}
+
+	.status :global(a) {
+		color: inherit;
+		text-underline-offset: 0.25em;
+	}
+
+	/* Enviando: solo para lectores de pantalla (el botón ya lo dice) */
+	.form[data-state="sending"] .status {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	/* Móvil estrecho: el botón ocupa todo el ancho */
+	@media (max-width: 30rem) {
+		.submit-row {
+			justify-items: stretch;
+		}
+
+		.submit {
+			justify-content: center;
+		}
+	}
+</style>
+
+<script>
+	import { initContactForm } from '../scripts/contact/form';
+
+	const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+	if (form) initContactForm(form);
+</script>

@@ -1,0 +1,418 @@
+---
+import { Picture } from 'astro:assets';
+import { audit, person } from '../data/audit';
+
+// El método. Los cuatro primeros pasos son la auditoría (gratis); el quinto
+// es el trabajo, y solo ocurre si algo merece la pena.
+const steps = [
+	{
+		name: 'Escuchar',
+		text: 'Me cuentas qué te preocupa, dónde se te va el tiempo y dónde se atascan tus clientes. Tú conoces tu negocio mejor que yo.',
+	},
+	{
+		name: 'Observar',
+		text: 'Miro lo que ve un cliente: tu web, tu ficha de Google, tus redes, cómo se pide una cita o un presupuesto. Y dónde la IA o una automatización podrían quitarte trabajo de verdad.',
+	},
+	{
+		name: 'Contrastar',
+		text: 'Lo que veo, te lo pregunto. Una observación no es un problema hasta que la contrasto contigo.',
+		example: {
+			question: '«He visto una parte del proceso en la que el cliente tiene que dar un paso de más. ¿Os genera algún problema?»',
+			answer: 'Puede que sí. Puede que no. Puede que sea a propósito.',
+		},
+	},
+	{
+		name: 'Priorizar',
+		text: 'No todo lo que se puede hacer merece hacerse. Te digo qué sí, qué no, y por dónde empezaría si el negocio fuera mío.',
+	},
+];
+
+const build = {
+	name: 'Construir',
+	text: 'Solo si algo merece la pena, te propongo cómo hacerlo y cuánto cuesta. Puede ser una web, una automatización, IA, una integración… o nada.',
+};
+
+// Datos prácticos: solo los que ya están decididos (ver src/data/audit.ts)
+const facts = [audit.delivery, audit.turnaround && `Plazo: ${audit.turnaround}.`].filter(Boolean);
+---
+
+<section class="audit" aria-labelledby="audit-title">
+	<header class="intro" data-reveal>
+		<p class="eyebrow" data-reveal-item>La auditoría gratuita</p>
+		<h2 id="audit-title" class="title">
+			<span data-reveal-item="scale">Primero miro.</span>{' '}
+			<span data-reveal-item="scale">Después decido.</span>{' '}
+			<span data-reveal-item="scale">Luego construyo.</span>
+		</h2>
+		<p class="lead" data-reveal-item>
+			Lo que acabas de ver es mi forma de trabajar. La auditoría es su primera parte: mirar tu negocio y decirte
+			qué cambiaría, antes de construir nada.
+		</p>
+	</header>
+
+	<ol class="steps">
+		{
+			steps.map(({ name, text, example }, i) => (
+				<li class="row" data-reveal>
+					<h3 class="step-label" data-reveal-item>
+						<span class="numeral" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>{' '}
+						<span class="eyebrow">{name}</span>
+					</h3>
+					<div class="body" data-reveal-item>
+						<p class="text">{text}</p>
+						{example && (
+							<p class="example">
+								<span class="question">{example.question}</span>{' '}
+								<span class="answer">{example.answer}</span>
+							</p>
+						)}
+					</div>
+					<span class="row-rule" data-reveal-line aria-hidden="true" />
+				</li>
+			))
+		}
+
+		<!-- La frontera: hasta aquí, gratis. Una línea oscura en lugar de la fina. -->
+		<li class="row after" data-reveal>
+			<p class="boundary" data-reveal-item>Hasta aquí, la auditoría. Gratis y sin compromiso.</p>
+			<h3 class="step-label" data-reveal-item>
+				<span class="numeral" aria-hidden="true">05</span>{' '}
+				<span class="eyebrow">{build.name}</span>
+			</h3>
+			<div class="body" data-reveal-item>
+				<p class="text">{build.text}</p>
+			</div>
+			<span class="row-rule" data-reveal-line aria-hidden="true"></span>
+		</li>
+	</ol>
+
+	<div class="row outcome" data-reveal>
+		<h3 class="eyebrow" data-reveal-item>Lo que te llevas</h3>
+		<div class="body" data-reveal-item>
+			<p class="promise">Hasta 3&nbsp;oportunidades concretas.</p>
+			<p class="text">
+				Solo las que merezcan la pena: si encuentro una, te enseño una. De cada una, qué pasa hoy, por qué
+				importa y qué tipo de solución tendría. Y por cuál empezaría yo.
+			</p>
+			<p class="text">Si la IA tiene sentido en tu negocio, te digo dónde. Si no lo tiene, también.</p>
+			<p class="small">No es un informe de 40 páginas. Es una conversación y una lista corta.</p>
+			{facts.length > 0 && <p class="small">{facts.join(' ')}</p>}
+		</div>
+		<span class="row-rule" data-reveal-line aria-hidden="true"></span>
+	</div>
+
+	<div class="row person" data-reveal>
+		<h3 class="eyebrow" data-reveal-item>Quién mira</h3>
+		<div class="body person-body" data-reveal-item>
+			{
+				person.photo && (
+					<Picture
+						class="photo"
+						src={person.photo}
+						alt={person.name}
+						widths={[240, 480]}
+						sizes="(max-width: 48rem) 7rem, 9rem"
+						formats={['avif', 'webp']}
+					/>
+				)
+			}
+			<div>
+				<p class="name">{person.name}</p>
+				<p class="text">
+					Trabajo solo, desde Málaga. Hablas conmigo desde la primera pregunta hasta lo último que
+					construyamos.
+				</p>
+				<p class="text muted">
+					Construyo webs, sistemas de reservas, automatizaciones y herramientas con IA. Pero antes de construir,
+					miro.
+				</p>
+			</div>
+		</div>
+		<span class="row-rule" data-reveal-line aria-hidden="true"></span>
+	</div>
+
+	<!-- Para pedirla aquí mismo, sin esperar al final de la página. Un enlace
+	     en la columna del texto, como «Ver la web»: el botón coral se reserva
+	     para la CTA final. -->
+	<div class="row next" data-reveal>
+		<p class="next-body" data-reveal-item>
+			<a class="next-link" href="/contacto">
+				Solicitar auditoría gratuita
+				<svg viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M1.5 6h9M7 2.5 10.5 6 7 9.5" /></svg>
+			</a>
+		</p>
+		<span class="row-rule" data-reveal-line aria-hidden="true"></span>
+	</div>
+</section>
+
+<style>
+	/* Acto 04. La auditoría: el caso se convierte en oferta. «Esto que acabas
+	   de ver es lo que hago contigo.»
+
+	   Misma retícula que el caso (filas de índice, global.css). El método en
+	   cinco pasos: los cuatro primeros son la auditoría; una línea oscura
+	   marca la frontera y el quinto, construir, queda en gris porque solo
+	   ocurre si algo merece la pena. Después, lo que te llevas y quién mira. */
+
+	.audit {
+		width: var(--frame);
+		margin-inline: auto;
+		padding: clamp(5rem, 18svh, 12rem) var(--frame-pad) clamp(4rem, 12svh, 8rem);
+	}
+
+	/* Tres tiempos, tres renglones que llegan uno detrás de otro. Escalonados
+	   hacia la derecha en escritorio: el método avanza. En móvil manda el
+	   ancho: «Luego construyo.» es la línea más ancha (~7.9em). */
+	.title {
+		margin: clamp(1.25rem, 3svh, 2rem) 0 0;
+		font-size: clamp(1.75rem, (100vw - 2 * var(--gutter) - 2 * var(--frame-pad)) / 8.3, 3.5rem);
+		font-weight: 400;
+		line-height: 1.04;
+		letter-spacing: -0.04em;
+	}
+
+	.title span {
+		display: block;
+		transform-origin: 0 50%;
+	}
+
+	@media (min-width: 48rem) {
+		.title {
+			font-size: clamp(3rem, min(7vw, 11svh), 6.5rem);
+		}
+
+		.title span:nth-child(2) {
+			padding-left: 1.2em;
+		}
+
+		.title span:nth-child(3) {
+			padding-left: 2.4em;
+		}
+	}
+
+	.lead {
+		max-width: 34em;
+		margin: clamp(1.5rem, 4svh, 2.5rem) 0 0;
+		font-size: clamp(1.125rem, 0.95rem + 0.5vw, 1.375rem);
+		line-height: 1.45;
+		letter-spacing: -0.01em;
+		color: var(--text-muted);
+		text-wrap: pretty;
+	}
+
+	.steps {
+		margin: clamp(3.5rem, 10svh, 6rem) 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	/* Cada paso: un número grande y ligero (un objeto, no un dato) y su nombre */
+	.step-label {
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+		margin: 0;
+		font-weight: 400;
+	}
+
+	.numeral {
+		font-size: clamp(2.75rem, 1.5rem + 3vw, 4.75rem);
+		font-weight: 300;
+		line-height: 0.85;
+		letter-spacing: -0.05em;
+		color: rgb(23 23 23 / 0.2);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.body {
+		max-width: 44rem;
+	}
+
+	.text {
+		margin: 0;
+		font-size: clamp(1.1875rem, 0.85rem + 0.95vw, 1.75rem);
+		line-height: 1.3;
+		letter-spacing: -0.02em;
+		text-wrap: pretty;
+	}
+
+	.text + .text {
+		margin-top: 0.8em;
+	}
+
+	.muted {
+		color: var(--text-muted);
+	}
+
+	/* El ejemplo de contrastar: una pregunta real, con sus tres respuestas
+	   posibles. Una línea coral fina a la izquierda: es una cita. */
+	.example {
+		margin: 1.25rem 0 0;
+		padding-left: 1.1rem;
+		border-left: 2px solid var(--accent);
+		font-size: clamp(1rem, 0.92rem + 0.3vw, 1.1875rem);
+		line-height: 1.5;
+	}
+
+	.question,
+	.answer {
+		display: block;
+	}
+
+	.answer {
+		color: var(--text-muted);
+	}
+
+	/* ---------- La frontera ---------- */
+
+	.after {
+		margin-top: clamp(1rem, 3svh, 2rem);
+	}
+
+	.after .row-rule {
+		height: 2px;
+		background: var(--text);
+	}
+
+	/* Sobre la línea, a la derecha: lo que queda a un lado y al otro */
+	.boundary {
+		position: absolute;
+		right: 0;
+		bottom: 100%;
+		margin: 0 0 0.6rem;
+		font-size: 0.875rem;
+		line-height: 1.3;
+	}
+
+	.after .eyebrow,
+	.after .text {
+		color: var(--text-muted);
+	}
+
+	.after .numeral {
+		color: rgb(23 23 23 / 0.1);
+	}
+
+	/* ---------- Lo que te llevas ---------- */
+
+	.outcome {
+		margin-top: clamp(3rem, 8svh, 5rem);
+	}
+
+	/* La promesa comercial de la sección: a escala de titular, con todo el
+	   ancho de la columna (el texto que la explica sigue a su medida) */
+	.outcome .body {
+		max-width: none;
+	}
+
+	.outcome .body > :not(.promise) {
+		max-width: 44rem;
+	}
+
+	.promise {
+		margin: 0 0 clamp(1.25rem, 3svh, 2rem);
+		font-size: clamp(2.25rem, 1rem + 4vw, 4.75rem);
+		line-height: 1;
+		letter-spacing: -0.045em;
+		text-wrap: balance;
+	}
+
+	.small {
+		margin: 1.25rem 0 0;
+		font-size: 0.9375rem;
+		line-height: 1.5;
+		color: var(--text-muted);
+	}
+
+	/* ---------- Quién mira ---------- */
+
+	.person-body {
+		display: flex;
+		align-items: flex-start;
+		gap: clamp(1.25rem, 3vw, 2rem);
+	}
+
+	.photo {
+		flex: none;
+		width: clamp(7rem, 10vw, 9rem);
+		height: auto;
+		aspect-ratio: 4 / 5;
+		object-fit: cover;
+		border-radius: 0.75rem;
+	}
+
+	.name {
+		margin: 0 0 0.75rem;
+		font-size: clamp(1.25rem, 1rem + 0.7vw, 1.625rem);
+		font-weight: 600;
+		letter-spacing: -0.025em;
+	}
+
+	/* ---------- Pedir la auditoría ---------- */
+
+	.next-body {
+		grid-column: 2;
+		margin: 0;
+	}
+
+	.next-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5em;
+		min-height: 2.75rem;
+		font-size: clamp(1.125rem, 1rem + 0.45vw, 1.375rem);
+		letter-spacing: -0.015em;
+		color: var(--text);
+		text-decoration: underline;
+		text-decoration-color: rgb(23 23 23 / 0.25);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.3em;
+		transition: text-decoration-color 0.3s var(--ease-out);
+	}
+
+	.next-link:hover {
+		text-decoration-color: currentColor;
+	}
+
+	.next-link svg {
+		width: 0.75em;
+		height: 0.75em;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.3;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		transition: translate 0.3s var(--ease-out);
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.next-link:hover svg {
+			translate: 0.15em 0;
+		}
+	}
+
+	@media (max-width: 48rem) {
+		.next-body {
+			grid-column: 1;
+		}
+
+		/* El número y el nombre, en línea */
+		.step-label {
+			flex-direction: row;
+			align-items: baseline;
+			gap: 0.75rem;
+		}
+
+		/* La frontera, como en escritorio, sobre la línea oscura (cierra los
+		   cuatro pasos de arriba), pero alineada a la izquierda. Más aire
+		   encima para que quepa en dos renglones. */
+		.boundary {
+			left: 0;
+			right: auto;
+		}
+
+		.after {
+			margin-top: 3rem;
+		}
+	}
+</style>

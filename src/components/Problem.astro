@@ -1,0 +1,106 @@
+<section class="problem" aria-label="Las preguntas">
+	<div class="moment moment-1">
+		<p class="statement" data-scene-part="statement">
+			<span>¿Dónde se te quedan</span> <span>clientes por el camino?</span>
+		</p>
+	</div>
+	<div class="moment moment-2">
+		<p class="statement" data-scene-part="statement">
+			<span>¿Qué haces cada día</span> <span>que siempre es igual?</span>
+		</p>
+	</div>
+	<div class="moment moment-3">
+		<p class="statement statement-ia" data-scene-part="statement">
+			<span class="ask">¿Deberías usar IA?</span> <span>¿Para qué, exactamente?</span>
+		</p>
+	</div>
+</section>
+
+<style>
+	/* Acto 01. Escuchar: tres preguntas de las que hago a un negocio antes de
+	   proponer nada (clientes, tiempo y la duda de la IA, que es la que
+	   contesta el Insight). Cada una con su propio momento. El recorrido
+	   horizontal contesta al titular del Hero (a la izquierda): la primera va
+	   a la derecha (alineada con el borde de la navegación), la segunda a la
+	   izquierda y la tercera en el centro, donde entrará la masa en el Insight.
+
+	   Por defecto (sin JS o con movimiento reducido) se leen en flujo normal,
+	   con aire pero sin huecos pensados para una animación que no ocurre. Dentro
+	   de la escena de scroll, las tres ocupan el mismo escenario y la timeline
+	   decide cuál está en foco. */
+
+	.problem {
+		width: var(--frame);
+		margin-inline: auto;
+		padding-inline: var(--frame-pad);
+		padding-bottom: clamp(3rem, 10svh, 6rem);
+	}
+
+	.moment {
+		display: flex;
+		padding-block: clamp(3.5rem, 14svh, 9rem);
+	}
+
+	.moment-1 {
+		justify-content: flex-end;
+	}
+
+	.moment-3 {
+		justify-content: center;
+		text-align: center;
+	}
+
+	.statement {
+		--statement-em: 11.9;
+
+		margin: 0;
+		/* ~0.76× el titular del Hero. En móvil manda el ancho disponible: la
+		   línea más larga («¿Para qué, exactamente?», 11.7em) cabe en --statement-em. */
+		font-size: min(
+			clamp(1.5rem, 0.9rem + 3.72vw, 4.25rem),
+			(100vw - 2 * var(--gutter) - 2 * var(--frame-pad)) / var(--statement-em)
+		);
+		font-weight: 400;
+		line-height: 1.08;
+		letter-spacing: -0.035em;
+	}
+
+	/* Cortes de línea fijos: cada pregunta, en dos renglones */
+	.statement span {
+		display: block;
+		text-wrap: balance;
+	}
+
+	/* La pregunta de la IA es la que todo el mundo se hace: va a la escala del
+	   Insight, que la contesta justo después. «¿Para qué, exactamente?» queda
+	   a la escala de las otras preguntas, como el matiz. En móvil manda el
+	   ancho: «¿Deberías usar IA?» ocupa 8.6em. */
+	.statement-ia .ask {
+		margin-bottom: 0.25em;
+		font-size: min(1.5em, (100vw - 2 * var(--gutter) - 2 * var(--frame-pad)) / 8.9);
+		line-height: 1.02;
+		letter-spacing: -0.04em;
+	}
+
+	/* ---------- Dentro de la escena de scroll ---------- */
+
+	:global(.scene-on) .problem {
+		position: absolute;
+		inset: 0;
+		padding: 0;
+		pointer-events: none;
+	}
+
+	/* Las tres capas comparten el escenario, algo por encima del centro
+	   (debajo, la masa gana presencia) */
+	:global(.scene-on) .moment {
+		position: absolute;
+		inset: 0;
+		align-items: center;
+		padding: calc(var(--nav-top) + var(--nav-height)) var(--frame-pad) 16svh;
+	}
+
+	:global(.scene-on) .statement {
+		will-change: opacity, filter, transform;
+	}
+</style>

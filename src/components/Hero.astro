@@ -1,0 +1,311 @@
+---
+import { getImage } from 'astro:assets';
+import massPoster from '../assets/mass-poster.png';
+import massPosterCompact from '../assets/mass-poster-compact.png';
+
+// Primer frame real de la masa (ver el comentario del CSS). Hay dos: la
+// perspectiva depende de la composición, así que móvil tiene el suyo,
+// exportado con su propia composición y la malla más ligera que usa.
+// sizes = 1.4 × --mass-size.
+const compactSizes = '(max-width: 31rem) 118vw, 37rem';
+const wideSizes = '(max-width: 95rem) 54vw, 51rem';
+const allSizes = '(max-width: 31rem) 118vw, (max-width: 48rem) 37rem, (max-width: 95rem) 54vw, 51rem';
+const [compact, wide, fallback] = await Promise.all([
+	getImage({ src: massPosterCompact, widths: [480, 720, 960, 1165], format: 'avif', quality: 75 }),
+	getImage({ src: massPoster, widths: [560, 840, 1120, 1613], format: 'avif', quality: 75 }),
+	getImage({
+		src: massPoster,
+		widths: [560, 840, 1120, 1613],
+		format: 'webp',
+		quality: 75,
+		// Se ve desde el primer pintado: nada de carga diferida
+		loading: 'eager',
+		fetchpriority: 'high',
+	}),
+]);
+---
+
+<section class="hero" aria-labelledby="hero-title">
+	<div class="atmosphere" aria-hidden="true">
+		<div class="glow" data-scene-part="follow-mass"></div>
+		<div class="mass-placeholder" data-scene-part="follow-mass" data-scene-rest>
+			<picture>
+				<source media="(max-width: 48rem)" type="image/avif" srcset={compact.srcSet.attribute} sizes={compactSizes} />
+				<source type="image/avif" srcset={wide.srcSet.attribute} sizes={wideSizes} />
+				<img src={fallback.src} srcset={fallback.srcSet.attribute} sizes={allSizes} alt="" {...fallback.attributes} />
+			</picture>
+		</div>
+	</div>
+
+	<div class="content" data-scene-part="hero-copy">
+		<h1 id="hero-title" class="title">
+			<span>Encuentro dónde</span> <span>se le escapan</span> <span>clientes y tiempo</span> <span>a tu negocio.</span>
+		</h1>
+		<p class="lead">
+			<span>Miro cómo funciona, te digo qué cambiaría</span>{' '}
+			<span>y construyo solo lo que merece la pena.</span>
+		</p>
+	</div>
+</section>
+
+<style>
+	.hero {
+		/* Masa: diámetro y fracción que asoma por encima del borde inferior */
+		--mass-size: clamp(17rem, 38vw, 36rem);
+		--mass-peek: 0.4;
+		/* La atmósfera continúa por debajo del Hero y se disuelve en este tramo:
+		   al hacer scroll la masa no se corta, se funde con el crema. */
+		--bleed: 14svh;
+
+		position: relative;
+		overflow-x: clip;
+		min-height: 100svh;
+	}
+
+	@media (max-width: 48rem) {
+		.hero {
+			--mass-size: min(84vw, 26rem);
+			--mass-peek: 0.55;
+		}
+	}
+
+	/* ---------- Atmósfera ----------
+	   El color solo vive abajo, alrededor de la masa. La mitad superior
+	   (titular y navegación) queda sobre crema limpio. */
+
+	/* Por debajo del grano de la página (z-index -1 en <main>) */
+	.atmosphere {
+		position: absolute;
+		inset: 0 0 calc(-1 * var(--bleed));
+		z-index: -2;
+		pointer-events: none;
+		/* Fundido con curva suave (no lineal): así no se percibe dónde acaba */
+		mask-image: linear-gradient(
+			#000 calc(100% - var(--bleed)),
+			rgb(0 0 0 / 0.82) calc(100% - var(--bleed) * 0.8),
+			rgb(0 0 0 / 0.5) calc(100% - var(--bleed) * 0.55),
+			rgb(0 0 0 / 0.2) calc(100% - var(--bleed) * 0.3),
+			rgb(0 0 0 / 0.05) calc(100% - var(--bleed) * 0.12),
+			transparent
+		);
+	}
+
+	/* Resplandor anclado al borde inferior del Hero: se desvanece del todo al
+	   60% de su altura (medido desde arriba), sin tocar la mitad superior. */
+	.glow {
+		position: absolute;
+		inset: 0;
+		background: radial-gradient(
+			ellipse 46% 40svh at 50% calc(100% - var(--bleed)),
+			rgb(242 140 122 / 0.34) 0%,
+			rgb(255 214 204 / 0.5) 35%,
+			rgb(255 214 204 / 0.18) 68%,
+			rgb(255 214 204 / 0) 100%
+		);
+	}
+
+	/* Caja de reposo de la masa: define dónde se coloca la masa 3D, así que se
+	   posiciona sin transformaciones: tamaño --mass-size, asomando --mass-peek. */
+	.mass-placeholder {
+		position: absolute;
+		left: calc(50% - var(--mass-size) / 2);
+		bottom: calc(var(--bleed) + var(--mass-size) * (var(--mass-peek) - 1));
+		width: var(--mass-size);
+		aspect-ratio: 1;
+	}
+
+	/* Póster: el primer frame de la masa renderizado con el propio shader, en
+	   su pose de reposo (src/assets/mass-poster.png). Se ve desde el primer
+	   pintado; cuando WebGL está listo, el canvas dibuja exactamente lo mismo
+	   encima y el relevo no se percibe: la masa simplemente empieza a
+	   respirar. Sin WebGL (o con movimiento reducido) es la masa definitiva.
+	   La imagen mide 1.4× la caja: los lóbulos salen de la esfera base. */
+	.mass-placeholder img {
+		position: absolute;
+		inset: -20%;
+		width: 140%;
+		height: 140%;
+		max-width: none;
+	}
+
+	/* Canvas WebGL (lo inserta el script, por eso :global) */
+	.atmosphere :global(.mass-canvas) {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		transition: opacity 0.8s var(--ease-out);
+	}
+
+	.hero:global(.has-mass) .atmosphere :global(.mass-canvas) {
+		opacity: 1;
+	}
+
+	/* El canvas aparece SOBRE el póster, que sigue opaco debajo; el póster
+	   solo se retira cuando el canvas ya lo cubre del todo (así lo único que
+	   se funde son las diferencias de borde, de 1–2 px). Fundir los dos a la
+	   vez dejaría ver el fondo a mitad de camino: la masa «parpadearía».
+	   Si se pierde el contexto WebGL, el póster vuelve al instante. */
+	.hero:global(.has-mass) .mass-placeholder img {
+		opacity: 0;
+		transition: opacity 0.5s linear 0.8s;
+	}
+
+	/* ---------- Dentro de la escena de scroll ----------
+	   El Hero es el primer plano del escenario fijo: no hay fundido inferior
+	   (la masa sube dentro del propio escenario) y el resplandor y el
+	   placeholder se mueven con la pose de la masa. */
+
+	:global(.scene-on) .hero {
+		--bleed: 0px;
+		height: 100svh;
+	}
+
+	:global(.scene-on) .atmosphere {
+		mask-image: none;
+	}
+
+	/* lvh: al ocultarse la barra de iOS la masa sigue dibujada hasta abajo,
+	   sin redimensionar el canvas (lvh no cambia con la barra) */
+	:global(.scene-on) .atmosphere :global(.mass-canvas) {
+		height: 100lvh;
+	}
+
+	/* La caja del resplandor se alarga hacia abajo: al subir con la masa, la
+	   elipse nunca deja ver el borde inferior de su caja */
+	:global(.scene-on) .glow {
+		bottom: -60svh;
+		background: radial-gradient(
+			ellipse 46% 40svh at 50% calc(100% - 60svh),
+			rgb(242 140 122 / 0.34) 0%,
+			rgb(255 214 204 / 0.5) 35%,
+			rgb(255 214 204 / 0.18) 68%,
+			rgb(255 214 204 / 0) 100%
+		);
+		transform-origin: 50% calc(100% - 60svh);
+		will-change: transform;
+	}
+
+	/* ---------- Titular ---------- */
+
+	/* El titular se centra entre el borde inferior de la navbar y el punto
+	   donde el halo empieza a percibirse (~70% de la altura; entre el 60% y
+	   el 70% el tinte es de 0–4 niveles, invisible). */
+	.content {
+		box-sizing: border-box;
+		min-height: 70svh;
+		width: var(--frame);
+		margin-inline: auto;
+		padding-inline: var(--frame-pad);
+		padding-top: calc(var(--nav-top) + var(--nav-height));
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	/* Cuatro líneas fijas en todas las pantallas: quién / qué se escapa /
+	   qué / de quién. En móvil manda el ancho: la línea más larga («clientes y
+	   tiempo») ocupa --title-em. */
+	.title {
+		--title-em: 8.45;
+
+		margin: 0;
+		font-size: clamp(1.75rem, (100vw - 2 * var(--gutter) - 2 * var(--frame-pad)) / var(--title-em), 3.5rem);
+		font-weight: 400;
+		line-height: 1.06;
+		letter-spacing: -0.035em;
+	}
+
+	.title span {
+		display: block;
+	}
+
+	/* La respuesta al titular: cómo. Más pequeña y en gris, para que el
+	   titular siga mandando. */
+	.lead {
+		max-width: 30em;
+		margin: clamp(1.25rem, 3.5svh, 2rem) 0 0;
+		font-size: clamp(1.0625rem, 0.95rem + 0.45vw, 1.375rem);
+		line-height: 1.4;
+		letter-spacing: -0.01em;
+		color: var(--text-muted);
+		text-wrap: balance;
+	}
+
+	@media (min-width: 48rem) {
+		.title {
+			font-size: clamp(2.75rem, min(6.4vw, 8.6svh), 5.75rem);
+			line-height: 1.04;
+		}
+
+		.lead span {
+			display: block;
+		}
+	}
+
+	/* ---------- Entrada ---------- */
+
+	@media (prefers-reduced-motion: no-preference) {
+		.title {
+			animation: focus-in 1.3s var(--ease-out) 0.15s both;
+		}
+
+		.lead {
+			animation: focus-in 1.1s var(--ease-out) 0.55s both;
+		}
+
+		.glow {
+			animation: fade-in 2.4s var(--ease-out) 0.3s both;
+		}
+
+		.mass-placeholder {
+			animation: rise 2.4s var(--ease-out) 0.3s backwards;
+		}
+	}
+
+	@keyframes focus-in {
+		from {
+			opacity: 0;
+			filter: blur(12px);
+			translate: 0 0.4rem;
+		}
+	}
+
+	@keyframes fade-in {
+		from {
+			opacity: 0;
+		}
+	}
+
+	@keyframes rise {
+		from {
+			opacity: 0;
+			translate: 0 15%;
+		}
+	}
+</style>
+
+<script>
+	// La masa 3D se carga cuando la página ya está pintada y el navegador está
+	// libre: Three.js nunca bloquea el render inicial ni la lectura del titular.
+	// Con movimiento reducido la masa estaría quieta, idéntica al póster: no
+	// hace falta descargar ni ejecutar WebGL.
+	const hero = document.querySelector<HTMLElement>('.hero');
+	const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	if (hero && !reduceMotion) {
+		const load = () =>
+			import('../scripts/mass/hero')
+				.then(({ mountHeroMass }) => mountHeroMass(hero))
+				.catch((error) => console.error('[mass]', error));
+
+		const whenIdle = () =>
+			'requestIdleCallback' in window
+				? requestIdleCallback(load, { timeout: 1500 })
+				: setTimeout(load, 300);
+
+		if (document.readyState === 'complete') whenIdle();
+		else addEventListener('load', whenIdle, { once: true });
+	}
+</script>

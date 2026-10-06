@@ -1,0 +1,45 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
+import Problem from '../components/Problem.astro';
+import Scene from '../components/Scene.astro';
+import Insight from '../components/Insight.astro';
+import Case from '../components/Case.astro';
+import Audit from '../components/Audit.astro';
+import Work from '../components/Work.astro';
+import Action from '../components/Action.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout
+	title="Félix Corcoran — Encuentro dónde se le escapan clientes y tiempo a tu negocio"
+	description="Miro cómo funciona tu negocio, te digo qué cambiaría y construyo solo lo que merece la pena: una web, una automatización o IA, cuando tiene sentido. Auditoría gratuita."
+>
+	<Navbar />
+	<main>
+		<!-- 00 Hero · 01 Preguntas · 02 Insight: la única escena fija de la historia -->
+		<Scene>
+			<Hero />
+			<Problem />
+			<Insight />
+		</Scene>
+		<!-- 03 El caso · 04 La auditoría · 05 Más trabajo: flujo normal -->
+		<Case />
+		<Audit />
+		<Work />
+		<!-- 06 CTA → 07 Firma: la escena final -->
+		<Action />
+	</main>
+	<Footer />
+</Layout>
+
+<script>
+	import { initReveal } from '../scripts/reveal';
+
+	const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	// Entradas de las secciones en flujo normal. Con movimiento reducido (o
+	// sin JS), todo está ya en su sitio.
+	if (!reduceMotion) initReveal();
+</script>

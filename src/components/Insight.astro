@@ -1,0 +1,94 @@
+<section class="insight" aria-label="La idea">
+	<h2 class="title">
+		<span class="phrase" data-scene-part="insight-1">
+			<span class="line">No necesitas</span> <span class="line">más tecnología.</span>
+		</span>{' '}
+		<span class="phrase" data-scene-part="insight-2">
+			<span class="line">Necesitas</span> <span class="line">la tecnología</span>{' '}
+			<span class="line"><span class="accent" data-scene-part="insight-accent">adecuada</span>.</span>
+		</span>
+	</h2>
+</section>
+
+<style>
+	/* Acto 02. Dos frases, núcleo conceptual de la landing, a la escala del
+	   titular del Hero. El único acento de color es un subrayado coral bajo
+	   «adecuada»: la palabra sigue en negro (el coral como texto no tendría
+	   contraste suficiente sobre crema).
+
+	   Por defecto (sin JS o con movimiento reducido) se leen en flujo normal,
+	   una debajo de la otra. En la escena de scroll ocupan el mismo sitio, sobre
+	   la masa, y la timeline las pone en foco una detrás de otra. */
+
+	.insight {
+		width: var(--frame);
+		margin-inline: auto;
+		padding: clamp(4rem, 16svh, 10rem) var(--frame-pad) clamp(6rem, 22svh, 14rem);
+		text-align: center;
+	}
+
+	.title {
+		margin: 0;
+		display: grid;
+		justify-items: center;
+		gap: clamp(3rem, 12svh, 7rem);
+		/* Móvil: la línea más ancha («más tecnología.») ocupa 7.7em */
+		font-size: clamp(1.75rem, (100vw - 2 * var(--gutter) - 2 * var(--frame-pad)) / 7.9, 3.5rem);
+		font-weight: 400;
+		line-height: 1.05;
+		letter-spacing: -0.035em;
+	}
+
+	/* Desde tablet, la misma escala que el titular del Hero */
+	@media (min-width: 48rem) {
+		.title {
+			font-size: clamp(3rem, min(7.2vw, 10svh), 6.25rem);
+		}
+	}
+
+	.phrase,
+	.line {
+		display: block;
+	}
+
+	.accent {
+		position: relative;
+		white-space: nowrap;
+	}
+
+	/* Subrayado coral: la escena lo dibuja con --draw (0 → 1) */
+	.accent::after {
+		content: "";
+		position: absolute;
+		left: 0.02em;
+		right: 0.02em;
+		bottom: -0.02em;
+		height: max(2px, 0.05em);
+		border-radius: 1em;
+		background: var(--accent);
+		transform: scaleX(var(--draw, 1));
+		transform-origin: left center;
+	}
+
+	/* ---------- Dentro de la escena de scroll ---------- */
+
+	:global(.scene-on) .insight {
+		position: absolute;
+		inset: 0;
+		display: grid;
+		place-items: center;
+		/* El texto vive en la mitad superior: debajo, la masa en su máximo */
+		padding: calc(var(--nav-top) + var(--nav-height)) var(--frame-pad) 26svh;
+		pointer-events: none;
+	}
+
+	/* Las dos frases comparten celda: una sustituye a la otra */
+	:global(.scene-on) .title {
+		gap: 0;
+	}
+
+	:global(.scene-on) .phrase {
+		grid-area: 1 / 1;
+		will-change: opacity, filter, transform;
+	}
+</style>
