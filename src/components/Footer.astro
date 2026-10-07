@@ -305,38 +305,59 @@ const showCta = !isCurrent('/contacto', pathname);
 	   Se superpone (margen negativo) a la última pantalla de la CTA y a su
 	   transición, --finale-leave, y su contenido se queda fijo (sticky)
 	   durante ella: al disolverse la CTA, el footer ya estaba ahí. Encima de
-	   <main> en el apilado, pero sin recibir clics hasta que se abre. */
+	   <main> en el apilado, pero sin recibir clics hasta que se abre.
+
+	   Fuera de la landing (/contacto, legales: html.footer-reveal), lo mismo
+	   con una transición más corta. Ahí no hay escenario fijo: <main> se
+	   alarga --finale-leave por abajo y el contenido, al terminar, sube ese
+	   tramo mientras se disuelve (scripts/footer-reveal.ts). */
 	:global(html.finale-on) {
 		--finale-leave: 85svh;
+	}
+
+	:global(html.footer-reveal) {
+		--finale-leave: 55svh;
 	}
 
 	@media (max-width: 48rem), (orientation: portrait) and (max-width: 75rem) {
 		:global(html.finale-on) {
 			--finale-leave: 70svh;
 		}
+
+		:global(html.footer-reveal) {
+			--finale-leave: 45svh;
+		}
 	}
 
-	:global(.finale-on) .footer {
+	/* Al menos una pantalla de contenido (border-box: la altura mínima
+	   incluye el tramo): si no, el footer taparía el principio de la página.
+	   Debajo, el tramo de la transición. */
+	:global(html.footer-reveal main) {
+		min-height: calc(100svh + var(--finale-leave));
+		padding-bottom: var(--finale-leave);
+	}
+
+	:global(:is(.finale-on, .footer-reveal)) .footer {
 		height: calc(100svh + var(--finale-leave));
 		margin-top: calc(-1 * (100svh + var(--finale-leave)));
 		pointer-events: none;
 	}
 
-	:global(.finale-on) .footer:global(.is-open) {
+	:global(:is(.finale-on, .footer-reveal)) .footer:global(.is-open) {
 		pointer-events: auto;
 	}
 
 	/* Toda su altura queda dentro de <main>, que ya pone el grano */
-	:global(.finale-on) .footer::before {
+	:global(:is(.finale-on, .footer-reveal)) .footer::before {
 		display: none;
 	}
 
-	:global(.finale-on) .inner {
+	:global(:is(.finale-on, .footer-reveal)) .inner {
 		position: sticky;
 		top: 0;
 	}
 
-	:global(.finale-on) :is(.brand, .fine, .sections a) {
+	:global(:is(.finale-on, .footer-reveal)) :is(.brand, .fine, .sections a) {
 		will-change: opacity, filter, transform;
 	}
 </style>
