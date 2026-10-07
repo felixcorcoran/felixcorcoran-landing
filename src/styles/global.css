@@ -62,9 +62,14 @@ html {
    Capas dentro de <main>: luces de cada sección (z-index -2) → grano (-1)
    → contenido. */
 
+/* overflow-x: clip (no hidden: no crea un contenedor de scroll, así las
+   escenas sticky siguen funcionando). Las entradas que llegan «desde la
+   profundidad» empiezan a escala 1.06 y, hasta animarse, sobresalen unos
+   píxeles: sin esto ensancharían la página (y en móvil, la alejarían). */
 main {
   position: relative;
   isolation: isolate;
+  overflow-x: clip;
 }
 
 main::before {
@@ -124,7 +129,7 @@ main::before {
   transform-origin: left center;
 }
 
-@media (max-width: 48rem) {
+@media (max-width: 48rem), (orientation: portrait) and (max-width: 75rem) {
   .row {
     grid-template-columns: 1fr;
     row-gap: 1rem;
