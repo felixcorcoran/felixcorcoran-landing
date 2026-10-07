@@ -1,0 +1,95 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<!-- Vercel la sirve (con estado 404) para cualquier ruta que no exista -->
+<Layout
+	title="Página no encontrada · Félix Corcoran"
+	description="Esta página no existe. Vuelve al inicio o pide una auditoría gratuita para tu negocio."
+	noindex
+>
+	<Navbar />
+	<main>
+		<section class="lost" aria-labelledby="lost-title">
+			<p class="eyebrow">Error 404</p>
+			<h1 id="lost-title" class="title">Esta página no existe.</h1>
+			<p class="lead">Puede que el enlace esté mal o que la página ya no esté aquí.</p>
+			<div class="actions">
+				<a class="primary" href="/">Volver al inicio</a>
+				<a class="secondary" href="/contacto">Solicitar auditoría gratuita</a>
+			</div>
+		</section>
+	</main>
+	<Footer />
+</Layout>
+
+<style>
+	/* Mismo sistema que /contacto: marco, eje, tipografía grande y la píldora
+	   coral como única acción principal */
+	.lost {
+		box-sizing: border-box;
+		width: var(--frame);
+		margin-inline: auto;
+		padding: calc(var(--nav-top) + var(--nav-height) + clamp(3.5rem, 14svh, 9rem)) var(--frame-pad)
+			clamp(6rem, 16svh, 10rem);
+	}
+
+	.title {
+		margin: clamp(1rem, 2.5svh, 1.5rem) 0 0;
+		font-size: clamp(2.5rem, min(6vw, 11svh), 5.25rem);
+		font-weight: 400;
+		line-height: 1.02;
+		letter-spacing: -0.04em;
+		text-wrap: balance;
+	}
+
+	.lead {
+		max-width: 26em;
+		margin: clamp(1.5rem, 4svh, 2.25rem) 0 0;
+		font-size: clamp(1.125rem, 0.95rem + 0.5vw, 1.375rem);
+		line-height: 1.45;
+		color: var(--text-muted);
+	}
+
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 1rem 2rem;
+		margin-top: clamp(2rem, 5svh, 3rem);
+	}
+
+	.primary {
+		display: inline-flex;
+		align-items: center;
+		min-height: 3.5rem;
+		padding: 0 1.75rem;
+		border-radius: 999px;
+		background: var(--accent);
+		color: var(--text);
+		font-weight: 500;
+		text-decoration: none;
+		transition: box-shadow 0.4s var(--ease-out);
+	}
+
+	.primary:hover {
+		box-shadow: 0 0 0 0.4rem var(--accent-soft);
+	}
+
+	.secondary {
+		display: inline-flex;
+		align-items: center;
+		min-height: 2.75rem;
+		color: var(--text);
+		text-decoration: underline;
+		text-decoration-color: rgb(23 23 23 / 0.25);
+		text-underline-offset: 0.3em;
+		transition: text-decoration-color 0.3s var(--ease-out);
+	}
+
+	.secondary:hover {
+		text-decoration-color: currentColor;
+	}
+</style>

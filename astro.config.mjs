@@ -23,6 +23,11 @@ export default defineConfig({
       },
     },
   ],
+  build: {
+    // El CSS va dentro del HTML: sin peticiones que bloqueen el primer
+    // pintado (la web tiene poco CSS y dos páginas principales)
+    inlineStylesheets: 'always',
+  },
   vite: {
     plugins: [tailwindcss()],
     build: {

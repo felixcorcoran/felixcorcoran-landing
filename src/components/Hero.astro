@@ -264,9 +264,12 @@ const [compact, wide, fallback] = await Promise.all([
 		}
 	}
 
+	/* Arranca casi transparente, no del todo: un elemento con opacidad 0 no
+	   cuenta para el LCP de Google, y el titular es lo principal de la
+	   página. A la vista es lo mismo. */
 	@keyframes focus-in {
 		from {
-			opacity: 0;
+			opacity: 0.01;
 			filter: blur(12px);
 			translate: 0 0.4rem;
 		}

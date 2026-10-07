@@ -1,7 +1,8 @@
 import type { APIRoute } from 'astro';
 
-// Las páginas del sitio. Pocas y estables: se listan a mano.
-const pages = ['/', '/contacto', '/aviso-legal', '/privacidad'];
+// Las páginas indexables. Pocas y estables: se listan a mano. Las legales
+// llevan noindex (LegalLayout): no van aquí.
+const pages = ['/', '/contacto'];
 
 export const GET: APIRoute = ({ site }) => {
 	const urls = pages.map((path) => `  <url><loc>${new URL(path, site)}</loc></url>`).join('\n');

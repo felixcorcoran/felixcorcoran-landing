@@ -5,9 +5,13 @@ import '../styles/global.css';
 interface Props {
 	title: string;
 	description: string;
+	/** Páginas que no deben aparecer en buscadores (legales, 404). */
+	noindex?: boolean;
+	/** Datos estructurados (schema.org) de la página. */
+	jsonLd?: Record<string, unknown>;
 }
 
-const { title, description } = Astro.props;
+const { title, description, noindex = false, jsonLd } = Astro.props;
 
 // URL canónica (sin barra final, salvo la raíz) e imagen para compartir
 const canonical = new URL(Astro.url.pathname.replace(/(.)\/$/, '$1'), Astro.site);
@@ -21,9 +25,10 @@ const image = new URL('/og.png', Astro.site);
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>{title}</title>
 		<meta name="description" content={description} />
-		<link rel="canonical" href={canonical} />
+		{noindex ? <meta name="robots" content="noindex, follow" /> : <link rel="canonical" href={canonical} />}
 		<meta name="theme-color" content="#FAF9F6" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 		<link rel="sitemap" href="/sitemap.xml" />
 
 		<!-- Al compartir el enlace (WhatsApp, LinkedIn, email…) -->
@@ -40,6 +45,8 @@ const image = new URL('/og.png', Astro.site);
 		<meta name="twitter:card" content="summary_large_image" />
 
 		<Font cssVariable="--font-sora" preload={[{ weight: 400 }]} />
+
+		{jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
 	</head>
 	<body>
 		<slot />

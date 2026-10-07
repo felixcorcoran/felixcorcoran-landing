@@ -53,6 +53,11 @@ export interface Mass {
 	readonly canvas: HTMLCanvasElement;
 	readonly state: MassState;
 	setSize(width: number, height: number): void;
+	/**
+	 * Compila el shader sin bloquear (KHR_parallel_shader_compile donde lo
+	 * haya): así el primer render no es una tarea larga en el hilo principal.
+	 */
+	prepare(): Promise<void>;
 	/** Dibuja un único frame con el estado actual. */
 	render(): void;
 	/** Pide un frame en el siguiente rAF (sin esperar al límite de fps). */
@@ -205,6 +210,9 @@ export function createMass(quality: MassQuality): Mass {
 			renderer.setSize(width, height, false);
 			camera.aspect = width / height;
 			camera.updateProjectionMatrix();
+		},
+		async prepare() {
+			await renderer.compileAsync(scene, camera);
 		},
 		render,
 		requestRender() {

@@ -2,6 +2,9 @@ import { onPoseChange, pose } from '../scene/pose';
 import { createMass, type MassQuality } from './mass';
 import { COMPACT } from '../motion';
 
+/** Cede el hilo principal: lo siguiente va en otra tarea. */
+const yieldToMain = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
+
 /** Sin WebGL (o si falla el contexto) devuelve null y se queda el póster. */
 function tryCreateMass(quality: MassQuality) {
 	try {
@@ -42,6 +45,14 @@ export async function mountHeroMass(hero: HTMLElement) {
 	};
 	const mass = tryCreateMass(quality);
 	if (!mass) return;
+
+	// Montar la masa es trabajo pesado (geometría, contexto WebGL, shader).
+	// Repartido en varias tareas, con el shader compilado en paralelo, el
+	// hilo principal nunca se queda bloqueado mucho rato seguido: la página
+	// sigue respondiendo a toques y clics mientras tanto.
+	await yieldToMain();
+	await mass.prepare().catch(() => {});
+	await yieldToMain();
 
 	const { canvas, state } = mass;
 	canvas.className = 'mass-canvas';

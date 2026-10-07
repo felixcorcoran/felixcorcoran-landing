@@ -22,7 +22,8 @@ const updated = legal.updated
 	: '';
 ---
 
-<Layout title={title} description={description}>
+<!-- Textos legales: accesibles desde el pie, pero fuera de los buscadores -->
+<Layout title={title} description={description} noindex>
 	<Navbar />
 	<main>
 		<article class="legal" aria-labelledby="legal-title">
