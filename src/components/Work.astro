@@ -98,7 +98,7 @@ const previews = await Promise.all(
 							<a class="preview-link" href={url} target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
 								<div class="window preview">
 									<picture>
-										<source media="(max-width: 48rem)" srcset={phone.srcSet.attribute} sizes={mobileWidth} />
+										<source media="(max-width: 48rem), (orientation: portrait) and (max-width: 75rem)" srcset={phone.srcSet.attribute} sizes={mobileWidth} />
 										<img
 											src={desktop.src}
 											srcset={desktop.srcSet.attribute}
@@ -252,7 +252,7 @@ const previews = await Promise.all(
 
 	/* Móvil: la captura en móvil, estrecha y al lado del texto (una fila de
 	   índice, no una galería) */
-	@media (max-width: 48rem) {
+	@media (max-width: 48rem), (orientation: portrait) and (max-width: 75rem) {
 		.body {
 			grid-template-columns: minmax(0, 1fr) clamp(5.5rem, 26vw, 7rem);
 			gap: 1.25rem;

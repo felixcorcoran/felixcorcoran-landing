@@ -62,7 +62,7 @@ if (!whatsappHref) console.warn('[Action] Falta contact.whatsappNumber en src/da
 	   sin partirse */
 	.title {
 		margin: 0;
-		font-size: clamp(1.75rem, (100vw - 2 * var(--gutter) - 2 * var(--frame-pad)) / 8, 4rem);
+		font-size: clamp(1.75rem, (100vw - 2 * var(--gutter) - 2 * var(--frame-pad)) / 8, 5.5rem);
 		font-weight: 400;
 		line-height: 1.02;
 		letter-spacing: -0.04em;
@@ -74,7 +74,7 @@ if (!whatsappHref) console.warn('[Action] Falta contact.whatsappNumber en src/da
 
 	/* Escritorio: por encima del titular del Hero (hasta 7.5rem), ~60% del
 	   ancho en 1440 px, y nunca más alto que lo que cabe con aire */
-	@media (min-width: 48rem) {
+	@media (min-width: 48.0625rem) and (orientation: landscape), (min-width: 75.0625rem) {
 		.title {
 			font-size: clamp(3.5rem, min(8.6vw, 13svh), 7.5rem);
 		}
@@ -196,7 +196,7 @@ if (!whatsappHref) console.warn('[Action] Falta contact.whatsappNumber en src/da
 		--action-hold: 60svh;
 	}
 
-	@media (max-width: 48rem) {
+	@media (max-width: 48rem), (orientation: portrait) and (max-width: 75rem) {
 		.action {
 			--action-hold: 45svh;
 		}

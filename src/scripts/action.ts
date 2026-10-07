@@ -1,5 +1,6 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { COMPACT, WIDE } from './motion';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,6 +20,9 @@ gsap.registerPlugin(ScrollTrigger);
  *                          los enlaces del footer ocuparán su misma banda)
  *            55 ── 85 %    la letra pequeña: la CTA y el correo
  *              62 ─── 100 %  Inicio · Trabajo · Contacto se revelan uno a uno
+ *
+ * En el diseño compacto, sin desenfoques (ver blur()); en todos, con una
+ * pizca de inercia en el scrub.
  *
  * El footer no entra después: está detrás desde el principio de la
  * transición (ver Footer.astro). Todo depende de la posición del scroll, así
@@ -40,8 +44,8 @@ export function initAction(section: HTMLElement) {
 	if (!footer || !stage || !title || !follow.length || !brand) return;
 
 	// Se rehace al cruzar el punto de corte: cambian la pausa y la transición
-	gsap.matchMedia().add({ compact: '(max-width: 48rem)', wide: '(min-width: 48.0625rem)' }, () =>
-		finale({ section, stage, title, follow, footer, brand, mail, links, nav }),
+	gsap.matchMedia().add({ compact: COMPACT, wide: WIDE }, (context) =>
+		finale({ section, stage, title, follow, footer, brand, mail, links, nav, compact: Boolean(context.conditions?.compact) }),
 	);
 }
 
@@ -55,9 +59,11 @@ interface FinaleParts {
 	mail: HTMLElement[];
 	links: HTMLElement[];
 	nav: HTMLElement | null;
+	/** Diseño compacto (móvil): la transición va sin desenfoques */
+	compact: boolean;
 }
 
-function finale({ section, stage, title, follow, footer, brand, mail, links, nav }: FinaleParts) {
+function finale({ section, stage, title, follow, footer, brand, mail, links, nav, compact }: FinaleParts) {
 	const root = document.documentElement;
 	root.classList.add('finale-on');
 
@@ -68,6 +74,10 @@ function finale({ section, stage, title, follow, footer, brand, mail, links, nav
 	const total = leaveStart + leave;
 	const at = (fraction: number) => leaveStart + leave * fraction;
 	const svh = (amount: number) => () => (stage.clientHeight * amount) / 100;
+	// Desenfoque, solo en el diseño amplio: en móvil, animar un filtro sobre
+	// texto grande obliga a redibujarlo en cada fotograma y la transición
+	// tiembla. Allí basta con opacidad y movimiento (van por la GPU).
+	const blur = (px: number): gsap.TweenVars => (compact ? {} : { filter: `blur(${px}px)` });
 
 	const timeline = gsap.timeline({
 		defaults: { ease: 'none' },
@@ -77,7 +87,9 @@ function finale({ section, stage, title, follow, footer, brand, mail, links, nav
 			// de la página)
 			start: 'top bottom',
 			end: 'bottom bottom',
-			scrub: true,
+			// Una pizca de inercia: el scroll llega a saltos (rueda, dedo) y, sin
+			// suavizar, la transición los reproduce tal cual
+			scrub: 0.35,
 			invalidateOnRefresh: true,
 			// También al refrescar: al recargar a mitad (o al final) de la escena,
 			// ScrollTrigger coloca la timeline sin pasar por onUpdate
@@ -87,31 +99,33 @@ function finale({ section, stage, title, follow, footer, brand, mail, links, nav
 	});
 
 	// Estados de partida
-	gsap.set(title, { opacity: 0.15, filter: 'blur(14px)', y: 24, scale: 0.98 });
-	gsap.set(follow, { opacity: 0, filter: 'blur(6px)', y: 12 });
-	gsap.set(brand, { opacity: 0, filter: 'blur(14px)', scale: 0.97, y: svh(3) });
-	gsap.set(mail, { opacity: 0, filter: 'blur(4px)' });
-	gsap.set(links, { opacity: 0, filter: 'blur(6px)', letterSpacing: '0.12em' });
+	gsap.set(title, { opacity: 0.15, ...blur(14), y: 24, scale: 0.98 });
+	gsap.set(follow, { opacity: 0, ...blur(6), y: 12 });
+	gsap.set(brand, { opacity: 0, ...blur(14), scale: 0.97, y: svh(3) });
+	gsap.set(mail, { opacity: 0, ...blur(4) });
+	// Los enlaces entran subiendo un poco (antes se animaba el espaciado entre
+	// letras: recolocaba el texto en cada fotograma y las letras bailaban)
+	gsap.set(links, { opacity: 0, ...blur(6), y: 8 });
 
 	timeline
 		// Duración total: toda la sección
 		.to({}, { duration: total }, 0)
 
 		// ---------- Entrada: la pregunta sube desde el silencio y se enfoca ----------
-		.to(title, { opacity: 1, filter: 'blur(0px)', y: 0, scale: 1, ease: 'power1.out', duration: 47 }, 25)
-		.to(follow, { opacity: 1, filter: 'blur(0px)', y: 0, duration: 22, stagger: 8 }, 62)
+		.to(title, { opacity: 1, ...blur(0), y: 0, scale: 1, ease: 'power1.out', duration: 47 }, 25)
+		.to(follow, { opacity: 1, ...blur(0), y: 0, duration: 22, stagger: 8 }, 62)
 
 		// ---------- Pausa (100 → leaveStart): nada cambia ----------
 
 		// ---------- Transición: la CTA se disuelve de abajo arriba ----------
-		.to(follow, { opacity: 0, filter: 'blur(6px)', y: svh(-2), ease: 'power1.in', duration: leave * 0.28, stagger: leave * 0.04 }, at(0))
-		.to(title, { opacity: 0, filter: 'blur(10px)', y: svh(-6), scale: 0.96, ease: 'power1.in', duration: leave * 0.62 }, at(0.08))
+		.to(follow, { opacity: 0, ...blur(6), y: svh(-2), ease: 'power1.in', duration: leave * 0.28, stagger: leave * 0.04 }, at(0))
+		.to(title, { opacity: 0, ...blur(10), y: svh(-6), scale: 0.96, ease: 'power1.in', duration: leave * 0.62 }, at(0.08))
 
 		// ---------- …y detrás, la firma ----------
-		.to(brand, { opacity: 1, filter: 'blur(0px)', y: 0, scale: 1, ease: 'power2.out', duration: leave * 0.6 }, at(0.25))
-		.to(mail, { opacity: 1, filter: 'blur(0px)', ease: 'power1.out', duration: leave * 0.3 }, at(0.55))
-		// La navegación se revela: desenfoque → foco y el tracking se asienta
-		.to(links, { opacity: 1, filter: 'blur(0px)', letterSpacing: '-0.015em', ease: 'power2.out', duration: leave * 0.24, stagger: leave * 0.07 }, at(0.62));
+		.to(brand, { opacity: 1, ...blur(0), y: 0, scale: 1, ease: 'power2.out', duration: leave * 0.6 }, at(0.25))
+		.to(mail, { opacity: 1, ...blur(0), ease: 'power1.out', duration: leave * 0.3 }, at(0.55))
+		// La navegación se revela, uno a uno
+		.to(links, { opacity: 1, ...blur(0), y: 0, ease: 'power2.out', duration: leave * 0.24, stagger: leave * 0.07 }, at(0.62));
 
 	// Estados discretos, en función de la posición del scroll (reversibles):
 	//   la píldora se retira · la CTA deja de recibir clics · el footer los recibe

@@ -1,5 +1,6 @@
 import { onPoseChange, pose } from '../scene/pose';
 import { createMass, type MassQuality } from './mass';
+import { COMPACT } from '../motion';
 
 /** Sin WebGL (o si falla el contexto) devuelve null y se queda el póster. */
 function tryCreateMass(quality: MassQuality) {
@@ -60,7 +61,7 @@ export async function mountHeroMass(hero: HTMLElement) {
 	if (import.meta.env.DEV) {
 		const exportPoster = async () => {
 			const { renderPoster, downloadPoster } = await import('./poster');
-			const narrow = matchMedia('(max-width: 48rem)').matches;
+			const narrow = matchMedia(COMPACT).matches;
 			// Diámetro máximo de la masa en esa composición (--mass-size) a 2×
 			const massPx = narrow ? 832 : 1152;
 			const composition = { width: canvas.clientWidth, height: canvas.clientHeight, ...rest };

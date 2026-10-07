@@ -176,7 +176,7 @@ const next = [
 	}
 
 	/* Móvil: una columna — título, texto, formulario */
-	@media (max-width: 48rem) {
+	@media (max-width: 48rem), (orientation: portrait) and (max-width: 75rem) {
 		.contact {
 			grid-template-columns: 1fr;
 			grid-template-rows: none;

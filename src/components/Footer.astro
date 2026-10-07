@@ -56,7 +56,7 @@ const showCta = !isCurrent('/contacto', pathname);
 	/* Fuera de <main>: lleva su propio grano para que el papel sea continuo */
 	/* overflow-x: clip (no hidden: no crea contenedor de scroll, el sticky
 	   sigue funcionando). En móviles muy estrechos, los enlaces llegan con el
-	   tracking abierto (scripts/action.ts) y no deben ensanchar la página. */
+	   desplazados (scripts/action.ts) y no deben ensanchar la página. */
 	.footer {
 		position: relative;
 		isolation: isolate;
@@ -310,7 +310,7 @@ const showCta = !isCurrent('/contacto', pathname);
 		--finale-leave: 85svh;
 	}
 
-	@media (max-width: 48rem) {
+	@media (max-width: 48rem), (orientation: portrait) and (max-width: 75rem) {
 		:global(html.finale-on) {
 			--finale-leave: 70svh;
 		}

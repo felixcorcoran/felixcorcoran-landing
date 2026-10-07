@@ -89,10 +89,11 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 	<div class="seen">
 		<div class="seen-head" data-reveal>
 			<h3 class="eyebrow" data-reveal-item><span class="step">02</span> Lo que vi</h3>
-			<p class="say" data-reveal-item>
-				Un catálogo grande y que no para de crecer. Clasificar cada producto a mano iba a ser lento y fácil de
-				equivocarse.
-			</p>
+			<!-- La primera frase hace de titular; la segunda la explica -->
+			<div class="say-group" data-reveal-item>
+				<p class="say">Un catálogo grande y que no para de crecer.</p>{' '}
+				<p class="say-2 muted">Clasificar cada producto a mano iba a ser lento y fácil de equivocarse.</p>
+			</div>
 		</div>
 
 		<figure
@@ -225,8 +226,8 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 		<h3 class="eyebrow" data-reveal-item><span class="step">04</span> Qué cambió</h3>
 		<p class="changed-title" data-reveal-item="scale">Del móvil a la tienda.</p>
 		<div class="changed-text" data-reveal-item>
-			<p class="say">Dar de alta un producto ya no empieza delante del ordenador. Empieza desde el móvil.</p>
-			<p class="say muted">
+			<p class="say-2">Dar de alta un producto ya no empieza delante del ordenador. Empieza desde el móvil.</p>
+			<p class="say-2 muted">
 				La parte repetitiva sigue una estructura definida. Lo que necesita criterio sigue bajo control humano.
 			</p>
 		</div>
@@ -285,6 +286,22 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 		text-wrap: pretty;
 	}
 
+	/* Texto secundario: la explicación bajo un titular o una frase. Los
+	   titulares hacen el trabajo; esto se lee si interesa. */
+	.say-2 {
+		max-width: 34em;
+		margin: 0;
+		font-size: clamp(1.0625rem, 0.95rem + 0.4vw, 1.3125rem);
+		line-height: 1.5;
+		letter-spacing: -0.01em;
+		text-wrap: pretty;
+	}
+
+	.say + .say-2,
+	.say-2 + .say-2 {
+		margin-top: 0.75em;
+	}
+
 	.say + .say {
 		margin-top: 0.8em;
 	}
@@ -299,7 +316,7 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 		margin: clamp(1.25rem, 3svh, 2rem) 0 0;
 		/* Móvil: la línea más ancha («No automaticé todo.») ocupa 9.8em; la
 		   segunda se parte en «Automaticé lo que / tenía sentido.» */
-		font-size: clamp(1.5rem, (100vw - 2 * var(--gutter) - 2 * var(--frame-pad)) / 10, 3.25rem);
+		font-size: clamp(1.5rem, (100vw - 2 * var(--gutter) - 2 * var(--frame-pad)) / 10, 4.5rem);
 		font-weight: 400;
 		line-height: 1.06;
 		letter-spacing: -0.035em;
@@ -309,7 +326,7 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 		display: block;
 	}
 
-	@media (min-width: 48rem) {
+	@media (min-width: 48.0625rem) and (orientation: landscape), (min-width: 75.0625rem) {
 		.title {
 			font-size: clamp(2.75rem, min(5.6vw, 9svh), 5.25rem);
 		}
@@ -375,6 +392,10 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 	   bloques) y se mide en cqw, así cada ficha escala con su columna. El
 	   melocotón es siempre el producto; el negro, lo que ya está decidido. */
 	.process {
+		/* El producto: un melocotón algo más vivo que --accent-soft, a medio
+		   camino del coral */
+		--product: color-mix(in srgb, var(--accent) 42%, #fff);
+
 		margin: clamp(3.5rem, 10svh, 6rem) 0 0;
 	}
 
@@ -387,14 +408,26 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 		column-gap: clamp(0.5rem, 1.2vw, 1.25rem);
 	}
 
+	/* min-width 0: un nombre largo («Estructurarlo») no puede ensanchar su
+	   ficha; si no cabe, se parte */
 	.process-step {
 		grid-row: span 2;
 		display: grid;
 		grid-template-rows: subgrid;
+		min-width: 0;
 	}
 
 	.process-label {
 		margin-top: 1.1rem;
+		overflow-wrap: anywhere;
+	}
+
+	/* Pantallas apaisadas medianas: fichas más estrechas, nombres más compactos */
+	@media (max-width: 68rem) {
+		.process-label {
+			font-size: 0.6875rem;
+			letter-spacing: 0.08em;
+		}
 	}
 
 	.process-arrow {
@@ -479,7 +512,7 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 		height: 40cqw;
 		margin-bottom: 2cqw;
 		border-radius: 4cqw;
-		background: var(--accent-soft);
+		background: var(--product);
 	}
 
 	/* Entender qué es: el producto, enfocado (cuatro esquinas de visor) */
@@ -507,7 +540,7 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 		width: var(--w);
 		height: 4cqw;
 		border-radius: 4cqw;
-		background: rgb(23 23 23 / 0.12);
+		background: rgb(23 23 23 / 0.16);
 	}
 
 	.bar.dark {
@@ -538,7 +571,7 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 		width: var(--w);
 		height: 5cqw;
 		border-radius: 5cqw;
-		background: rgb(23 23 23 / 0.1);
+		background: rgb(23 23 23 / 0.14);
 	}
 
 	.chip.on {
@@ -575,15 +608,15 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 		aspect-ratio: 16 / 10;
 		margin-bottom: 1cqw;
 		border-radius: 3cqw;
-		background: rgb(23 23 23 / 0.07);
+		background: rgb(23 23 23 / 0.09);
 	}
 
 	.tile .bar {
-		background: rgb(23 23 23 / 0.08);
+		background: rgb(23 23 23 / 0.11);
 	}
 
 	.tile.ours .tile-thumb {
-		background: var(--accent-soft);
+		background: var(--product);
 	}
 
 	.tile.ours .bar {
@@ -793,7 +826,7 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 	}
 
 	/* El cierre conceptual del caso: el titular más grande de la sección */
-	@media (min-width: 48rem) {
+	@media (min-width: 48.0625rem) and (orientation: landscape), (min-width: 75.0625rem) {
 		.closing {
 			font-size: clamp(3.25rem, min(7.6vw, 12svh), 7rem);
 		}
@@ -801,7 +834,7 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 
 	/* ---------- Móvil ---------- */
 
-	@media (max-width: 48rem) {
+	@media (max-width: 48rem), (orientation: portrait) and (max-width: 75rem) {
 		.found-text,
 		.seen-head {
 			grid-template-columns: 1fr;
@@ -834,8 +867,13 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 			flex-direction: column;
 		}
 
+		/* La ficha crece con el ancho (tablets y pantallas en vertical) */
+		.process-steps {
+			--card: clamp(6.25rem, 14vw, 10rem);
+		}
+
 		.process-step {
-			grid-template-columns: 6.25rem minmax(0, 1fr);
+			grid-template-columns: var(--card) minmax(0, 1fr);
 			grid-template-rows: none;
 			column-gap: 1.5rem;
 			align-items: center;
@@ -849,7 +887,7 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 			align-self: flex-start;
 			width: 1px;
 			height: 1.75rem;
-			margin: 0.75rem 0 0.75rem 3.125rem;
+			margin: 0.75rem 0 0.75rem calc(var(--card) / 2);
 			transform: scaleY(var(--line, 1));
 			transform-origin: center top;
 		}

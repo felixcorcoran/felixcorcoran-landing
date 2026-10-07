@@ -7,7 +7,7 @@ import massPosterCompact from '../assets/mass-poster-compact.png';
 // perspectiva depende de la composición, así que móvil tiene el suyo,
 // exportado con su propia composición y la malla más ligera que usa.
 // sizes = 1.4 × --mass-size.
-const compactSizes = '(max-width: 31rem) 118vw, 37rem';
+const compactSizes = '(max-width: 40.5rem) 118vw, 48rem';
 const wideSizes = '(max-width: 95rem) 54vw, 51rem';
 const allSizes = '(max-width: 31rem) 118vw, (max-width: 48rem) 37rem, (max-width: 95rem) 54vw, 51rem';
 const [compact, wide, fallback] = await Promise.all([
@@ -30,7 +30,7 @@ const [compact, wide, fallback] = await Promise.all([
 		<div class="glow" data-scene-part="follow-mass"></div>
 		<div class="mass-placeholder" data-scene-part="follow-mass" data-scene-rest>
 			<picture>
-				<source media="(max-width: 48rem)" type="image/avif" srcset={compact.srcSet.attribute} sizes={compactSizes} />
+				<source media="(max-width: 48rem), (orientation: portrait) and (max-width: 75rem)" type="image/avif" srcset={compact.srcSet.attribute} sizes={compactSizes} />
 				<source type="image/avif" srcset={wide.srcSet.attribute} sizes={wideSizes} />
 				<img src={fallback.src} srcset={fallback.srcSet.attribute} sizes={allSizes} alt="" {...fallback.attributes} />
 			</picture>
@@ -62,9 +62,9 @@ const [compact, wide, fallback] = await Promise.all([
 		min-height: 100svh;
 	}
 
-	@media (max-width: 48rem) {
+	@media (max-width: 48rem), (orientation: portrait) and (max-width: 75rem) {
 		.hero {
-			--mass-size: min(84vw, 26rem);
+			--mass-size: min(84vw, 34rem);
 			--mass-peek: 0.55;
 		}
 	}
@@ -211,7 +211,7 @@ const [compact, wide, fallback] = await Promise.all([
 		--title-em: 8.45;
 
 		margin: 0;
-		font-size: clamp(1.75rem, (100vw - 2 * var(--gutter) - 2 * var(--frame-pad)) / var(--title-em), 3.5rem);
+		font-size: clamp(1.75rem, (100vw - 2 * var(--gutter) - 2 * var(--frame-pad)) / var(--title-em), 5rem);
 		font-weight: 400;
 		line-height: 1.06;
 		letter-spacing: -0.035em;
@@ -233,7 +233,7 @@ const [compact, wide, fallback] = await Promise.all([
 		text-wrap: balance;
 	}
 
-	@media (min-width: 48rem) {
+	@media (min-width: 48.0625rem) and (orientation: landscape), (min-width: 75.0625rem) {
 		.title {
 			font-size: clamp(2.75rem, min(6.4vw, 8.6svh), 5.75rem);
 			line-height: 1.04;

@@ -33,14 +33,14 @@
 		justify-items: center;
 		gap: clamp(3rem, 12svh, 7rem);
 		/* Móvil: la línea más ancha («más tecnología.») ocupa 7.7em */
-		font-size: clamp(1.75rem, (100vw - 2 * var(--gutter) - 2 * var(--frame-pad)) / 7.9, 3.5rem);
+		font-size: clamp(1.75rem, (100vw - 2 * var(--gutter) - 2 * var(--frame-pad)) / 7.9, 5rem);
 		font-weight: 400;
 		line-height: 1.05;
 		letter-spacing: -0.035em;
 	}
 
 	/* Desde tablet, la misma escala que el titular del Hero */
-	@media (min-width: 48rem) {
+	@media (min-width: 48.0625rem) and (orientation: landscape), (min-width: 75.0625rem) {
 		.title {
 			font-size: clamp(3rem, min(7.2vw, 10svh), 6.25rem);
 		}

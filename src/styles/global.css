@@ -124,7 +124,7 @@ main::before {
   transform-origin: left center;
 }
 
-@media (max-width: 48rem) {
+@media (max-width: 48rem), (orientation: portrait) and (max-width: 75rem) {
   .row {
     grid-template-columns: 1fr;
     row-gap: 1rem;
