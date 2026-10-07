@@ -7,29 +7,25 @@ import { audit, person } from '../data/audit';
 const steps = [
 	{
 		name: 'Escuchar',
-		text: 'Me cuentas qué te preocupa, dónde se te va el tiempo y dónde se atascan tus clientes. Tú conoces tu negocio mejor que yo.',
+		text: 'Me cuentas qué te preocupa y dónde se te va el tiempo.',
 	},
 	{
 		name: 'Observar',
-		text: 'Miro lo que ve un cliente: tu web, tu ficha de Google, tus redes, cómo se pide una cita o un presupuesto. Y dónde la IA o una automatización podrían quitarte trabajo de verdad.',
+		text: 'Miro tu web, tu ficha de Google, tus redes y cómo funciona hoy el negocio.',
 	},
 	{
 		name: 'Contrastar',
 		text: 'Lo que veo, te lo pregunto. Una observación no es un problema hasta que la contrasto contigo.',
-		example: {
-			question: '«He visto una parte del proceso en la que el cliente tiene que dar un paso de más. ¿Os genera algún problema?»',
-			answer: 'Puede que sí. Puede que no. Puede que sea a propósito.',
-		},
 	},
 	{
 		name: 'Priorizar',
-		text: 'No todo lo que se puede hacer merece hacerse. Te digo qué sí, qué no, y por dónde empezaría si el negocio fuera mío.',
+		text: 'Te digo qué merece la pena y qué no.',
 	},
 ];
 
 const build = {
 	name: 'Construir',
-	text: 'Solo si algo merece la pena, te propongo cómo hacerlo y cuánto cuesta. Puede ser una web, una automatización, IA, una integración… o nada.',
+	text: 'Solo después, y solo si tiene sentido. Puede ser una web, una automatización, IA, una integración… o nada.',
 };
 
 // Datos prácticos: solo los que ya están decididos (ver src/data/audit.ts)
@@ -44,15 +40,11 @@ const facts = [audit.delivery, audit.turnaround && `Plazo: ${audit.turnaround}.`
 			<span data-reveal-item="scale">Después decido.</span>{' '}
 			<span data-reveal-item="scale">Luego construyo.</span>
 		</h2>
-		<p class="lead" data-reveal-item>
-			Lo que acabas de ver es mi forma de trabajar. La auditoría es su primera parte: mirar tu negocio y decirte
-			qué cambiaría, antes de construir nada.
-		</p>
 	</header>
 
 	<ol class="steps">
 		{
-			steps.map(({ name, text, example }, i) => (
+			steps.map(({ name, text }, i) => (
 				<li class="row" data-reveal>
 					<h3 class="step-label" data-reveal-item>
 						<span class="numeral" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>{' '}
@@ -60,12 +52,6 @@ const facts = [audit.delivery, audit.turnaround && `Plazo: ${audit.turnaround}.`
 					</h3>
 					<div class="body" data-reveal-item>
 						<p class="text">{text}</p>
-						{example && (
-							<p class="example">
-								<span class="question">{example.question}</span>{' '}
-								<span class="answer">{example.answer}</span>
-							</p>
-						)}
 					</div>
 					<span class="row-rule" data-reveal-line aria-hidden="true" />
 				</li>
@@ -91,8 +77,8 @@ const facts = [audit.delivery, audit.turnaround && `Plazo: ${audit.turnaround}.`
 		<div class="body" data-reveal-item>
 			<p class="promise">Hasta 3&nbsp;oportunidades concretas.</p>
 			<p class="text">
-				Solo las que merezcan la pena: si encuentro una, te enseño una. De cada una, qué pasa hoy, por qué
-				importa y qué tipo de solución tendría. Y por cuál empezaría yo.
+				Solo las que merezcan la pena: qué pasa hoy, por qué importa, qué tipo de solución tendría y por cuál
+				empezaría yo.
 			</p>
 			<p class="text">Si la IA tiene sentido en tu negocio, te digo dónde. Si no lo tiene, también.</p>
 			<p class="small">No es un informe de 40 páginas. Es una conversación y una lista corta.</p>
@@ -122,10 +108,7 @@ const facts = [audit.delivery, audit.turnaround && `Plazo: ${audit.turnaround}.`
 					Trabajo solo, desde Málaga. Hablas conmigo desde la primera pregunta hasta lo último que
 					construyamos.
 				</p>
-				<p class="text muted">
-					Construyo webs, sistemas de reservas, automatizaciones y herramientas con IA. Pero antes de construir,
-					miro.
-				</p>
+				<p class="text muted">Construyo webs, sistemas de reservas, automatizaciones y herramientas con IA.</p>
 			</div>
 		</div>
 		<span class="row-rule" data-reveal-line aria-hidden="true"></span>
@@ -190,16 +173,6 @@ const facts = [audit.delivery, audit.turnaround && `Plazo: ${audit.turnaround}.`
 		}
 	}
 
-	.lead {
-		max-width: 34em;
-		margin: clamp(1.5rem, 4svh, 2.5rem) 0 0;
-		font-size: clamp(1.125rem, 0.95rem + 0.5vw, 1.375rem);
-		line-height: 1.45;
-		letter-spacing: -0.01em;
-		color: var(--text-muted);
-		text-wrap: pretty;
-	}
-
 	.steps {
 		margin: clamp(3.5rem, 10svh, 6rem) 0 0;
 		padding: 0;
@@ -257,25 +230,6 @@ const facts = [audit.delivery, audit.turnaround && `Plazo: ${audit.turnaround}.`
 		color: var(--text-muted);
 	}
 
-	/* El ejemplo de contrastar: una pregunta real, con sus tres respuestas
-	   posibles. Una línea coral fina a la izquierda: es una cita. */
-	.example {
-		margin: 1.25rem 0 0;
-		padding-left: 1.1rem;
-		border-left: 2px solid var(--accent);
-		font-size: clamp(1rem, 0.92rem + 0.3vw, 1.1875rem);
-		line-height: 1.5;
-	}
-
-	.question,
-	.answer {
-		display: block;
-	}
-
-	.answer {
-		color: var(--text-muted);
-	}
-
 	/* ---------- La frontera ---------- */
 
 	.after {
@@ -311,7 +265,7 @@ const facts = [audit.delivery, audit.turnaround && `Plazo: ${audit.turnaround}.`
 	/* ---------- Lo que te llevas ---------- */
 
 	.outcome {
-		margin-top: clamp(3rem, 8svh, 5rem);
+		margin-top: clamp(4rem, 12svh, 8rem);
 	}
 
 	/* La promesa comercial de la sección: a escala de titular, con todo el
@@ -325,8 +279,8 @@ const facts = [audit.delivery, audit.turnaround && `Plazo: ${audit.turnaround}.`
 	}
 
 	.promise {
-		margin: 0 0 clamp(1.25rem, 3svh, 2rem);
-		font-size: clamp(2.25rem, 1rem + 4vw, 4.75rem);
+		margin: 0 0 clamp(1.5rem, 4svh, 2.5rem);
+		font-size: clamp(2.5rem, 1rem + 5vw, 5.75rem);
 		line-height: 1;
 		letter-spacing: -0.045em;
 		text-wrap: balance;

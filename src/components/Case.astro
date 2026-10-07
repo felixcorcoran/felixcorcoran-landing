@@ -41,13 +41,8 @@ const shelves = [
 ];
 
 // El caso es la diferencia entre las dos columnas, no la tecnología
-const automated = [
-	'Clasifica cada producto.',
-	'Genera el título y la descripción.',
-	'Añade las etiquetas.',
-	'Lo prepara y lo crea en la tienda.',
-];
-const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesita criterio humano.'];
+const automated = ['Clasifica.', 'Genera título y descripción.', 'Añade etiquetas.', 'Crea el producto.'];
+const human = ['Las fotos.', 'El precio.', 'Lo que necesita criterio humano.'];
 ---
 
 <section id="trabajo" class="case" aria-labelledby="case-title">
@@ -64,7 +59,7 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 		<div class="found-text" data-reveal>
 			<h3 class="eyebrow" data-reveal-item><span class="step">01</span> Lo que me encontré</h3>
 			<p class="say" data-reveal-item>
-				Un negocio de cartas coleccionables que estaba dando el salto a su propia tienda online.
+				Un negocio de cartas coleccionables dando el salto a su propia tienda online.
 			</p>
 		</div>
 		<figure class="store" data-reveal>
@@ -89,11 +84,8 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 	<div class="seen">
 		<div class="seen-head" data-reveal>
 			<h3 class="eyebrow" data-reveal-item><span class="step">02</span> Lo que vi</h3>
-			<!-- La primera frase hace de titular; la segunda la explica -->
-			<div class="say-group" data-reveal-item>
-				<p class="say">Un catálogo grande y que no para de crecer.</p>{' '}
-				<p class="say-2 muted">Clasificar cada producto a mano iba a ser lento y fácil de equivocarse.</p>
-			</div>
+			<!-- Una frase: el esquema de debajo enseña el resto -->
+			<p class="say" data-reveal-item>Muchos productos. Y en cada uno, la misma información que ordenar.</p>
 		</div>
 
 		<figure
@@ -174,9 +166,6 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 					))
 				}
 			</div>
-			<figcaption class="caption process-caption" data-reveal-item>
-				Cada producto, en su sitio exacto. Y el catálogo sigue creciendo.
-			</figcaption>
 		</figure>
 	</div>
 
@@ -195,7 +184,7 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 			<span class="link" data-reveal-line aria-hidden="true"></span>
 			<div class="node node-ai" data-reveal-item>
 				<span class="eyebrow">IA</span>
-				<p>Lo entiende, lo clasifica y lo escribe.</p>
+				<p>Lo entiende y lo escribe.</p>
 			</div>
 			<span class="link" data-reveal-line aria-hidden="true"></span>
 			<div class="node" data-reveal-item>
@@ -217,7 +206,6 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 					{human.map((item) => <li>{item}</li>)}
 				</ul>
 			</div>
-			<p class="inside" data-reveal-item>Por dentro: Telegram, Gemini, n8n y la API de Shopify.</p>
 		</div>
 	</div>
 
@@ -225,12 +213,7 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 	<div class="changed" data-reveal>
 		<h3 class="eyebrow" data-reveal-item><span class="step">04</span> Qué cambió</h3>
 		<p class="changed-title" data-reveal-item="scale">Del móvil a la tienda.</p>
-		<div class="changed-text" data-reveal-item>
-			<p class="say-2">Dar de alta un producto ya no empieza delante del ordenador. Empieza desde el móvil.</p>
-			<p class="say-2 muted">
-				La parte repetitiva sigue una estructura definida. Lo que necesita criterio sigue bajo control humano.
-			</p>
-		</div>
+		<p class="say-2 changed-text" data-reveal-item>Dar de alta un producto ya no empieza delante del ordenador.</p>
 	</div>
 
 	<!-- Cierre: la idea del caso, sin explicación -->
@@ -251,7 +234,7 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 	         dejarlo listo; y detrás, la cola de los que siguen llegando
 	     03  la decisión en grande → el flujo (la IA en el centro) → lo que hace
 	         el sistema y lo que revisa él
-	     04  «Del móvil a la tienda.» y el cambio, en dos frases
+	     04  «Del móvil a la tienda.» y el cambio, en una frase
 	     ··  cierre centrado: la idea del caso, el único tamaño grande de verdad
 
 	   Dos ejes: el borde del marco (titulares, etiquetas) y la columna del
@@ -295,19 +278,6 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 		line-height: 1.5;
 		letter-spacing: -0.01em;
 		text-wrap: pretty;
-	}
-
-	.say + .say-2,
-	.say-2 + .say-2 {
-		margin-top: 0.75em;
-	}
-
-	.say + .say {
-		margin-top: 0.8em;
-	}
-
-	.muted {
-		color: var(--text-muted);
 	}
 
 	/* ---------- Titular ---------- */
@@ -623,10 +593,6 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 		background: var(--text);
 	}
 
-	.process-caption {
-		margin-top: 1.75rem;
-	}
-
 	/* ---------- 03 · La decisión ---------- */
 
 	.decision {
@@ -772,15 +738,6 @@ const human = ['Las fotos.', 'El precio.', 'El stock.', 'Lo que todavía necesit
 		font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
 		line-height: 1.25;
 		letter-spacing: -0.02em;
-	}
-
-	/* La tecnología, en letra pequeña: es la consecuencia, no el titular */
-	.inside {
-		grid-column: 1 / -1;
-		margin: 0;
-		font-size: 0.875rem;
-		line-height: 1.5;
-		color: var(--text-muted);
 	}
 
 	/* ---------- 04 · Qué cambió ---------- */
