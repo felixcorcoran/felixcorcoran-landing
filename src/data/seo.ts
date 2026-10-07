@@ -25,6 +25,7 @@ export const homeJsonLd = {
 			url: `${site}/`,
 			email: contact.email,
 			jobTitle: 'Desarrollador web y de automatizaciones',
+			image: `${site}/felix-corcoran.jpg`,
 			// Sus perfiles: le dice a Google qué perfiles son de esta misma persona
 			// (si cambia la URL de LinkedIn, actualizarla aquí)
 			sameAs: ['https://www.linkedin.com/in/felixcorcoran'],

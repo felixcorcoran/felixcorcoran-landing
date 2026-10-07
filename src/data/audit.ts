@@ -1,3 +1,5 @@
+import photo from '../assets/felix.png';
+
 /**
  * La auditoría gratuita: lo que se promete en la landing y en /contacto.
  *
@@ -16,8 +18,9 @@ export const audit = {
 export const person = {
 	name: 'Félix Corcoran',
 	/**
-	 * Foto real (documental, no de estudio) en src/assets/. Mientras no la
-	 * haya, la sección se sostiene solo con el texto.
+	 * Foto real, la misma que en LinkedIn y en el Perfil de Empresa (se le
+	 * reconoce de un sitio a otro). Recortada a 4:5 desde el original de
+	 * 400×400; sin foto, la sección se sostiene solo con el texto.
 	 */
-	photo: undefined as ImageMetadata | undefined,
+	photo: photo as ImageMetadata | undefined,
 };

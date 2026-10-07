@@ -94,9 +94,10 @@ const facts = [audit.delivery, audit.turnaround && `Plazo: ${audit.turnaround}.`
 				person.photo && (
 					<Picture
 						class="photo"
+						pictureAttributes={{ class: 'photo-frame' }}
 						src={person.photo}
 						alt={person.name}
-						widths={[240, 480]}
+						widths={[240, 320]}
 						sizes="(max-width: 48rem) 7rem, 9rem"
 						formats={['avif', 'webp']}
 					/>
@@ -301,9 +302,15 @@ const facts = [audit.delivery, audit.turnaround && `Plazo: ${audit.turnaround}.`
 		gap: clamp(1.25rem, 3vw, 2rem);
 	}
 
-	.photo {
+	/* El marco (<picture>) no encoge en la fila; la imagen lo llena */
+	.photo-frame {
 		flex: none;
-		width: clamp(7rem, 10vw, 9rem);
+		width: clamp(5.5rem, 10vw, 9rem);
+	}
+
+	.photo {
+		display: block;
+		width: 100%;
 		height: auto;
 		aspect-ratio: 4 / 5;
 		object-fit: cover;
