@@ -117,8 +117,19 @@ export function initScene(scene: HTMLElement) {
 			// en lugar de verse a golpes
 			scrub: 0.6,
 			invalidateOnRefresh: true,
+			onUpdate: skipJumps,
 		},
 	});
+
+	// Un salto (el ancla #trabajo, la barra de scroll, Inicio/Fin) no es
+	// scroll: sin esto, la inercia reproduciría toda la escena de golpe en
+	// 0.6 s y la masa bailaría detrás de la navegación. Se coloca al instante.
+	let lastScroll = scrollY;
+	function skipJumps(trigger: ScrollTrigger) {
+		const scroll = trigger.scroll();
+		if (Math.abs(scroll - lastScroll) > innerHeight) trigger.getTween()?.progress(1);
+		lastScroll = scroll;
+	}
 
 	// ---------- Masa ----------
 	// La silueta cambia sobre todo por deformación y forma; la rotación es

@@ -348,14 +348,20 @@ const showCta = !isCurrent('/contacto', pathname);
 
 	gsap.registerPlugin(ScrollTrigger);
 
-	// Sin escena final (en /contacto, o en la landing con movimiento
-	// reducido o en pantallas bajas) la píldora se retira al llegar al footer: su banda es la de
-	// los enlaces del footer. Con la escena final lo decide scripts/action.ts.
+	import { initFooterReveal } from '../scripts/footer-reveal';
+
+	// En la landing, con movimiento, la transición al footer es la escena
+	// final (scripts/action.ts). En el resto de páginas (/contacto, legales)
+	// hay una versión en flujo normal (scripts/footer-reveal.ts). Sin
+	// movimiento, la píldora se retira al llegar al footer: su banda es la de
+	// los enlaces del footer.
 	const footer = document.querySelector<HTMLElement>('[data-footer]');
 	const nav = document.querySelector<HTMLElement>('[data-nav]');
-	const finale = document.querySelector('[data-action]') && cinematic();
+	const landing = document.querySelector('[data-action]');
 
-	if (footer && nav && !finale) {
+	if (footer && !landing && cinematic()) {
+		initFooterReveal(footer, nav);
+	} else if (footer && nav && !(landing && cinematic())) {
 		// Solo entrar / volver a subir: en el último píxel de scroll
 		// ScrollTrigger da el tramo por terminado y la píldora volvería
 		const away = (value: boolean) => () => nav.classList.toggle('is-away', value);

@@ -35,6 +35,7 @@ import Footer from '../components/Footer.astro';
 </Layout>
 
 <script>
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
 	import { initReveal } from '../scripts/reveal';
 
 	const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -42,4 +43,18 @@ import Footer from '../components/Footer.astro';
 	// Entradas de las secciones en flujo normal. Con movimiento reducido (o
 	// sin JS), todo está ya en su sitio.
 	if (!reduceMotion) initReveal();
+
+	// Al llegar con un ancla desde otra página (/#trabajo desde /contacto), el
+	// navegador salta antes de que la escena de la intro gane su altura, y el
+	// salto se queda corto: en el Insight. Se repite una vez, ya montada (tras
+	// el primer refresh de ScrollTrigger, que es cuando las alturas son las
+	// definitivas).
+	const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+	if (target) {
+		const settle = () => {
+			ScrollTrigger.removeEventListener('refresh', settle);
+			target.scrollIntoView({ behavior: 'instant' });
+		};
+		ScrollTrigger.addEventListener('refresh', settle);
+	}
 </script>
