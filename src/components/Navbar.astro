@@ -1,19 +1,14 @@
 ---
 import { isCurrent, primary } from '../data/navigation';
-import { alternatesOf, langOf, routes } from '../i18n';
+import { langOf, routes } from '../i18n';
 
 const { pathname } = Astro.url;
 const lang = langOf(Astro.currentLocale);
-const [work, contact] = primary(lang);
-
-// El otro idioma: la misma página si existe en él; si no (legales), su inicio
-const other = lang === 'es' ? 'en' : 'es';
-const alternates = alternatesOf(pathname);
-const switchHref = alternates ? alternates[other] : routes.home[other];
+const links = primary(lang);
 
 const text = {
-	es: { nav: 'Principal', home: 'felixcorcoran — inicio', switch: 'English version' },
-	en: { nav: 'Main', home: 'felixcorcoran — home', switch: 'Versión en español' },
+	es: { nav: 'Principal', home: 'felixcorcoran — inicio' },
+	en: { nav: 'Main', home: 'felixcorcoran — home' },
 }[lang];
 ---
 
@@ -23,20 +18,13 @@ const text = {
 			<span class="logo-first">felix</span><span class="logo-last">corcoran</span>
 		</a>
 		<ul class="links">
-			<li>
-				<a href={work.href}>{work.label}</a>
-			</li>
-			<!-- El otro idioma: dos letras, discretas, junto a «Contacto» -->
-			<li>
-				<a class="lang" href={switchHref} hreflang={other} lang={other} aria-label={text.switch}>
-					{other.toUpperCase()}
-				</a>
-			</li>
-			<li>
-				<a class="highlight" href={contact.href} aria-current={isCurrent(contact.href, pathname) ? 'page' : undefined}>
-					{contact.label}
-				</a>
-			</li>
+			{links.map(({ href, label, highlight }) => (
+				<li>
+					<a class:list={{ highlight }} href={href} aria-current={isCurrent(href, pathname) ? 'page' : undefined}>
+						{label}
+					</a>
+				</li>
+			))}
 		</ul>
 	</nav>
 </header>
@@ -110,13 +98,6 @@ const text = {
 		color: var(--text);
 	}
 
-	/* Idioma: dos letras en versalitas, como una etiqueta */
-	.links a.lang {
-		font-size: 0.75rem;
-		font-weight: 500;
-		letter-spacing: 0.1em;
-	}
-
 	/* Contacto: una píldora finísima con el punto coral. Se distingue de un
 	   enlace más sin convertirse en un botón. */
 	.links {
@@ -160,22 +141,9 @@ const text = {
 		}
 	}
 
-	/* Móviles (≤480 px): con el idioma, los tres enlaces y el logo caben con
-	   algo menos de aire entre ellos */
-	@media (max-width: 30rem) {
-		.pill,
-		.links {
-			gap: 0.75rem;
-		}
-
-		.links a.highlight {
-			padding: 0 0.625rem;
-		}
-	}
-
-	/* Móviles estrechos (≤372 px): sin la píldora de Contacto y con menos
-	   aire interior */
-	@media (max-width: 23.25rem) {
+	/* Móviles estrechos (≤360 px): los dos enlaces caben junto al logo con
+	   algo menos de aire interior */
+	@media (max-width: 22.5rem) {
 		.pill,
 		.links {
 			gap: 0.75rem;
@@ -195,23 +163,6 @@ const text = {
 			margin-right: 0;
 			padding: 0;
 			box-shadow: none;
-		}
-	}
-
-	/* Los más estrechos (≤352 px): sin el punto, y un poco menos de aire;
-	   Contacto se distingue por el color */
-	@media (max-width: 22rem) {
-		.pill,
-		.links {
-			gap: 0.625rem;
-		}
-
-		.pill {
-			padding-inline: 0.75rem;
-		}
-
-		.links a.highlight::before {
-			display: none;
 		}
 	}
 

@@ -1,16 +1,24 @@
 ---
 import { contact } from '../data/contact';
 import { footer, isCurrent } from '../data/navigation';
-import { langOf, routes } from '../i18n';
+import { alternatesOf, langOf, routes } from '../i18n';
 
 const { pathname } = Astro.url;
 const lang = langOf(Astro.currentLocale);
 const links = footer(lang);
 
-// Las legales existen solo en español: en inglés, el enlace lo avisa
+// El otro idioma, discreto, junto a las legales: la misma página si existe
+// en él; si no (legales, 404), su inicio. Quien llega desde Google ya entra
+// en el suyo (hreflang)
+const other = lang === 'es' ? 'en' : 'es';
+const alternates = alternatesOf(pathname);
+const switchHref = alternates ? alternates[other] : routes.home[other];
+const switchLabel = { es: 'Español', en: 'English' }[other];
+
+// Las legales existen solo en español (los enlaces llevan hreflang="es")
 const t = {
 	es: { sections: 'Secciones', cta: 'Solicitar auditoría gratuita', legal: 'Aviso legal', privacy: 'Privacidad' },
-	en: { sections: 'Sections', cta: 'Request a free audit', legal: 'Legal notice (ES)', privacy: 'Privacy (ES)' },
+	en: { sections: 'Sections', cta: 'Request a free audit', legal: 'Legal notice', privacy: 'Privacy' },
 }[lang];
 
 // La CTA se queda en la firma: quien llega al final de la página (o salta a
@@ -43,6 +51,7 @@ const showCta = !isCurrent(routes.contact[lang], pathname);
 			<span class="legal">
 				<a href="/aviso-legal" hreflang="es" aria-current={isCurrent('/aviso-legal', pathname) ? 'page' : undefined}>{t.legal}</a>
 				<a href="/privacidad" hreflang="es" aria-current={isCurrent('/privacidad', pathname) ? 'page' : undefined}>{t.privacy}</a>
+				<a href={switchHref} hreflang={other} lang={other}>{switchLabel}</a>
 			</span>
 		</div>
 	</div>
@@ -245,6 +254,7 @@ const showCta = !isCurrent(routes.contact[lang], pathname);
 
 	.legal a {
 		padding-block: 0.4rem;
+		white-space: nowrap;
 		font-size: 0.8125rem;
 		color: var(--text-muted);
 		text-decoration: none;
