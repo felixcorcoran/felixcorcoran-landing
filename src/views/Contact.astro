@@ -1,0 +1,275 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Footer from '../components/Footer.astro';
+import { contact, whatsappHref as whatsappFor } from '../data/contact';
+import { langOf } from '../i18n';
+
+// La página de contacto, en los dos idiomas: /contacto y /en/contact
+const lang = langOf(Astro.currentLocale);
+const whatsappHref = whatsappFor(lang);
+
+// Qué pasa después de enviar: lo mismo que promete la auditoría en la landing
+const t = {
+	es: {
+		title: 'Auditoría gratuita para tu negocio · Félix Corcoran',
+		description:
+			'Cuéntame un poco de tu negocio y qué te gustaría mejorar. Lo miro y te enseño hasta 3 oportunidades concretas. Gratis y sin compromiso.',
+		eyebrow: 'Auditoría gratuita',
+		heading: 'Cuéntame tu negocio.',
+		lead: 'Qué hace, cómo te llegan los clientes y qué te gustaría mejorar. Con eso empiezo a mirar.',
+		next: [
+			'Leo lo que me cuentas y miro tu negocio por fuera: tu web, tu ficha de Google, tus redes.',
+			'Te escribo para hablar y preguntarte por lo que he visto.',
+			'Te enseño hasta 3 oportunidades concretas y por cuál empezaría.',
+		],
+		free: 'Gratis y sin compromiso: si no ves nada que te convenza, ahí se queda. Te respondo yo, personalmente.',
+		direct: '¿Prefieres escribir directamente?',
+		newTab: ' (se abre en una pestaña nueva)',
+		or: 'o',
+	},
+	en: {
+		title: 'Free audit for your business · Félix Corcoran',
+		description:
+			"Tell me a bit about your business and what you'd like to improve. I'll take a look and show you up to 3 concrete opportunities. Free, no strings attached.",
+		eyebrow: 'Free audit',
+		heading: 'Tell me about your business.',
+		lead: "What it does, how customers find you and what you'd like to improve. That's where I start looking.",
+		next: [
+			'I read what you tell me and look at your business from the outside: your website, your Google profile, your social media.',
+			"I get in touch to talk and ask you about what I've seen.",
+			"I show you up to 3 concrete opportunities and which one I'd start with.",
+		],
+		free: "Free, no strings attached: if nothing convinces you, that's the end of it. I'll reply myself, personally.",
+		direct: 'Rather write to me directly?',
+		newTab: ' (opens in a new tab)',
+		or: 'or',
+	},
+}[lang];
+---
+
+<Layout title={t.title} description={t.description}>
+	<Navbar />
+	<main>
+		<section class="contact" aria-labelledby="contact-title">
+			<div class="intro">
+				<p class="eyebrow">{t.eyebrow}</p>
+				<h1 id="contact-title" class="title">{t.heading}</h1>
+				<p class="lead">{t.lead}</p>
+			</div>
+
+			<div class="form-column">
+				<ContactForm />
+			</div>
+
+			<!-- Qué pasa después: en escritorio, bajo la invitación; en móvil,
+			     después del formulario (quien llega aquí viene a escribir) -->
+			<div class="more">
+				<ol class="next">
+					{t.next.map((step, i) => (
+						<li>
+							<span class="next-step">{String(i + 1).padStart(2, '0')}</span>{' '}
+							<span>{step}</span>
+						</li>
+					))}
+				</ol>
+
+				<p class="note">{t.free}</p>
+				<p class="note">
+					{t.direct}{' '}
+					{whatsappHref && (
+						<>
+							<a href={whatsappHref} target="_blank" rel="noopener">
+								WhatsApp<span class="sr-only">{t.newTab}</span>
+							</a>{' '}
+							{t.or}{' '}
+						</>
+					)}
+					<a href={`mailto:${contact.email}`}>{contact.email}</a>
+				</p>
+			</div>
+		</section>
+	</main>
+	<Footer />
+</Layout>
+
+<style>
+	/* /contacto: donde se pide la auditoría. La landing cuenta la historia;
+	   aquí solo se escribe. Mismo
+	   sistema (marco, eje, tipografía, papel) y ninguna escena: dos columnas,
+	   la invitación (y qué pasa después) a la izquierda y el formulario a la
+	   derecha. En móvil, el formulario va justo después de la invitación.
+	   Después, la firma del footer. */
+
+	.contact {
+		box-sizing: border-box;
+		width: var(--frame);
+		margin-inline: auto;
+		padding: calc(var(--nav-top) + var(--nav-height) + clamp(3.5rem, 12svh, 8rem)) var(--frame-pad)
+			clamp(6rem, 16svh, 10rem);
+		display: grid;
+		grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+		grid-template-rows: auto 1fr;
+		grid-template-areas:
+			"intro form"
+			"more form";
+		column-gap: clamp(3rem, 8vw, 8rem);
+		align-items: start;
+	}
+
+	.intro {
+		grid-area: intro;
+	}
+
+	.more {
+		grid-area: more;
+	}
+
+	.form-column {
+		grid-area: form;
+	}
+
+	/* Grande y breve, cerca de la escala del titular del Hero: la página dice
+	   dónde estás de un vistazo. En dos renglones en su columna. */
+	.title {
+		margin: 0;
+		font-size: clamp(2.75rem, min(5.6vw, 11svh), 5.25rem);
+		font-weight: 400;
+		line-height: 1;
+		letter-spacing: -0.04em;
+		text-wrap: balance;
+	}
+
+	.eyebrow {
+		margin-bottom: clamp(1rem, 2.5svh, 1.5rem);
+	}
+
+	.lead {
+		max-width: 22em;
+		margin: clamp(1.75rem, 4svh, 2.5rem) 0 0;
+		font-size: clamp(1.125rem, 0.95rem + 0.5vw, 1.375rem);
+		line-height: 1.45;
+		letter-spacing: -0.01em;
+		text-wrap: pretty;
+	}
+
+	/* Qué pasa después: tres pasos, en el lenguaje de las filas de la landing */
+	.next {
+		max-width: 28em;
+		margin: clamp(2rem, 5svh, 2.75rem) 0 0;
+		padding: 0;
+		list-style: none;
+		border-top: 1px solid var(--rule);
+	}
+
+	.next li {
+		display: grid;
+		grid-template-columns: 2.25rem minmax(0, 1fr);
+		padding-block: 0.85rem;
+		border-bottom: 1px solid var(--rule);
+		font-size: 1rem;
+		line-height: 1.5;
+	}
+
+	.next-step {
+		font-size: 0.8125rem;
+		font-weight: 500;
+		line-height: 1.85;
+		letter-spacing: 0.08em;
+		color: var(--text-muted);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.note {
+		max-width: 26em;
+		margin: 1.25rem 0 0;
+		font-size: 1rem;
+		line-height: 1.5;
+		color: var(--text-muted);
+		text-wrap: pretty;
+	}
+
+	.note a {
+		color: var(--text);
+		text-decoration-color: rgb(23 23 23 / 0.3);
+		text-underline-offset: 0.25em;
+	}
+
+	.note a:hover {
+		text-decoration-color: currentColor;
+	}
+
+	/* El primer campo arranca a la altura del título */
+	.form-column {
+		padding-top: 0.5rem;
+	}
+
+	/* Móvil: una columna — título, texto, formulario */
+	@media (max-width: 48rem), (orientation: portrait) and (max-width: 75rem) {
+		.contact {
+			grid-template-columns: 1fr;
+			grid-template-rows: none;
+			grid-template-areas:
+				"intro"
+				"form"
+				"more";
+			row-gap: clamp(2.5rem, 6svh, 3.5rem);
+			padding-top: calc(var(--nav-top) + var(--nav-height) + clamp(2rem, 5svh, 3rem));
+		}
+
+		.lead {
+			margin-top: 1.25rem;
+		}
+
+		.next {
+			margin-top: 0;
+		}
+
+		.title {
+			font-size: clamp(2.75rem, 14vw, 4.5rem);
+		}
+
+		.form-column {
+			padding-top: 0;
+		}
+	}
+
+	/* Entrada breve y discreta: el título se enfoca; el texto y el
+	   formulario llegan justo después. Sin movimiento, directamente visible. */
+	@media (prefers-reduced-motion: no-preference) {
+		.title {
+			animation: focus-in 0.9s var(--ease-out) 0.05s both;
+		}
+
+		.eyebrow,
+		.lead,
+		.next,
+		.note {
+			animation: rise-in 0.8s var(--ease-out) 0.2s both;
+		}
+
+		.note {
+			animation-delay: 0.28s;
+		}
+
+		.form-column {
+			animation: rise-in 0.8s var(--ease-out) 0.35s both;
+		}
+	}
+
+	@keyframes focus-in {
+		from {
+			opacity: 0;
+			filter: blur(10px);
+			translate: 0 0.4rem;
+		}
+	}
+
+	@keyframes rise-in {
+		from {
+			opacity: 0;
+			translate: 0 0.6rem;
+		}
+	}
+</style>

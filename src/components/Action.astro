@@ -1,5 +1,26 @@
 ---
-import { whatsappHref } from '../data/contact';
+import { whatsappHref as whatsappFor } from '../data/contact';
+import { langOf, routes } from '../i18n';
+
+const lang = langOf(Astro.currentLocale);
+const whatsappHref = whatsappFor(lang);
+
+const t = {
+	es: {
+		title: ['¿Qué podríamos', 'mejorar en', 'tu negocio?'],
+		lead: ['Te hago una auditoría gratuita', 'y te enseño hasta 3 oportunidades concretas.'],
+		primary: 'Solicitar auditoría gratuita',
+		whatsapp: 'Hablar por WhatsApp',
+		newTab: 'se abre en una pestaña nueva',
+	},
+	en: {
+		title: ['What could we', 'improve in', 'your business?'],
+		lead: ["I'll do a free audit", 'and show you up to 3 concrete opportunities.'],
+		primary: 'Request a free audit',
+		whatsapp: 'Chat on WhatsApp',
+		newTab: 'opens in a new tab',
+	},
+}[lang];
 
 // Sin número real todavía: el enlace no se muestra (un botón que no lleva a
 // ninguna parte rompe la confianza justo donde se pide) y el build lo avisa
@@ -9,19 +30,19 @@ if (!whatsappHref) console.warn('[Action] Falta contact.whatsappNumber en src/da
 <section class="action" aria-labelledby="action-title" data-action>
 	<div class="stage" data-action-part="stage">
 		<h2 id="action-title" class="title" data-action-part="title">
-			<span>¿Qué podríamos</span> <span>mejorar en</span> <span>tu negocio?</span>
+			<span>{t.title[0]}</span> <span>{t.title[1]}</span> <span>{t.title[2]}</span>
 		</h2>
 
 		<p class="lead" data-action-part="follow">
-			<span>Te hago una auditoría gratuita</span> <span>y te enseño hasta&nbsp;3&nbsp;oportunidades concretas.</span>
+			<span>{t.lead[0]}</span> <span>{t.lead[1]}</span>
 		</p>
 
 		<div class="actions" data-action-part="follow">
 			<!-- La auditoría se pide desde la página de contacto -->
-			<a class="primary" href="/contacto">Solicitar auditoría gratuita</a>
+			<a class="primary" href={routes.contact[lang]}>{t.primary}</a>
 			{whatsappHref && (
 				<a class="secondary" href={whatsappHref} target="_blank" rel="noopener">
-					Hablar por WhatsApp<span class="sr-only"> (se abre en una pestaña nueva)</span>
+					{t.whatsapp}<span class="sr-only"> ({t.newTab})</span>
 					<svg viewBox="0 0 12 12" aria-hidden="true" focusable="false">
 						<path d="M3 9 9 3M4 3h5v5" />
 					</svg>

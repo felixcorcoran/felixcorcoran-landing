@@ -1,17 +1,26 @@
 ---
 import { contact } from '../data/contact';
-import { footer as links, isCurrent } from '../data/navigation';
+import { footer, isCurrent } from '../data/navigation';
+import { langOf, routes } from '../i18n';
 
 const { pathname } = Astro.url;
+const lang = langOf(Astro.currentLocale);
+const links = footer(lang);
+
+// Las legales existen solo en español: en inglés, el enlace lo avisa
+const t = {
+	es: { sections: 'Secciones', cta: 'Solicitar auditoría gratuita', legal: 'Aviso legal', privacy: 'Privacidad' },
+	en: { sections: 'Sections', cta: 'Request a free audit', legal: 'Legal notice (ES)', privacy: 'Privacy (ES)' },
+}[lang];
 
 // La CTA se queda en la firma: quien llega al final de la página (o salta a
 // él) sigue teniendo a mano la auditoría. En /contacto ya está en ella.
-const showCta = !isCurrent('/contacto', pathname);
+const showCta = !isCurrent(routes.contact[lang], pathname);
 ---
 
 <footer class="footer" data-footer>
 	<div class="inner">
-		<nav class="sections" aria-label="Secciones" data-footer-part="nav">
+		<nav class="sections" aria-label={t.sections} data-footer-part="nav">
 			<ul>
 				{links.map(({ href, label }) => (
 					<li><a href={href} aria-current={isCurrent(href, pathname) ? 'page' : undefined}>{label}</a></li>
@@ -25,15 +34,15 @@ const showCta = !isCurrent('/contacto', pathname);
 
 		<div class="fine" data-footer-part="fine">
 			{showCta && (
-				<a class="cta" href="/contacto">
-					Solicitar auditoría gratuita
+				<a class="cta" href={routes.contact[lang]}>
+					{t.cta}
 					<svg viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M1.5 6h9M7 2.5 10.5 6 7 9.5" /></svg>
 				</a>
 			)}
 			<a class="mail" href={`mailto:${contact.email}`}>{contact.email}</a>
 			<span class="legal">
-				<a href="/aviso-legal" aria-current={isCurrent('/aviso-legal', pathname) ? 'page' : undefined}>Aviso legal</a>
-				<a href="/privacidad" aria-current={isCurrent('/privacidad', pathname) ? 'page' : undefined}>Privacidad</a>
+				<a href="/aviso-legal" hreflang="es" aria-current={isCurrent('/aviso-legal', pathname) ? 'page' : undefined}>{t.legal}</a>
+				<a href="/privacidad" hreflang="es" aria-current={isCurrent('/privacidad', pathname) ? 'page' : undefined}>{t.privacy}</a>
 			</span>
 		</div>
 	</div>

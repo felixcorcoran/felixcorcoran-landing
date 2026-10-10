@@ -6,21 +6,53 @@ type State = 'idle' | 'sending' | 'success' | 'mail' | 'error';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-/** Cada regla devuelve el mensaje de error, o null si el valor es válido. */
-const RULES: Record<Validated, (value: string, field: Field) => string | null> = {
-	name: (value) => (value.length >= 2 ? null : 'Escribe tu nombre.'),
-	email: (value, field) => {
-		if (!value) return 'Escribe tu email para que pueda responderte.';
-		const invalid = (field as HTMLInputElement).validity.typeMismatch || !EMAIL.test(value);
-		return invalid ? 'Este email no parece correcto. Revísalo, por favor.' : null;
+/** Los mensajes del formulario en cada idioma (el formulario dice cuál: data-lang). */
+const MESSAGES = {
+	es: {
+		name: 'Escribe tu nombre.',
+		emailEmpty: 'Escribe tu email para que pueda responderte.',
+		emailInvalid: 'Este email no parece correcto. Revísalo, por favor.',
+		messageEmpty: 'Cuéntame qué te gustaría mejorar.',
+		messageShort: 'Cuéntame un poco más (al menos 10 caracteres).',
+		sendingLabel: 'Enviando…',
+		sending: 'Enviando tu mensaje…',
+		success: 'Gracias. Lo he recibido: empiezo por leerlo y mirar tu negocio, y te escribo.',
+		mail: 'Se ha abierto tu correo con la solicitud ya escrita: solo te falta enviarla. Si no se ha abierto, escríbeme a ',
+		error: 'No se ha podido enviar el mensaje. Inténtalo de nuevo o escríbeme directamente por ',
+		errorLink: 'email',
 	},
-	message: (value) => {
-		if (!value) return 'Cuéntame qué te gustaría mejorar.';
-		return value.length >= 10 ? null : 'Cuéntame un poco más (al menos 10 caracteres).';
+	en: {
+		name: 'Please enter your name.',
+		emailEmpty: 'Please enter your email so I can reply.',
+		emailInvalid: "This email doesn't look right. Please check it.",
+		messageEmpty: "Tell me what you'd like to improve.",
+		messageShort: 'Tell me a little more (at least 10 characters).',
+		sendingLabel: 'Sending…',
+		sending: 'Sending your message…',
+		success: "Thanks, I've got it. I'll start by reading it and looking at your business, and I'll get back to you.",
+		mail: "Your email app has opened with the request already written: you just need to send it. If it didn't open, write to me at ",
+		error: "The message couldn't be sent. Please try again or write to me directly by ",
+		errorLink: 'email',
 	},
 };
 
-const VALIDATED = Object.keys(RULES) as Validated[];
+type Messages = (typeof MESSAGES)['es'];
+
+/** Cada regla devuelve el mensaje de error, o null si el valor es válido. */
+const rulesFor = (m: Messages): Record<Validated, (value: string, field: Field) => string | null> => ({
+	name: (value) => (value.length >= 2 ? null : m.name),
+	email: (value, field) => {
+		if (!value) return m.emailEmpty;
+		const invalid = (field as HTMLInputElement).validity.typeMismatch || !EMAIL.test(value);
+		return invalid ? m.emailInvalid : null;
+	},
+	message: (value) => {
+		if (!value) return m.messageEmpty;
+		return value.length >= 10 ? null : m.messageShort;
+	},
+});
+
+const VALIDATED: Validated[] = ['name', 'email', 'message'];
 
 /**
  * Formulario de contacto: validación, estados y envío.
@@ -43,9 +75,13 @@ export function initContactForm(form: HTMLFormElement, send = sendContactMessage
 	const label = button?.querySelector<HTMLElement>('[data-button-label]');
 	if (!status || !button || !label) return;
 
-	// La validación la hace este script (mensajes propios, en español y
-	// asociados a cada campo); sin JS queda la validación nativa del navegador
+	// La validación la hace este script (mensajes propios, en el idioma de la
+	// página y asociados a cada campo); sin JS queda la del navegador
 	form.noValidate = true;
+
+	const lang = form.dataset.lang === 'en' ? 'en' : 'es';
+	const m = MESSAGES[lang];
+	const RULES = rulesFor(m);
 
 	const idleLabel = label.textContent ?? '';
 	const email = form.dataset.email ?? '';
@@ -53,7 +89,7 @@ export function initContactForm(form: HTMLFormElement, send = sendContactMessage
 	let state: State = 'idle';
 
 	const field = (name: string) => form.elements.namedItem(name) as Field;
-	const isValidated = (name: string): name is Validated => name in RULES;
+	const isValidated = (name: string): name is Validated => (VALIDATED as string[]).includes(name);
 
 	function validate(name: Validated) {
 		const input = field(name);
@@ -99,6 +135,7 @@ export function initContactForm(form: HTMLFormElement, send = sendContactMessage
 			phone: field('phone').value.trim(),
 			business: field('business').value.trim(),
 			message: field('message').value.trim(),
+			lang,
 		};
 
 		// Solo en desarrollo: window.__contactSend sustituye el envío para
@@ -128,25 +165,25 @@ export function initContactForm(form: HTMLFormElement, send = sendContactMessage
 		form.dataset.state = next;
 		form.setAttribute('aria-busy', String(next === 'sending'));
 		button!.setAttribute('aria-disabled', String(next === 'sending'));
-		label!.textContent = next === 'sending' ? 'Enviando…' : idleLabel;
+		label!.textContent = next === 'sending' ? m.sendingLabel : idleLabel;
 
 		status!.replaceChildren();
 		if (next === 'sending') {
 			// Para lectores de pantalla (visualmente ya lo dice el botón)
-			status!.textContent = 'Enviando tu mensaje…';
+			status!.textContent = m.sending;
 		} else if (next === 'success') {
-			status!.textContent = 'Gracias. Lo he recibido: empiezo por leerlo y mirar tu negocio, y te escribo.';
+			status!.textContent = m.success;
 		} else if (next === 'mail') {
 			const link = Object.assign(document.createElement('a'), { href: `mailto:${email}`, textContent: email });
 			status!.append(
-				'Se ha abierto tu correo con la solicitud ya escrita: solo te falta enviarla. Si no se ha abierto, escríbeme a ',
+				m.mail,
 				link,
 				'.',
 			);
 		} else if (next === 'error') {
-			const link = Object.assign(document.createElement('a'), { href: `mailto:${email}`, textContent: 'email' });
+			const link = Object.assign(document.createElement('a'), { href: `mailto:${email}`, textContent: m.errorLink });
 			status!.append(
-				'No se ha podido enviar el mensaje. Inténtalo de nuevo o escríbeme directamente por ',
+				m.error,
 				link,
 				'.',
 			);

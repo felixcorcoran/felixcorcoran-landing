@@ -1,13 +1,39 @@
-<section class="insight" aria-label="La idea">
-	<h2 class="title">
-		<span class="phrase" data-scene-part="insight-1">
-			<span class="line">No necesitas</span> <span class="line">más tecnología.</span>
-		</span>{' '}
-		<span class="phrase" data-scene-part="insight-2">
-			<span class="line">Necesitas</span> <span class="line">la tecnología</span>{' '}
-			<span class="line"><span class="accent" data-scene-part="insight-accent">adecuada</span>.</span>
-		</span>
-	</h2>
+---
+import { langOf } from '../i18n';
+
+// Dos frases en líneas fijas. En la segunda, el subrayado coral va sobre la
+// palabra clave: «adecuada» / «right» (antes o después, según el idioma).
+const lang = langOf(Astro.currentLocale);
+const label = { es: 'La idea', en: 'The idea' }[lang];
+---
+
+<section class="insight" aria-label={label}>
+	{
+		lang === 'en' ? (
+			<h2 class="title">
+				<span class="phrase" data-scene-part="insight-1">
+					<span class="line">You don't need</span> <span class="line">more technology.</span>
+				</span>{' '}
+				<span class="phrase" data-scene-part="insight-2">
+					<span class="line">You need</span>{' '}
+					<span class="line">
+						the <span class="accent" data-scene-part="insight-accent">right</span>
+					</span>{' '}
+					<span class="line">technology.</span>
+				</span>
+			</h2>
+		) : (
+			<h2 class="title">
+				<span class="phrase" data-scene-part="insight-1">
+					<span class="line">No necesitas</span> <span class="line">más tecnología.</span>
+				</span>{' '}
+				<span class="phrase" data-scene-part="insight-2">
+					<span class="line">Necesitas</span> <span class="line">la tecnología</span>{' '}
+					<span class="line"><span class="accent" data-scene-part="insight-accent">adecuada</span>.</span>
+				</span>
+			</h2>
+		)
+	}
 </section>
 
 <style>

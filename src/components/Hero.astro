@@ -2,6 +2,21 @@
 import { getImage } from 'astro:assets';
 import massPoster from '../assets/mass-poster.png';
 import massPosterCompact from '../assets/mass-poster-compact.png';
+import { langOf } from '../i18n';
+
+// El titular en cuatro líneas fijas y la respuesta en dos
+const copy = {
+	es: {
+		title: ['Encuentro dónde', 'se le escapan', 'clientes y tiempo', 'a tu negocio.'],
+		titleEm: 8.45,
+		lead: ['Miro cómo funciona, te digo qué cambiaría', 'y construyo solo lo que merece la pena.'],
+	},
+	en: {
+		title: ['I find where', 'your business', 'loses customers', 'and time.'],
+		titleEm: 8.45,
+		lead: ["I look at how it works, tell you what I'd change", "and build only what's worth building."],
+	},
+}[langOf(Astro.currentLocale)];
 
 // Primer frame real de la masa (ver el comentario del CSS). Hay dos: la
 // perspectiva depende de la composición, así que móvil tiene el suyo,
@@ -38,12 +53,13 @@ const [compact, wide, fallback] = await Promise.all([
 	</div>
 
 	<div class="content" data-scene-part="hero-copy">
-		<h1 id="hero-title" class="title">
-			<span>Encuentro dónde</span> <span>se le escapan</span> <span>clientes y tiempo</span> <span>a tu negocio.</span>
+		<!-- --title-em: lo que ocupa la línea más larga, que manda en móvil -->
+		<h1 id="hero-title" class="title" style={`--title-em: ${copy.titleEm}`}>
+			{copy.title.map((line, i) => <>{i > 0 && ' '}<span>{line}</span></>)}
 		</h1>
 		<p class="lead">
-			<span>Miro cómo funciona, te digo qué cambiaría</span>{' '}
-			<span>y construyo solo lo que merece la pena.</span>
+			<span>{copy.lead[0]}</span>{' '}
+			<span>{copy.lead[1]}</span>
 		</p>
 	</div>
 </section>

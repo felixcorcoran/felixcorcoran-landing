@@ -27,6 +27,13 @@ export const contact = {
 	formAccessKey: '',
 };
 
-export const whatsappHref = contact.whatsappNumber
-	? `https://wa.me/${contact.whatsappNumber}?text=${encodeURIComponent('Hola Félix, me gustaría que mirases mi negocio.')}`
-	: undefined;
+/** El primer mensaje de WhatsApp, ya escrito, en el idioma de la página */
+const whatsappGreeting = {
+	es: 'Hola Félix, me gustaría que mirases mi negocio.',
+	en: "Hi Félix, I'd like you to take a look at my business.",
+};
+
+export const whatsappHref = (lang: 'es' | 'en' = 'es') =>
+	contact.whatsappNumber
+		? `https://wa.me/${contact.whatsappNumber}?text=${encodeURIComponent(whatsappGreeting[lang])}`
+		: undefined;

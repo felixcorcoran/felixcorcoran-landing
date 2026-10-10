@@ -4,14 +4,14 @@ import photo from '../assets/felix.png';
  * La auditoría gratuita: lo que se promete en la landing y en /contacto.
  *
  * Igual que en contact.ts, lo que aún no está decidido no se inventa: un
- * dato vacío simplemente no se muestra. Rellenarlo es suficiente para que
- * aparezca en la sección de la auditoría.
+ * dato vacío simplemente no se muestra. Rellenarlo (en los dos idiomas) es
+ * suficiente para que aparezca en la sección de la auditoría.
  */
 export const audit = {
-	/** Cuánto tarda desde que se pide hasta que se entrega (p. ej. «una semana»). */
-	turnaround: '',
+	/** Cuánto tarda desde que se pide hasta que se entrega (p. ej. «una semana» / «a week»). */
+	turnaround: { es: '', en: '' },
 	/** Cómo se entrega (p. ej. «En una llamada de 30 minutos, o en persona si estás en Málaga»). */
-	delivery: '',
+	delivery: { es: '', en: '' },
 };
 
 /** Quién mira. Tres líneas, en primera persona. */

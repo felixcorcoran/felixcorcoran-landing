@@ -1,6 +1,7 @@
 ---
 import { getImage } from 'astro:assets';
 import store from '../assets/work/stc-desktop.png';
+import { langOf, workId } from '../i18n';
 
 // Captura real de la portada de la tienda (1965×943, sin retocar; solo se
 // ha recortado el marco del navegador). Ancho máximo 68rem: se sirve a ~1.8×
@@ -22,7 +23,62 @@ const [wide, fallback] = await Promise.all([
 // de poder entrar en la tienda. Abstracto a propósito: se entiende sin saber
 // nada de cartas ni de Shopify. Detrás del primero, la cola: llegan muchos y
 // a todos les toca lo mismo.
-const steps = ['Producto nuevo', 'Entender qué es', 'Clasificarlo', 'Estructurarlo', 'Listo para la tienda'];
+const lang = langOf(Astro.currentLocale);
+
+const t = {
+	es: {
+		eyebrow: 'Un caso real · IA aplicada a una tienda online',
+		title: ['No automaticé todo.', 'Automaticé lo que', 'tenía sentido'],
+		found: 'Lo que me encontré',
+		foundText: 'Un negocio de cartas coleccionables dando el salto a su propia tienda online.',
+		storeAlt:
+			'Portada de Spain Trading Cards: menú con Pokémon, One Piece, Dragon Ball, Naruto, otros TCG y otros productos',
+		seen: 'Lo que vi',
+		seenText: 'Muchos productos. Y en cada uno, la misma información que ordenar.',
+		processLabel:
+			'Esquema: cada producto nuevo tiene que entenderse, clasificarse y estructurarse antes de entrar en la tienda. Y llegan muchos.',
+		steps: ['Producto nuevo', 'Entender qué es', 'Clasificarlo', 'Estructurarlo', 'Listo para la tienda'],
+		decided: 'Lo que decidí',
+		decidedText: 'No todo necesitaba automatizarse.',
+		ai: 'IA',
+		flow: ['Un mensaje desde el móvil.', 'Lo entiende y lo escribe.', 'El producto, creado en la tienda.'],
+		system: 'Lo hace el sistema',
+		human: 'Lo revisa él',
+		automated: ['Clasifica.', 'Genera título y descripción.', 'Añade etiquetas.', 'Crea el producto.'],
+		reviewed: ['Las fotos.', 'El precio.', 'Lo que necesita criterio humano.'],
+		changed: 'Qué cambió',
+		changedTitle: 'Del móvil a la tienda.',
+		changedText: 'Dar de alta un producto ya no empieza delante del ordenador.',
+		closing: ['Automatizar más', 'no siempre significa', 'automatizar mejor.'],
+	},
+	en: {
+		eyebrow: 'A real case · AI applied to an online store',
+		title: ["I didn't automate everything.", 'I automated what', 'made sense'],
+		found: 'What I found',
+		foundText: 'A trading card business making the leap to its own online store.',
+		storeAlt:
+			'Spain Trading Cards homepage: menu with Pokémon, One Piece, Dragon Ball, Naruto, other TCGs and other products',
+		seen: 'What I saw',
+		seenText: 'Lots of products. And in every one, the same information to sort out.',
+		processLabel:
+			'Diagram: every new product has to be understood, classified and structured before it goes into the store. And lots of them arrive.',
+		steps: ['New product', 'Work out what it is', 'Classify it', 'Structure it', 'Ready for the store'],
+		decided: 'What I decided',
+		decidedText: "Not everything needed automating.",
+		ai: 'AI',
+		flow: ['A message from the phone.', 'Understands it and writes it up.', 'The product, created in the store.'],
+		system: 'What the system does',
+		human: 'What he reviews',
+		automated: ['Classifies.', 'Writes the title and description.', 'Adds tags.', 'Creates the product.'],
+		reviewed: ['The photos.', 'The price.', 'Anything that needs human judgement.'],
+		changed: 'What changed',
+		changedTitle: 'From phone to store.',
+		changedText: 'Adding a product no longer starts at the computer.',
+		closing: ['Automating more', "doesn't always mean", 'automating better.'],
+	},
+}[lang];
+
+const steps = t.steps;
 
 // Información sin ordenar: trozos de distinta longitud, torcidos y
 // desalineados (ancho, giro, desplazamiento)
@@ -41,26 +97,24 @@ const shelves = [
 ];
 
 // El caso es la diferencia entre las dos columnas, no la tecnología
-const automated = ['Clasifica.', 'Genera título y descripción.', 'Añade etiquetas.', 'Crea el producto.'];
-const human = ['Las fotos.', 'El precio.', 'Lo que necesita criterio humano.'];
+const automated = t.automated;
+const human = t.reviewed;
 ---
 
-<section id="trabajo" class="case" aria-labelledby="case-title">
+<section id={workId[lang]} class="case" aria-labelledby="case-title">
 	<header class="intro" data-reveal>
-		<p class="eyebrow" data-reveal-item>Un caso real · IA aplicada a una tienda online</p>
+		<p class="eyebrow" data-reveal-item>{t.eyebrow}</p>
 		<h2 id="case-title" class="title" data-reveal-item>
-			<span>No automaticé todo.</span>{' '}
-			<span>Automaticé lo que <span class="accent">tenía sentido</span>.</span>
+			<span>{t.title[0]}</span>{' '}
+			<span>{t.title[1]} <span class="accent">{t.title[2]}</span>.</span>
 		</h2>
 	</header>
 
 	<!-- 01 · Texto breve y, debajo, la tienda con presencia, desplazada a la derecha -->
 	<div class="found">
 		<div class="found-text" data-reveal>
-			<h3 class="eyebrow" data-reveal-item><span class="step">01</span> Lo que me encontré</h3>
-			<p class="say" data-reveal-item>
-				Un negocio de cartas coleccionables dando el salto a su propia tienda online.
-			</p>
+			<h3 class="eyebrow" data-reveal-item><span class="step">01</span> {t.found}</h3>
+			<p class="say" data-reveal-item>{t.foundText}</p>
 		</div>
 		<figure class="store" data-reveal>
 			<div class="window" data-reveal-item="clip">
@@ -70,7 +124,7 @@ const human = ['Las fotos.', 'El precio.', 'Lo que necesita criterio humano.'];
 						src={fallback.src}
 						srcset={fallback.srcSet.attribute}
 						sizes={sizes}
-						alt="Portada de Spain Trading Cards: menú con Pokémon, One Piece, Dragon Ball, Naruto, otros TCG y otros productos"
+						alt={t.storeAlt}
 						{...fallback.attributes}
 					/>
 				</picture>
@@ -83,16 +137,12 @@ const human = ['Las fotos.', 'El precio.', 'Lo que necesita criterio humano.'];
 	     la tienda, y cuántos llegaban -->
 	<div class="seen">
 		<div class="seen-head" data-reveal>
-			<h3 class="eyebrow" data-reveal-item><span class="step">02</span> Lo que vi</h3>
+			<h3 class="eyebrow" data-reveal-item><span class="step">02</span> {t.seen}</h3>
 			<!-- Una frase: el esquema de debajo enseña el resto -->
-			<p class="say" data-reveal-item>Muchos productos. Y en cada uno, la misma información que ordenar.</p>
+			<p class="say" data-reveal-item>{t.seenText}</p>
 		</div>
 
-		<figure
-			class="process"
-			data-reveal="sequence"
-			aria-label="Esquema: cada producto nuevo tiene que entenderse, clasificarse y estructurarse antes de entrar en la tienda. Y llegan muchos."
-		>
+		<figure class="process" data-reveal="sequence" aria-label={t.processLabel}>
 			<div class="process-steps">
 				{
 					steps.map((label, i) => (
@@ -172,36 +222,36 @@ const human = ['Las fotos.', 'El precio.', 'Lo que necesita criterio humano.'];
 	<!-- 03 · La decisión, en grande; después, el flujo y las dos columnas -->
 	<div class="decision">
 		<h3 class="giant" data-reveal>
-			<span class="eyebrow giant-step" data-reveal-item><span class="step">03</span> Lo que decidí</span>{' '}
-			<span class="giant-text" data-reveal-item="scale">No todo necesitaba automatizarse.</span>
+			<span class="eyebrow giant-step" data-reveal-item><span class="step">03</span> {t.decided}</span>{' '}
+			<span class="giant-text" data-reveal-item="scale">{t.decidedText}</span>
 		</h3>
 
 		<div class="flow" data-reveal="sequence">
 			<div class="node" data-reveal-item>
 				<span class="eyebrow">Telegram</span>
-				<p>Un mensaje desde el móvil.</p>
+				<p>{t.flow[0]}</p>
 			</div>
 			<span class="link" data-reveal-line aria-hidden="true"></span>
 			<div class="node node-ai" data-reveal-item>
-				<span class="eyebrow">IA</span>
-				<p>Lo entiende y lo escribe.</p>
+				<span class="eyebrow">{t.ai}</span>
+				<p>{t.flow[1]}</p>
 			</div>
 			<span class="link" data-reveal-line aria-hidden="true"></span>
 			<div class="node" data-reveal-item>
 				<span class="eyebrow">Shopify</span>
-				<p>El producto, creado en la tienda.</p>
+				<p>{t.flow[2]}</p>
 			</div>
 		</div>
 
 		<div class="split" data-reveal>
 			<div class="column system" data-reveal-item>
-				<h4 class="eyebrow column-title">Lo hace el sistema</h4>
+				<h4 class="eyebrow column-title">{t.system}</h4>
 				<ul class="list">
 					{automated.map((item) => <li>{item}</li>)}
 				</ul>
 			</div>
 			<div class="column human" data-reveal-item>
-				<h4 class="eyebrow column-title">Lo revisa él</h4>
+				<h4 class="eyebrow column-title">{t.human}</h4>
 				<ul class="list">
 					{human.map((item) => <li>{item}</li>)}
 				</ul>
@@ -211,15 +261,15 @@ const human = ['Las fotos.', 'El precio.', 'Lo que necesita criterio humano.'];
 
 	<!-- 04 · Qué cambió -->
 	<div class="changed" data-reveal>
-		<h3 class="eyebrow" data-reveal-item><span class="step">04</span> Qué cambió</h3>
-		<p class="changed-title" data-reveal-item="scale">Del móvil a la tienda.</p>
-		<p class="say-2 changed-text" data-reveal-item>Dar de alta un producto ya no empieza delante del ordenador.</p>
+		<h3 class="eyebrow" data-reveal-item><span class="step">04</span> {t.changed}</h3>
+		<p class="changed-title" data-reveal-item="scale">{t.changedTitle}</p>
+		<p class="say-2 changed-text" data-reveal-item>{t.changedText}</p>
 	</div>
 
 	<!-- Cierre: la idea del caso, sin explicación -->
 	<p class="closing" data-reveal>
 		<span data-reveal-item="scale">
-			<span>Automatizar más</span> <span>no siempre significa</span> <span>automatizar mejor.</span>
+			<span>{t.closing[0]}</span> <span>{t.closing[1]}</span> <span>{t.closing[2]}</span>
 		</span>
 	</p>
 </section>

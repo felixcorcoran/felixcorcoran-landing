@@ -1,17 +1,45 @@
-<section class="problem" aria-label="Las preguntas">
+---
+import { langOf } from '../i18n';
+
+// Tres preguntas, cada una en dos líneas fijas. La tercera (la IA) va a la
+// escala del Insight. --statement-em: la línea más larga, que manda en móvil.
+const copy = {
+	es: {
+		label: 'Las preguntas',
+		questions: [
+			['¿Dónde se te quedan', 'clientes por el camino?'],
+			['¿Qué haces cada día', 'que siempre es igual?'],
+			['¿Deberías usar IA?', '¿Para qué, exactamente?'],
+		],
+		em: 11.9,
+	},
+	en: {
+		label: 'The questions',
+		questions: [
+			['Where are customers', 'slipping away?'],
+			['What do you do every day', "that's always the same?"],
+			['Should you use AI?', 'What for, exactly?'],
+		],
+		em: 11.9,
+	},
+}[langOf(Astro.currentLocale)];
+const [first, second, third] = copy.questions;
+---
+
+<section class="problem" aria-label={copy.label} style={`--statement-em: ${copy.em}`}>
 	<div class="moment moment-1">
 		<p class="statement" data-scene-part="statement">
-			<span>¿Dónde se te quedan</span> <span>clientes por el camino?</span>
+			<span>{first[0]}</span> <span>{first[1]}</span>
 		</p>
 	</div>
 	<div class="moment moment-2">
 		<p class="statement" data-scene-part="statement">
-			<span>¿Qué haces cada día</span> <span>que siempre es igual?</span>
+			<span>{second[0]}</span> <span>{second[1]}</span>
 		</p>
 	</div>
 	<div class="moment moment-3">
 		<p class="statement statement-ia" data-scene-part="statement">
-			<span class="ask">¿Deberías usar IA?</span> <span>¿Para qué, exactamente?</span>
+			<span class="ask">{third[0]}</span> <span>{third[1]}</span>
 		</p>
 	</div>
 </section>
@@ -51,8 +79,6 @@
 	}
 
 	.statement {
-		--statement-em: 11.9;
-
 		margin: 0;
 		/* ~0.76× el titular del Hero. En móvil manda el ancho disponible: la
 		   línea más larga («¿Para qué, exactamente?», 11.7em) cabe en --statement-em. */

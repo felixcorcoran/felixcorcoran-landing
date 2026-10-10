@@ -6,6 +6,13 @@ import tailwindcss from '@tailwindcss/vite';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://felixcorcoran.es',
+  // Español en la raíz; inglés en /en/ (para negocios de habla inglesa de la
+  // Costa del Sol). Los componentes eligen sus textos con Astro.currentLocale.
+  i18n: {
+    defaultLocale: 'es',
+    locales: ['es', 'en'],
+    routing: { prefixDefaultLocale: false },
+  },
   fonts: [
     {
       // Self-hosted desde @fontsource/sora. Solo el subset latin (cubre el

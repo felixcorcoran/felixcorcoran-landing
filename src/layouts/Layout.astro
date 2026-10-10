@@ -1,6 +1,7 @@
 ---
 import { Font } from 'astro:assets';
 import '../styles/global.css';
+import { alternatesOf, langOf } from '../i18n';
 
 interface Props {
 	title: string;
@@ -13,13 +14,23 @@ interface Props {
 
 const { title, description, noindex = false, jsonLd } = Astro.props;
 
-// URL canónica (sin barra final, salvo la raíz) e imagen para compartir
+const lang = langOf(Astro.currentLocale);
+
+// URL canónica (sin barra final, salvo la raíz) e imagen para compartir, en
+// el idioma de la página
 const canonical = new URL(Astro.url.pathname.replace(/(.)\/$/, '$1'), Astro.site);
-const image = new URL('/og.png', Astro.site);
+const image = new URL(lang === 'en' ? '/og-en.png' : '/og.png', Astro.site);
+const imageAlt = {
+	es: 'felixcorcoran — Encuentro dónde se le escapan clientes y tiempo a tu negocio.',
+	en: 'felixcorcoran — I find where your business loses customers and time.',
+}[lang];
+
+// La misma página en el otro idioma (para buscadores): solo si existe
+const alternates = alternatesOf(Astro.url.pathname);
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={lang}>
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -31,10 +42,19 @@ const image = new URL('/og.png', Astro.site);
 		<link rel="icon" type="image/png" sizes="96x96" href="/favicon.png" />
 		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 		<link rel="sitemap" href="/sitemap.xml" />
+		{
+			alternates && !noindex && (
+				<>
+					<link rel="alternate" hreflang="es" href={new URL(alternates.es, Astro.site)} />
+					<link rel="alternate" hreflang="en" href={new URL(alternates.en, Astro.site)} />
+					<link rel="alternate" hreflang="x-default" href={new URL(alternates.es, Astro.site)} />
+				</>
+			)
+		}
 
 		<!-- Al compartir el enlace (WhatsApp, LinkedIn, email…) -->
 		<meta property="og:type" content="website" />
-		<meta property="og:locale" content="es_ES" />
+		<meta property="og:locale" content={lang === 'en' ? 'en_GB' : 'es_ES'} />
 		<meta property="og:site_name" content="Félix Corcoran" />
 		<meta property="og:url" content={canonical} />
 		<meta property="og:title" content={title} />
@@ -42,7 +62,7 @@ const image = new URL('/og.png', Astro.site);
 		<meta property="og:image" content={image} />
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
-		<meta property="og:image:alt" content="felixcorcoran — Encuentro dónde se le escapan clientes y tiempo a tu negocio." />
+		<meta property="og:image:alt" content={imageAlt} />
 		<meta name="twitter:card" content="summary_large_image" />
 
 		<Font cssVariable="--font-sora" preload={[{ weight: 400 }]} />

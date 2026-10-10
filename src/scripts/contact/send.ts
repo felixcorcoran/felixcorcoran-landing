@@ -9,6 +9,8 @@ export interface ContactMessage {
 	/** Opcional: nombre, web o ficha de Google del negocio. */
 	business: string;
 	message: string;
+	/** Idioma de la página desde la que se escribe: en qué idioma responder. */
+	lang: 'es' | 'en';
 }
 
 /**
@@ -19,7 +21,10 @@ export interface ContactMessage {
  */
 export type Delivery = 'sent' | 'mail';
 
-const subject = (message: ContactMessage) => `Solicitud de auditoría — ${message.business || message.name}`;
+// El correo es para Félix (en español); las solicitudes de la versión inglesa
+// llevan [EN] para que se vea de un vistazo en qué idioma contestar
+const subject = (message: ContactMessage) =>
+	`${message.lang === 'en' ? '[EN] ' : ''}Solicitud de auditoría — ${message.business || message.name}`;
 
 /**
  * Envía una solicitud. Lanza un error si no se ha podido; el formulario se
@@ -63,9 +68,14 @@ export async function sendContactMessage(message: ContactMessage): Promise<Deliv
 
 /** El correo de la persona, con la solicitud escrita (mailto:). */
 function openMail(message: ContactMessage) {
-	const lines = [message.message, '', '—', `Nombre: ${message.name}`, `Email: ${message.email}`];
-	if (message.phone) lines.push(`Teléfono: ${message.phone}`);
-	if (message.business) lines.push(`Negocio: ${message.business}`);
+	// Lo envía quien escribe, desde su correo: las etiquetas, en su idioma
+	const l =
+		message.lang === 'en'
+			? { name: 'Name', phone: 'Phone', business: 'Business' }
+			: { name: 'Nombre', phone: 'Teléfono', business: 'Negocio' };
+	const lines = [message.message, '', '—', `${l.name}: ${message.name}`, `Email: ${message.email}`];
+	if (message.phone) lines.push(`${l.phone}: ${message.phone}`);
+	if (message.business) lines.push(`${l.business}: ${message.business}`);
 
 	const query = new URLSearchParams({ subject: subject(message), body: lines.join('\n') })
 		.toString()

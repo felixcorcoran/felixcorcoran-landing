@@ -8,6 +8,14 @@ import avilaDesktop from '../assets/work/avila-desktop.jpg';
 import avilaMobile from '../assets/work/avila-mobile.jpg';
 import kaloaiDesktop from '../assets/work/kaloai-desktop.jpg';
 import kaloaiMobile from '../assets/work/kaloai-mobile.jpg';
+import { langOf } from '../i18n';
+
+const lang = langOf(Astro.currentLocale);
+
+const t = {
+	es: { eyebrow: 'Más trabajo', title: 'Otras cosas que he construido.', view: 'Ver la web', newTab: 'se abre en una pestaña nueva' },
+	en: { eyebrow: 'More work', title: "Other things I've built.", view: 'View site', newTab: 'opens in a new tab' },
+}[lang];
 
 // Prueba de que sé construir (el caso ya ha enseñado cómo decido qué
 // construir). Cada trabajo dice qué es, sin resultados que no estén
@@ -18,33 +26,45 @@ import kaloaiMobile from '../assets/work/kaloai-mobile.jpg';
 // 1170×2100).
 const projects = [
 	{
-		kind: 'Web + sistema de reservas',
+		kind: { es: 'Web + sistema de reservas', en: 'Website + booking system' }[lang],
 		name: 'Peluquería Pilar',
-		text: 'Web bilingüe, servicios y sistema de solicitud y gestión de citas.',
+		text: {
+			es: 'Web bilingüe, servicios y sistema de solicitud y gestión de citas.',
+			en: 'Bilingual website, services and a system for requesting and managing appointments.',
+		}[lang],
 		url: 'https://pilarpeluqueria.com/inicio.html',
 		image: pilarDesktop,
 		mobile: pilarMobile,
 	},
 	{
-		kind: 'Web',
+		kind: { es: 'Web', en: 'Website' }[lang],
 		name: 'Reformas y Mantenimientos Paola',
-		text: 'Web bilingüe y sistema de solicitud de presupuestos.',
+		text: {
+			es: 'Web bilingüe y sistema de solicitud de presupuestos.',
+			en: 'Bilingual website and a quote request system.',
+		}[lang],
 		url: 'https://reformasymantenimientospaola.com/inicio',
 		image: paolaDesktop,
 		mobile: paolaMobile,
 	},
 	{
-		kind: 'Web',
+		kind: { es: 'Web', en: 'Website' }[lang],
 		name: 'Ávila Secretaria Online',
-		text: 'Web bilingüe de un servicio de secretaría online: qué hace, cuánto cuesta y consulta gratuita.',
+		text: {
+			es: 'Web bilingüe de un servicio de secretaría online: qué hace, cuánto cuesta y consulta gratuita.',
+			en: 'Bilingual website for an online secretarial service: what it does, what it costs and a free consultation.',
+		}[lang],
 		url: 'https://avilasecretariaonline.com/inicio.html',
 		image: avilaDesktop,
 		mobile: avilaMobile,
 	},
 	{
-		kind: 'Aplicación web con IA',
+		kind: { es: 'Aplicación web con IA', en: 'AI web app' }[lang],
 		name: 'KaloAI',
-		text: 'Aplicación web con IA de nutrición: usuarios, nutricionistas, administración, seguimiento, planificación y generación personalizada de recetas.',
+		text: {
+			es: 'Aplicación web con IA de nutrición: usuarios, nutricionistas, administración, seguimiento, planificación y generación personalizada de recetas.',
+			en: 'AI nutrition web app: users, nutritionists, admin, tracking, planning and personalised recipe generation.',
+		}[lang],
 		url: 'https://kaloai.infinityfreeapp.com/index.php',
 		image: kaloaiDesktop,
 		mobile: kaloaiMobile,
@@ -66,8 +86,8 @@ const previews = await Promise.all(
 
 <section class="work" aria-labelledby="work-title">
 	<header class="intro" data-reveal>
-		<p class="eyebrow" data-reveal-item>Más trabajo</p>
-		<h2 id="work-title" class="title" data-reveal-item>Otras cosas que he construido.</h2>
+		<p class="eyebrow" data-reveal-item>{t.eyebrow}</p>
+		<h2 id="work-title" class="title" data-reveal-item>{t.title}</h2>
 	</header>
 
 	<ul class="list">
@@ -84,7 +104,7 @@ const previews = await Promise.all(
 								<h3 class="name">{name}</h3>
 								<p class="text">{text}</p>
 								<a class="live" href={url} target="_blank" rel="noopener">
-									Ver la web<span class="sr-only">: {name} (se abre en una pestaña nueva)</span>
+									{t.view}<span class="sr-only">: {name} ({t.newTab})</span>
 									<svg viewBox="0 0 12 12" aria-hidden="true" focusable="false">
 										<path d="M3 9 9 3M4 3h5v5" />
 									</svg>

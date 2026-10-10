@@ -1,44 +1,93 @@
 ---
 import { Picture } from 'astro:assets';
 import { audit, person } from '../data/audit';
+import { langOf, routes } from '../i18n';
+
+const lang = langOf(Astro.currentLocale);
 
 // El método. Los cuatro primeros pasos son la auditoría (gratis); el quinto
 // es el trabajo, y solo ocurre si algo merece la pena.
-const steps = [
-	{
-		name: 'Escuchar',
-		text: 'Me cuentas qué te preocupa y dónde se te va el tiempo.',
+const t = {
+	es: {
+		eyebrow: 'La auditoría gratuita',
+		title: ['Primero miro.', 'Después decido.', 'Luego construyo.'],
+		steps: [
+			{ name: 'Escuchar', text: 'Me cuentas qué te preocupa y dónde se te va el tiempo.' },
+			{ name: 'Observar', text: 'Miro tu web, tu ficha de Google, tus redes y cómo funciona hoy el negocio.' },
+			{
+				name: 'Contrastar',
+				text: 'Lo que veo, te lo pregunto. Una observación no es un problema hasta que la contrasto contigo.',
+			},
+			{ name: 'Priorizar', text: 'Te digo qué merece la pena y qué no.' },
+		],
+		boundary: 'Hasta aquí, la auditoría. Gratis y sin compromiso.',
+		build: {
+			name: 'Construir',
+			text: 'Solo después, y solo si tiene sentido. Puede ser una web, una automatización, IA, una integración… o nada.',
+		},
+		outcome: 'Lo que te llevas',
+		promise: 'Hasta 3 oportunidades concretas.',
+		outcomeText:
+			'Solo las que merezcan la pena: qué pasa hoy, por qué importa, qué tipo de solución tendría y por cuál empezaría yo.',
+		ai: 'Si la IA tiene sentido en tu negocio, te digo dónde. Si no lo tiene, también.',
+		small: 'No es un informe de 40 páginas. Es una conversación y una lista corta.',
+		turnaround: 'Plazo',
+		who: 'Quién mira',
+		bio: 'Trabajo solo, desde Málaga. Hablas conmigo desde la primera pregunta hasta lo último que construyamos.',
+		builds: 'Construyo webs, sistemas de reservas, automatizaciones y herramientas con IA.',
+		request: 'Solicitar auditoría gratuita',
 	},
-	{
-		name: 'Observar',
-		text: 'Miro tu web, tu ficha de Google, tus redes y cómo funciona hoy el negocio.',
+	en: {
+		eyebrow: 'The free audit',
+		title: ['First, I look.', 'Then, I decide.', 'Only then, I build.'],
+		steps: [
+			{ name: 'Listen', text: 'You tell me what worries you and where your time goes.' },
+			{
+				name: 'Observe',
+				text: 'I look at your website, your Google profile, your social media and how the business works today.',
+			},
+			{
+				name: 'Check',
+				text: "I ask you about what I see. An observation isn't a problem until I've checked it with you.",
+			},
+			{ name: 'Prioritise', text: "I tell you what's worth doing and what isn't." },
+		],
+		boundary: 'Up to here, the audit. Free, no strings attached.',
+		build: {
+			name: 'Build',
+			text: 'Only afterwards, and only if it makes sense. It could be a website, an automation, AI, an integration… or nothing.',
+		},
+		outcome: 'What you get',
+		promise: 'Up to 3 concrete opportunities.',
+		outcomeText:
+			"Only the ones worth it: what's happening today, why it matters, what kind of solution it would need and which one I'd start with.",
+		ai: "If AI makes sense for your business, I'll tell you where. If it doesn't, I'll tell you that too.",
+		small: "It isn't a 40-page report. It's a conversation and a short list.",
+		turnaround: 'Turnaround',
+		who: "Who's looking",
+		bio: 'I work on my own, from Málaga. You talk to me from the first question to the last thing we build.',
+		builds: 'I build websites, booking systems, automations and AI tools.',
+		request: 'Request a free audit',
 	},
-	{
-		name: 'Contrastar',
-		text: 'Lo que veo, te lo pregunto. Una observación no es un problema hasta que la contrasto contigo.',
-	},
-	{
-		name: 'Priorizar',
-		text: 'Te digo qué merece la pena y qué no.',
-	},
-];
+}[lang];
 
-const build = {
-	name: 'Construir',
-	text: 'Solo después, y solo si tiene sentido. Puede ser una web, una automatización, IA, una integración… o nada.',
-};
+const steps = t.steps;
+const build = t.build;
 
 // Datos prácticos: solo los que ya están decididos (ver src/data/audit.ts)
-const facts = [audit.delivery, audit.turnaround && `Plazo: ${audit.turnaround}.`].filter(Boolean);
+const facts = [
+	audit.delivery[lang],
+	audit.turnaround[lang] && `${t.turnaround}: ${audit.turnaround[lang]}.`,
+].filter(Boolean);
 ---
 
 <section class="audit" aria-labelledby="audit-title">
 	<header class="intro" data-reveal>
-		<p class="eyebrow" data-reveal-item>La auditoría gratuita</p>
+		<p class="eyebrow" data-reveal-item>{t.eyebrow}</p>
 		<h2 id="audit-title" class="title">
-			<span data-reveal-item="scale">Primero miro.</span>{' '}
-			<span data-reveal-item="scale">Después decido.</span>{' '}
-			<span data-reveal-item="scale">Luego construyo.</span>
+			<span data-reveal-item="scale">{t.title[0]}</span>{' '}
+			<span data-reveal-item="scale">{t.title[1]}</span>{' '}
+			<span data-reveal-item="scale">{t.title[2]}</span>
 		</h2>
 	</header>
 
@@ -60,7 +109,7 @@ const facts = [audit.delivery, audit.turnaround && `Plazo: ${audit.turnaround}.`
 
 		<!-- La frontera: hasta aquí, gratis. Una línea oscura en lugar de la fina. -->
 		<li class="row after" data-reveal>
-			<p class="boundary" data-reveal-item>Hasta aquí, la auditoría. Gratis y sin compromiso.</p>
+			<p class="boundary" data-reveal-item>{t.boundary}</p>
 			<h3 class="step-label" data-reveal-item>
 				<span class="numeral" aria-hidden="true">05</span>{' '}
 				<span class="step-name">{build.name}</span>
@@ -73,22 +122,19 @@ const facts = [audit.delivery, audit.turnaround && `Plazo: ${audit.turnaround}.`
 	</ol>
 
 	<div class="row outcome" data-reveal>
-		<h3 class="eyebrow" data-reveal-item>Lo que te llevas</h3>
+		<h3 class="eyebrow" data-reveal-item>{t.outcome}</h3>
 		<div class="body" data-reveal-item>
-			<p class="promise">Hasta 3&nbsp;oportunidades concretas.</p>
-			<p class="text">
-				Solo las que merezcan la pena: qué pasa hoy, por qué importa, qué tipo de solución tendría y por cuál
-				empezaría yo.
-			</p>
-			<p class="text">Si la IA tiene sentido en tu negocio, te digo dónde. Si no lo tiene, también.</p>
-			<p class="small">No es un informe de 40 páginas. Es una conversación y una lista corta.</p>
+			<p class="promise">{t.promise}</p>
+			<p class="text">{t.outcomeText}</p>
+			<p class="text">{t.ai}</p>
+			<p class="small">{t.small}</p>
 			{facts.length > 0 && <p class="small">{facts.join(' ')}</p>}
 		</div>
 		<span class="row-rule" data-reveal-line aria-hidden="true"></span>
 	</div>
 
 	<div class="row person" data-reveal>
-		<h3 class="eyebrow" data-reveal-item>Quién mira</h3>
+		<h3 class="eyebrow" data-reveal-item>{t.who}</h3>
 		<div class="body person-body" data-reveal-item>
 			{
 				person.photo && (
@@ -105,11 +151,8 @@ const facts = [audit.delivery, audit.turnaround && `Plazo: ${audit.turnaround}.`
 			}
 			<div>
 				<p class="name">{person.name}</p>
-				<p class="text">
-					Trabajo solo, desde Málaga. Hablas conmigo desde la primera pregunta hasta lo último que
-					construyamos.
-				</p>
-				<p class="text muted">Construyo webs, sistemas de reservas, automatizaciones y herramientas con IA.</p>
+				<p class="text">{t.bio}</p>
+				<p class="text muted">{t.builds}</p>
 			</div>
 		</div>
 		<span class="row-rule" data-reveal-line aria-hidden="true"></span>
@@ -120,8 +163,8 @@ const facts = [audit.delivery, audit.turnaround && `Plazo: ${audit.turnaround}.`
 	     para la CTA final. -->
 	<div class="row next" data-reveal>
 		<p class="next-body" data-reveal-item>
-			<a class="next-link" href="/contacto">
-				Solicitar auditoría gratuita
+			<a class="next-link" href={routes.contact[lang]}>
+				{t.request}
 				<svg viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M1.5 6h9M7 2.5 10.5 6 7 9.5" /></svg>
 			</a>
 		</p>
@@ -281,7 +324,9 @@ const facts = [audit.delivery, audit.turnaround && `Plazo: ${audit.turnaround}.`
 
 	.promise {
 		margin: 0 0 clamp(1.5rem, 4svh, 2.5rem);
-		font-size: clamp(2.5rem, 1rem + 5vw, 5.75rem);
+		/* Por debajo de 400 px, el mínimo baja con la pantalla: «oportunidades»
+		   (y «opportunities») caben enteras en su columna */
+		font-size: clamp(min(2.5rem, 10vw), 1rem + 5vw, 5.75rem);
 		line-height: 1;
 		letter-spacing: -0.045em;
 		text-wrap: balance;

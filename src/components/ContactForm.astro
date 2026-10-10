@@ -1,10 +1,45 @@
 ---
 import { contact } from '../data/contact';
+import { langOf } from '../i18n';
+
+const lang = langOf(Astro.currentLocale);
+
+const t = {
+	es: {
+		name: 'Nombre',
+		email: 'Email',
+		phone: 'Teléfono',
+		phoneHint: '— opcional, si prefieres que te llame',
+		business: 'Tu negocio',
+		businessHint: '— nombre, web o ficha de Google',
+		message: '¿Qué te gustaría mejorar?',
+		messageHint:
+			'Dónde se te va el tiempo, dónde se atascan tus clientes… Con tus palabras: no hace falta saber qué tecnología necesitas.',
+		submit: 'Solicitar auditoría',
+		privacy: 'Solo usaré estos datos para responder a tu solicitud. Puedes pedir que los corrija o los borre cuando quieras: los detalles, en la',
+		privacyLink: 'política de privacidad',
+	},
+	en: {
+		name: 'Name',
+		email: 'Email',
+		phone: 'Phone',
+		phoneHint: "— optional, if you'd rather I called",
+		business: 'Your business',
+		businessHint: '— name, website or Google profile',
+		message: 'What would you like to improve?',
+		messageHint:
+			"Where your time goes, where customers get stuck… In your own words: you don't need to know what technology you need.",
+		submit: 'Request audit',
+		privacy: "I'll only use this data to reply to your request. You can ask me to correct or delete it at any time: details in the",
+		privacyLink: 'privacy policy (in Spanish)',
+	},
+}[lang];
 ---
 
-<form class="form" data-contact-form data-email={contact.email}>
+<!-- data-lang: el script elige el idioma de sus mensajes -->
+<form class="form" data-contact-form data-email={contact.email} data-lang={lang}>
 	<div class="field">
-		<label for="contact-name">Nombre</label>
+		<label for="contact-name">{t.name}</label>
 		<input
 			id="contact-name"
 			name="name"
@@ -18,7 +53,7 @@ import { contact } from '../data/contact';
 	</div>
 
 	<div class="field">
-		<label for="contact-email">Email</label>
+		<label for="contact-email">{t.email}</label>
 		<input
 			id="contact-email"
 			name="email"
@@ -32,21 +67,18 @@ import { contact } from '../data/contact';
 	</div>
 
 	<div class="field">
-		<label for="contact-phone">Teléfono <span class="optional">— opcional, si prefieres que te llame</span></label>
+		<label for="contact-phone">{t.phone} <span class="optional">{t.phoneHint}</span></label>
 		<input id="contact-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" />
 	</div>
 
 	<div class="field">
-		<label for="contact-business">Tu negocio <span class="optional">— nombre, web o ficha de Google</span></label>
+		<label for="contact-business">{t.business} <span class="optional">{t.businessHint}</span></label>
 		<input id="contact-business" name="business" type="text" autocomplete="organization" />
 	</div>
 
 	<div class="field">
-		<label for="contact-message">¿Qué te gustaría mejorar?</label>
-		<p id="contact-message-hint" class="hint">
-			Dónde se te va el tiempo, dónde se atascan tus clientes… Con tus palabras: no hace falta saber qué
-			tecnología necesitas.
-		</p>
+		<label for="contact-message">{t.message}</label>
+		<p id="contact-message-hint" class="hint">{t.messageHint}</p>
 		<textarea
 			id="contact-message"
 			name="message"
@@ -58,13 +90,12 @@ import { contact } from '../data/contact';
 
 	<div class="submit-row">
 		<button class="submit" type="submit">
-			<span data-button-label>Solicitar auditoría</span>
+			<span data-button-label>{t.submit}</span>
 			<svg viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 9 9 3M4 3h5v5" /></svg>
 		</button>
 		<p class="status" role="status" data-form-status></p>
 		<p class="privacy">
-			Solo usaré estos datos para responder a tu solicitud. Puedes pedir que los corrija o los borre cuando
-			quieras: los detalles, en la <a href="/privacidad">política de privacidad</a>.
+			{t.privacy} <a href="/privacidad" hreflang="es">{t.privacyLink}</a>.
 		</p>
 	</div>
 </form>
