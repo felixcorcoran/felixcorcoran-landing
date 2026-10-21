@@ -245,7 +245,7 @@ const facts = [
 		font-weight: 300;
 		line-height: 0.85;
 		letter-spacing: -0.05em;
-		color: rgb(23 23 23 / 0.3);
+		color: rgb(var(--ink) / 0.3);
 		font-variant-numeric: tabular-nums;
 	}
 
@@ -303,7 +303,7 @@ const facts = [
 	/* Más claro que los de la auditoría (es lo que viene después), pero
 	   legible también en pantallas con poco contraste */
 	.after .numeral {
-		color: rgb(23 23 23 / 0.2);
+		color: rgb(var(--ink) / 0.2);
 	}
 
 	/* ---------- Lo que te llevas ---------- */
@@ -385,7 +385,7 @@ const facts = [
 		letter-spacing: -0.015em;
 		color: var(--text);
 		text-decoration: underline;
-		text-decoration-color: rgb(23 23 23 / 0.25);
+		text-decoration-color: rgb(var(--ink) / 0.25);
 		text-decoration-thickness: 1px;
 		text-underline-offset: 0.3em;
 		transition: text-decoration-color 0.3s var(--ease-out);

@@ -414,7 +414,7 @@ const human = t.reviewed;
 	.process {
 		/* El producto: un melocotón algo más vivo que --accent-soft, a medio
 		   camino del coral */
-		--product: color-mix(in srgb, var(--accent) 42%, #fff);
+		--product: color-mix(in srgb, var(--accent) 42%, var(--surface));
 
 		margin: clamp(3.5rem, 10svh, 6rem) 0 0;
 	}
@@ -480,15 +480,15 @@ const human = t.reviewed;
 	.ghost {
 		aspect-ratio: 1;
 		border-radius: clamp(0.5rem, 0.9vw, 0.875rem);
-		background: #fff;
+		background: var(--surface);
 	}
 
 	.card {
 		position: relative;
 		container-type: inline-size;
 		box-shadow:
-			0 1px 2px rgb(23 23 23 / 0.05),
-			0 18px 40px -24px rgb(23 23 23 / 0.3);
+			0 1px 2px rgb(var(--ink) / 0.05),
+			0 18px 40px -24px rgb(var(--ink) / 0.3);
 	}
 
 	/* La cola: más productos esperando detrás del primero */
@@ -496,8 +496,8 @@ const human = t.reviewed;
 		position: absolute;
 		inset: 0;
 		box-shadow:
-			0 0 0 1px rgb(23 23 23 / 0.06),
-			0 10px 24px -18px rgb(23 23 23 / 0.25);
+			0 0 0 1px rgb(var(--ink) / 0.06),
+			0 10px 24px -18px rgb(var(--ink) / 0.25);
 	}
 
 	.ghost:nth-child(1) {
@@ -560,7 +560,7 @@ const human = t.reviewed;
 		width: var(--w);
 		height: 4cqw;
 		border-radius: 4cqw;
-		background: rgb(23 23 23 / 0.16);
+		background: rgb(var(--ink) / 0.16);
 	}
 
 	.bar.dark {
@@ -591,7 +591,7 @@ const human = t.reviewed;
 		width: var(--w);
 		height: 5cqw;
 		border-radius: 5cqw;
-		background: rgb(23 23 23 / 0.14);
+		background: rgb(var(--ink) / 0.14);
 	}
 
 	.chip.on {
@@ -609,7 +609,7 @@ const human = t.reviewed;
 		width: var(--w);
 		height: 7cqw;
 		border-radius: 7cqw;
-		box-shadow: inset 0 0 0 max(1px, 0.5cqw) rgb(23 23 23 / 0.35);
+		box-shadow: inset 0 0 0 max(1px, 0.5cqw) rgb(var(--ink) / 0.35);
 	}
 
 	/* Listo para la tienda: ya es uno más del escaparate */
@@ -628,11 +628,11 @@ const human = t.reviewed;
 		aspect-ratio: 16 / 10;
 		margin-bottom: 1cqw;
 		border-radius: 3cqw;
-		background: rgb(23 23 23 / 0.09);
+		background: rgb(var(--ink) / 0.09);
 	}
 
 	.tile .bar {
-		background: rgb(23 23 23 / 0.11);
+		background: rgb(var(--ink) / 0.11);
 	}
 
 	.tile.ours .tile-thumb {
@@ -763,7 +763,7 @@ const human = t.reviewed;
 	.system {
 		padding: var(--pad);
 		border-radius: clamp(0.75rem, 1vw, 1rem);
-		background: rgb(23 23 23 / 0.04);
+		background: rgb(var(--ink) / 0.04);
 	}
 
 	.system .list li {

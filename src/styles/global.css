@@ -12,6 +12,21 @@
   --accent: #F28C7A;
   --accent-soft: #FFD6CC;
 
+  /* Los mismos colores como canales, para usarlos con transparencia:
+     rgb(var(--ink) / 0.2). Así el modo oscuro solo cambia estas variables. */
+  --ink: 23 23 23;
+  --paper: 250 249 246;
+  --surface: #fff;
+  --surface-rgb: 255 255 255;
+
+  /* El halo de la masa: coral en el centro, melocotón hacia fuera */
+  --glow-1: rgb(242 140 122 / 0.34);
+  --glow-2: rgb(255 214 204 / 0.5);
+  --glow-3: rgb(255 214 204 / 0.18);
+  --glow-4: rgb(255 214 204 / 0);
+
+  color-scheme: light;
+
   /* Layout: la navbar y el contenido comparten el mismo marco */
   --gutter: clamp(1rem, 3vw, 2.5rem);
   --frame: min(100% - 2 * var(--gutter), 84rem);
@@ -28,6 +43,29 @@
      es lija. */
   --grain: 0.12;
   --grain-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='.33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='discrete' tableValues='0 1'/%3E%3CfeFuncG type='discrete' tableValues='0 1'/%3E%3CfeFuncB type='discrete' tableValues='0 1'/%3E%3CfeFuncA type='table' tableValues='1 0 1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Modo oscuro: solo si el visitante lo elige con el botón de la barra (la
+   web es clara por defecto, también con el móvil en oscuro). Lo aplica un
+   script en <head> antes de pintar, para que no haya destello. */
+:root[data-theme="dark"] {
+  --bg: #131211;
+  --text: #EEEBE5;
+  --text-muted: #A39F98;
+  --accent-soft: #5B3129;
+
+  --ink: 238 235 229;
+  --paper: 19 18 17;
+  --surface: #1D1B1A;
+  --surface-rgb: 29 27 26;
+
+  /* Sobre oscuro, el halo es un resplandor coral más contenido */
+  --glow-1: rgb(242 140 122 / 0.3);
+  --glow-2: rgb(242 140 122 / 0.15);
+  --glow-3: rgb(242 140 122 / 0.05);
+  --glow-4: rgb(242 140 122 / 0);
+
+  color-scheme: dark;
 }
 
 @media (max-width: 40rem) {
@@ -93,7 +131,7 @@ main::before {
                 sombra que solo separa */
 
 :root {
-  --rule: rgb(23 23 23 / 0.1);
+  --rule: rgb(var(--ink) / 0.1);
   --label-col: clamp(10rem, 18vw, 15rem);
   --col-gap: clamp(2rem, 5vw, 5rem);
 }
@@ -145,10 +183,10 @@ main::before {
   margin: 0;
   overflow: hidden;
   border-radius: clamp(0.625rem, 1vw, 1rem);
-  background: rgb(23 23 23 / 0.04);
+  background: rgb(var(--ink) / 0.04);
   box-shadow:
-    0 1px 2px rgb(23 23 23 / 0.04),
-    0 30px 70px -30px rgb(23 23 23 / 0.22);
+    0 1px 2px rgb(var(--ink) / 0.04),
+    0 30px 70px -30px rgb(var(--ink) / 0.22);
 }
 
 /* Borde encima de la imagen (si no, la foto lo tapa) */
@@ -157,7 +195,7 @@ main::before {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow: inset 0 0 0 1px rgb(23 23 23 / 0.08);
+  box-shadow: inset 0 0 0 1px rgb(var(--ink) / 0.08);
   pointer-events: none;
 }
 

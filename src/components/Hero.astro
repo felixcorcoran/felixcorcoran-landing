@@ -113,10 +113,10 @@ const [compact, wide, fallback] = await Promise.all([
 		inset: 0;
 		background: radial-gradient(
 			ellipse 46% 40svh at 50% calc(100% - var(--bleed)),
-			rgb(242 140 122 / 0.34) 0%,
-			rgb(255 214 204 / 0.5) 35%,
-			rgb(255 214 204 / 0.18) 68%,
-			rgb(255 214 204 / 0) 100%
+			var(--glow-1) 0%,
+			var(--glow-2) 35%,
+			var(--glow-3) 68%,
+			var(--glow-4) 100%
 		);
 	}
 
@@ -194,10 +194,10 @@ const [compact, wide, fallback] = await Promise.all([
 		bottom: -60svh;
 		background: radial-gradient(
 			ellipse 46% 40svh at 50% calc(100% - 60svh),
-			rgb(242 140 122 / 0.34) 0%,
-			rgb(255 214 204 / 0.5) 35%,
-			rgb(255 214 204 / 0.18) 68%,
-			rgb(255 214 204 / 0) 100%
+			var(--glow-1) 0%,
+			var(--glow-2) 35%,
+			var(--glow-3) 68%,
+			var(--glow-4) 100%
 		);
 		transform-origin: 50% calc(100% - 60svh);
 		will-change: transform;

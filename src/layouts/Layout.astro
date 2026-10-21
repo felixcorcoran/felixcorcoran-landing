@@ -37,7 +37,18 @@ const alternates = alternatesOf(Astro.url.pathname);
 		<title>{title}</title>
 		<meta name="description" content={description} />
 		{noindex ? <meta name="robots" content="noindex, follow" /> : <link rel="canonical" href={canonical} />}
-		<meta name="theme-color" content="#FAF9F6" />
+		<meta name="theme-color" content="#FAF9F6" data-theme-color />
+		<!-- Modo oscuro solo si el visitante lo eligió (botón de la barra). Va
+		     antes de pintar para que no haya destello claro. Si el
+		     almacenamiento no está disponible, la web se queda clara. -->
+		<script is:inline>
+			try {
+				if (localStorage.getItem('tema') === 'oscuro') {
+					document.documentElement.dataset.theme = 'dark';
+					document.querySelector('[data-theme-color]')?.setAttribute('content', '#131211');
+				}
+			} catch {}
+		</script>
 		<!-- El monograma «fc» coral, el mismo que el logo del Perfil de Empresa -->
 		<link rel="icon" type="image/png" sizes="96x96" href="/favicon.png" />
 		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
