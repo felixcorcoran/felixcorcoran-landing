@@ -68,6 +68,48 @@
   color-scheme: dark;
 }
 
+/* Detalles coral del modo oscuro. En claro, el color lo ponen el crema y el
+   melocotón; en oscuro todo el texto es claro, así que el coral aparece en
+   piezas pequeñas que se repiten por toda la web: rótulos, números,
+   subrayados de enlaces y sus flechas, el foco. Siempre en detalle, nunca en
+   bloques grandes ni en el texto de lectura. («:root:root» sube la especificidad a propósito:
+   así gana a los estilos con ámbito de cada componente.) */
+:root[data-theme="dark"] {
+  --accent-line: rgb(242 140 122 / 0.6);
+}
+
+/* Rótulos en versalitas (secciones, etiquetas, tipos de trabajo) */
+:root:root[data-theme="dark"] .eyebrow {
+  color: color-mix(in srgb, var(--accent) 62%, var(--text-muted));
+}
+
+/* Los números grandes del método de la auditoría */
+:root:root[data-theme="dark"] .numeral {
+  color: rgb(242 140 122 / 0.55);
+}
+
+:root:root[data-theme="dark"] .after .numeral {
+  color: rgb(242 140 122 / 0.3);
+}
+
+/* Enlaces subrayados: subrayado y flecha en coral; al pasar, el texto */
+:root:root[data-theme="dark"] :is(.live, .next-link, .secondary, .mail) {
+  text-decoration-color: var(--accent-line);
+}
+
+:root:root[data-theme="dark"] :is(.live, .next-link, .secondary, .cta) svg {
+  color: var(--accent);
+}
+
+/* «Lo revisa él»: la línea que lo separa, en coral (es el criterio humano) */
+:root:root[data-theme="dark"] .human .column-title {
+  border-bottom-color: var(--accent);
+}
+
+:root:root[data-theme="dark"] :focus-visible {
+  outline-color: var(--accent);
+}
+
 @media (max-width: 40rem) {
   :root {
     --nav-height: 3rem;
