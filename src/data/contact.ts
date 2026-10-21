@@ -10,7 +10,7 @@ export const contact = {
 	 * Número de WhatsApp en formato internacional, solo dígitos y sin «+»
 	 * (p. ej. 34 seguido del número). Se convierte en un enlace wa.me.
 	 */
-	whatsappNumber: '34673350029',
+	whatsappNumber: '34711206795',
 	/**
 	 * Dirección a la que el formulario envía las solicitudes (POST con JSON).
 	 * Sirve cualquier servicio de formularios que acepte JSON y responda 2xx
