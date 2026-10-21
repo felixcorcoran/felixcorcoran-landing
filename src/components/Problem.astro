@@ -91,6 +91,13 @@ const [first, second, third] = copy.questions;
 		letter-spacing: -0.035em;
 	}
 
+	/* En oscuro, el texto claro se leería mal sobre la masa melocotón. Con
+	   «difference», la parte de cada letra que tiene la masa detrás se
+	   oscurece sola, siguiéndola mientras se mueve; sobre el fondo sigue clara. */
+	:global([data-theme="dark"]) .statement {
+		mix-blend-mode: difference;
+	}
+
 	/* Cortes de línea fijos: cada pregunta, en dos renglones */
 	.statement span {
 		display: block;

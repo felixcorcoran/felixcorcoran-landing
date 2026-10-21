@@ -450,12 +450,34 @@ const human = t.reviewed;
 		}
 	}
 
+	/* En oscuro: el coral pone el color que en claro ponen el crema y el
+	   melocotón. Flechas y números de paso en coral, algo más gruesos, y el
+	   producto más vivo para que no se pierda sobre la ficha. */
+	:global([data-theme="dark"]) .case {
+		--line-color: var(--accent);
+		--line-width: 1.5px;
+	}
+
+	:global([data-theme="dark"]) .process {
+		--product: color-mix(in srgb, var(--accent) 72%, var(--surface));
+	}
+
+	:global([data-theme="dark"]) .step {
+		color: var(--accent);
+	}
+
+	:global([data-theme="dark"]) .card {
+		box-shadow:
+			0 0 0 1px rgb(var(--ink) / 0.08),
+			0 18px 40px -24px rgb(0 0 0 / 0.7);
+	}
+
 	.process-arrow {
 		grid-row: 1;
 		align-self: center;
 		position: relative;
-		height: 1px;
-		background: var(--text);
+		height: var(--line-width, 1px);
+		background: var(--line-color, var(--text));
 		transform: scaleX(var(--line, 1));
 		transform-origin: left center;
 	}
@@ -467,8 +489,8 @@ const human = t.reviewed;
 		top: -3px;
 		width: 7px;
 		height: 7px;
-		border-top: 1px solid var(--text);
-		border-right: 1px solid var(--text);
+		border-top: var(--line-width, 1px) solid var(--line-color, var(--text));
+		border-right: var(--line-width, 1px) solid var(--line-color, var(--text));
 		transform: rotate(45deg);
 	}
 
@@ -705,9 +727,9 @@ const human = t.reviewed;
 
 	.link {
 		position: relative;
-		height: 1px;
+		height: var(--line-width, 1px);
 		margin-top: 0.55rem;
-		background: var(--text);
+		background: var(--line-color, var(--text));
 		transform: scaleX(var(--line, 1));
 		transform-origin: left center;
 	}
@@ -720,8 +742,8 @@ const human = t.reviewed;
 		top: -3px;
 		width: 7px;
 		height: 7px;
-		border-top: 1px solid var(--text);
-		border-right: 1px solid var(--text);
+		border-top: var(--line-width, 1px) solid var(--line-color, var(--text));
+		border-right: var(--line-width, 1px) solid var(--line-color, var(--text));
 		transform: rotate(45deg);
 	}
 
@@ -892,7 +914,7 @@ const human = t.reviewed;
 
 		.process-arrow {
 			align-self: flex-start;
-			width: 1px;
+			width: var(--line-width, 1px);
 			height: 1.75rem;
 			margin: 0.75rem 0 0.75rem calc(var(--card) / 2);
 			transform: scaleY(var(--line, 1));
@@ -926,7 +948,7 @@ const human = t.reviewed;
 		}
 
 		.link {
-			width: 1px;
+			width: var(--line-width, 1px);
 			height: 2rem;
 			margin: 0 0 0 0.25rem;
 			transform: scaleY(var(--line, 1));

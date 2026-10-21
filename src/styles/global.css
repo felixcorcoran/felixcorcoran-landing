@@ -56,13 +56,13 @@
 
   --ink: 238 235 229;
   --paper: 19 18 17;
-  --surface: #1D1B1A;
-  --surface-rgb: 29 27 26;
+  --surface: #262321;
+  --surface-rgb: 38 35 33;
 
   /* Sobre oscuro, el halo es un resplandor coral más contenido */
-  --glow-1: rgb(242 140 122 / 0.3);
-  --glow-2: rgb(242 140 122 / 0.15);
-  --glow-3: rgb(242 140 122 / 0.05);
+  --glow-1: rgb(242 140 122 / 0.4);
+  --glow-2: rgb(242 140 122 / 0.2);
+  --glow-3: rgb(242 140 122 / 0.07);
   --glow-4: rgb(242 140 122 / 0);
 
   color-scheme: dark;
