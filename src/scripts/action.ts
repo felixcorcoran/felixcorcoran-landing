@@ -21,8 +21,9 @@ gsap.registerPlugin(ScrollTrigger);
  *            55 ── 85 %    la letra pequeña: la CTA y el correo
  *              62 ─── 100 %  Inicio · Trabajo · Contacto se revelan uno a uno
  *
- * En el diseño compacto, sin desenfoques (ver blur()); en todos, con una
- * pizca de inercia en el scrub.
+ * En el diseño compacto, solo fundidos: sin desenfoques ni movimiento, y sin
+ * inercia en el scrub (ver blur() y move()). En el amplio, con una pizca de
+ * inercia.
  *
  * El footer no entra después: está detrás desde el principio de la
  * transición (ver Footer.astro). Todo depende de la posición del scroll, así
@@ -78,6 +79,11 @@ function finale({ section, stage, title, follow, footer, brand, mail, links, nav
 	// texto grande obliga a redibujarlo en cada fotograma y la transición
 	// tiembla. Allí basta con opacidad y movimiento (van por la GPU).
 	const blur = (px: number): gsap.TweenVars => (compact ? {} : { filter: `blur(${px}px)` });
+	// Movimiento (y, escala), también solo en el amplio: en iPhone el scroll va
+	// por un hilo y la animación por otro, y en esta escena (dos capas fijas
+	// superpuestas) el texto temblaba unos píxeles arriba y abajo al parar.
+	// Con opacidad sola no hay posición que pueda desacompasarse.
+	const move = (vars: gsap.TweenVars): gsap.TweenVars => (compact ? {} : vars);
 
 	const timeline = gsap.timeline({
 		defaults: { ease: 'none' },
@@ -87,9 +93,11 @@ function finale({ section, stage, title, follow, footer, brand, mail, links, nav
 			// de la página)
 			start: 'top bottom',
 			end: 'bottom bottom',
-			// Una pizca de inercia: el scroll llega a saltos (rueda, dedo) y, sin
-			// suavizar, la transición los reproduce tal cual
-			scrub: 0.35,
+			// Una pizca de inercia: el scroll llega a saltos (rueda) y, sin
+			// suavizar, la transición los reproduce tal cual. En móvil, no: el
+			// dedo y el impulso de iOS ya son suaves, y la inercia se peleaba
+			// con ellos
+			scrub: compact ? true : 0.35,
 			invalidateOnRefresh: true,
 			// También al refrescar: al recargar a mitad (o al final) de la escena,
 			// ScrollTrigger coloca la timeline sin pasar por onUpdate
@@ -99,33 +107,33 @@ function finale({ section, stage, title, follow, footer, brand, mail, links, nav
 	});
 
 	// Estados de partida
-	gsap.set(title, { opacity: 0.15, ...blur(14), y: 24, scale: 0.98 });
-	gsap.set(follow, { opacity: 0, ...blur(6), y: 12 });
-	gsap.set(brand, { opacity: 0, ...blur(14), scale: 0.97, y: svh(3) });
+	gsap.set(title, { opacity: 0.15, ...blur(14), ...move({ y: 24, scale: 0.98 }) });
+	gsap.set(follow, { opacity: 0, ...blur(6), ...move({ y: 12 }) });
+	gsap.set(brand, { opacity: 0, ...blur(14), ...move({ scale: 0.97, y: svh(3) }) });
 	gsap.set(mail, { opacity: 0, ...blur(4) });
 	// Los enlaces entran subiendo un poco (antes se animaba el espaciado entre
 	// letras: recolocaba el texto en cada fotograma y las letras bailaban)
-	gsap.set(links, { opacity: 0, ...blur(6), y: 8 });
+	gsap.set(links, { opacity: 0, ...blur(6), ...move({ y: 8 }) });
 
 	timeline
 		// Duración total: toda la sección
 		.to({}, { duration: total }, 0)
 
 		// ---------- Entrada: la pregunta sube desde el silencio y se enfoca ----------
-		.to(title, { opacity: 1, ...blur(0), y: 0, scale: 1, ease: 'power1.out', duration: 47 }, 25)
-		.to(follow, { opacity: 1, ...blur(0), y: 0, duration: 22, stagger: 8 }, 62)
+		.to(title, { opacity: 1, ...blur(0), ...move({ y: 0, scale: 1 }), ease: 'power1.out', duration: 47 }, 25)
+		.to(follow, { opacity: 1, ...blur(0), ...move({ y: 0 }), duration: 22, stagger: 8 }, 62)
 
 		// ---------- Pausa (100 → leaveStart): nada cambia ----------
 
 		// ---------- Transición: la CTA se disuelve de abajo arriba ----------
-		.to(follow, { opacity: 0, ...blur(6), y: svh(-2), ease: 'power1.in', duration: leave * 0.28, stagger: leave * 0.04 }, at(0))
-		.to(title, { opacity: 0, ...blur(10), y: svh(-6), scale: 0.96, ease: 'power1.in', duration: leave * 0.62 }, at(0.08))
+		.to(follow, { opacity: 0, ...blur(6), ...move({ y: svh(-2) }), ease: 'power1.in', duration: leave * 0.28, stagger: leave * 0.04 }, at(0))
+		.to(title, { opacity: 0, ...blur(10), ...move({ y: svh(-6), scale: 0.96 }), ease: 'power1.in', duration: leave * 0.62 }, at(0.08))
 
 		// ---------- …y detrás, la firma ----------
-		.to(brand, { opacity: 1, ...blur(0), y: 0, scale: 1, ease: 'power2.out', duration: leave * 0.6 }, at(0.25))
+		.to(brand, { opacity: 1, ...blur(0), ...move({ y: 0, scale: 1 }), ease: 'power2.out', duration: leave * 0.6 }, at(0.25))
 		.to(mail, { opacity: 1, ...blur(0), ease: 'power1.out', duration: leave * 0.3 }, at(0.55))
 		// La navegación se revela, uno a uno
-		.to(links, { opacity: 1, ...blur(0), y: 0, ease: 'power2.out', duration: leave * 0.24, stagger: leave * 0.07 }, at(0.62));
+		.to(links, { opacity: 1, ...blur(0), ...move({ y: 0 }), ease: 'power2.out', duration: leave * 0.24, stagger: leave * 0.07 }, at(0.62));
 
 	// Estados discretos, en función de la posición del scroll (reversibles):
 	//   la píldora se retira · la CTA deja de recibir clics · el footer los recibe
