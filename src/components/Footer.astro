@@ -334,23 +334,11 @@ const showCta = !isCurrent(routes.contact[lang], pathname);
 		--finale-leave: 85svh;
 	}
 
-	/* Sin rebote elástico al final de la página. En iPhone, al llegar abajo
-	   con impulso, la página se estira y vuelve; la escena va ligada al
-	   scroll, así que el rebote la hacía temblar (CTA → footer) hasta que se
-	   volvía a desplazar. La página termina donde termina el footer. */
-	:global(html:is(.finale-on, .footer-reveal)) {
-		overscroll-behavior-y: none;
-	}
-
 	:global(html.footer-reveal) {
 		--finale-leave: 55svh;
 	}
 
 	@media (max-width: 48rem), (orientation: portrait) and (max-width: 75rem) {
-		:global(html.finale-on) {
-			--finale-leave: 70svh;
-		}
-
 		:global(html.footer-reveal) {
 			--finale-leave: 45svh;
 		}

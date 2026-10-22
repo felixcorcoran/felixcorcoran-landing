@@ -68,7 +68,8 @@ if (!whatsappHref) console.warn('[Action] Falta contact.whatsappNumber en src/da
 	   página donde se escribe; «Hablar por WhatsApp», a la conversación.
 
 	   Por defecto (sin JS o con movimiento reducido), una sección en flujo
-	   normal. Con movimiento, el script añade .finale-on a <html> y la CTA y
+	   normal. Con movimiento y en el diseño amplio (en móvil no: ver
+	   scripts/action.ts), el script añade .finale-on a <html> y la CTA y
 	   el footer forman la escena final (ver el final de este bloque). */
 
 	.action {
@@ -215,12 +216,6 @@ if (!whatsappHref) console.warn('[Action] Falta contact.whatsappNumber en src/da
 
 	.action {
 		--action-hold: 60svh;
-	}
-
-	@media (max-width: 48rem), (orientation: portrait) and (max-width: 75rem) {
-		.action {
-			--action-hold: 45svh;
-		}
 	}
 
 	/* El silencio tras Más trabajo es margen, fuera del recorrido */
