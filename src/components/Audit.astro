@@ -35,6 +35,11 @@ const t = {
 		who: 'Quién mira',
 		bio: 'Trabajo solo, desde Málaga. Hablas conmigo desde la primera pregunta hasta lo último que construyamos.',
 		builds: 'Construyo webs, sistemas de reservas, automatizaciones y herramientas con IA.',
+		check: {
+			label: 'Compruébalo tú',
+			text: 'Antes de pedirla, puedes ver qué se encuentra un cliente al entrar en tu web. Escribes la dirección y solo te dice lo que se puede comprobar.',
+			link: 'Comprobar mi web',
+		},
 		request: 'Solicitar auditoría gratuita',
 	},
 	en: {
@@ -67,12 +72,20 @@ const t = {
 		who: "Who's looking",
 		bio: 'I work on my own, from Málaga. You talk to me from the first question to the last thing we build.',
 		builds: 'I build websites, booking systems, automations and AI tools.',
+		check: {
+			label: 'Check it yourself',
+			text: 'Before you ask, you can see what a customer finds when they open your website. Type the address and it only tells you what can be checked.',
+			link: 'Check my website',
+		},
 		request: 'Request a free audit',
 	},
 }[lang];
 
 const steps = t.steps;
 const build = t.build;
+
+// El diagnóstico: una herramienta aparte (otro proyecto), en su subdominio
+const diagnosis = { es: 'https://diagnostico.felixcorcoran.es/', en: 'https://diagnostico.felixcorcoran.es/en' }[lang];
 
 // Datos prácticos: solo los que ya están decididos (ver src/data/audit.ts)
 const facts = [
@@ -154,6 +167,21 @@ const facts = [
 				<p class="text">{t.bio}</p>
 				<p class="text muted">{t.builds}</p>
 			</div>
+		</div>
+		<span class="row-rule" data-reveal-line aria-hidden="true"></span>
+	</div>
+
+	<!-- El paso previo, sin pedir nada a nadie: el diagnóstico de la web, que
+	     hace a solas una parte de «Observar». Antes del enlace para pedir la
+	     auditoría, para que la sección siga terminando en ella. -->
+	<div class="row check" data-reveal>
+		<h3 class="eyebrow" data-reveal-item>{t.check.label}</h3>
+		<div class="body" data-reveal-item>
+			<p class="text">{t.check.text}</p>
+			<a class="next-link check-link" href={diagnosis}>
+				{t.check.link}
+				<svg viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M1.5 6h9M7 2.5 10.5 6 7 9.5" /></svg>
+			</a>
 		</div>
 		<span class="row-rule" data-reveal-line aria-hidden="true"></span>
 	</div>
@@ -367,6 +395,12 @@ const facts = [
 		font-size: clamp(1.25rem, 1rem + 0.7vw, 1.625rem);
 		font-weight: 600;
 		letter-spacing: -0.025em;
+	}
+
+	/* ---------- Compruébalo tú (el diagnóstico) ---------- */
+
+	.check-link {
+		margin-top: 1rem;
 	}
 
 	/* ---------- Pedir la auditoría ---------- */
