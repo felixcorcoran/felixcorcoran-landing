@@ -316,6 +316,17 @@ const text = {
 		button.addEventListener('click', () => reveal(button, toggle));
 	}
 
+	// Los enlaces al diagnóstico se llevan el tema: es otra web (otro origen)
+	// y no puede leer lo que se guarda aquí. Se añade al pulsar, así vale
+	// también si el tema se cambia después de cargar.
+	document.addEventListener('click', (event) => {
+		const link = (event.target as Element | null)?.closest<HTMLAnchorElement>('a[data-site-link]');
+		if (!link) return;
+		const url = new URL(link.href);
+		url.searchParams.set('tema', root.dataset.theme === 'dark' ? 'oscuro' : 'claro');
+		link.href = url.href;
+	});
+
 	/**
 	 * El tema nuevo se abre en círculo desde la luna hasta cubrir la pantalla
 	 * (View Transitions: el navegador fotografía la página antes y después y
