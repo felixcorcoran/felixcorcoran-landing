@@ -4,8 +4,7 @@ Web profesional de Félix Corcoran: «Encuentro dónde se le escapan clientes y 
 Una landing editorial con una escena de scroll (masa 3D), un caso real y una auditoría gratuita como
 oferta, más `/contacto`, `/aviso-legal` y `/privacidad`.
 
-La estrategia, las decisiones y los datos pendientes están en [ESTRATEGIA.md](ESTRATEGIA.md): es lo
-primero que hay que leer antes de tocar nada.
+**En marcha:** [felixcorcoran.es](https://felixcorcoran.es) · [English](https://felixcorcoran.es/en)
 
 ## Stack
 
@@ -17,8 +16,9 @@ primero que hay que leer antes de tocar nada.
 - Formulario → [Formspree](https://formspree.io) (fetch con JSON, sin librería).
 - Alojamiento en Vercel.
 
-La web no usa cookies, `localStorage` ni servicios de terceros en el navegador (solo Formspree, al
-enviar el formulario). Si eso cambia, hay que revisar `/privacidad`.
+La web no usa cookies ni servicios de terceros en el navegador (solo Formspree, al enviar el
+formulario). En `localStorage` solo guarda el tema claro u oscuro que elija quien la visita. Si eso
+cambia, hay que revisar `/privacidad`.
 
 ## Comandos
 
@@ -81,7 +81,6 @@ src/
 
 Ningún dato se inventa: métricas, clientes, testimonios, plazos, datos legales… Si falta un dato, su
 campo en `src/data/*.ts` se deja vacío, no se muestra y, cuando es obligatorio, el build lo avisa.
-La lista de pendientes está en [ESTRATEGIA.md](ESTRATEGIA.md).
 
 ## Capturas del portfolio
 
