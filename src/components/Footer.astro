@@ -21,6 +21,19 @@ const t = {
 	en: { sections: 'Sections', cta: 'Request a free audit', legal: 'Legal notice', privacy: 'Privacy' },
 }[lang];
 
+// Las dos herramientas gratuitas, en sus subdominios. El radar existe solo en
+// español: en inglés lo dice. data-site-link les pasa el tema (Navbar.astro)
+const tools = {
+	es: [
+		{ href: 'https://diagnostico.felixcorcoran.es/', label: 'Diagnóstico web', hreflang: 'es' },
+		{ href: 'https://subvenciones.felixcorcoran.es/', label: 'Radar de subvenciones', hreflang: 'es' },
+	],
+	en: [
+		{ href: 'https://diagnostico.felixcorcoran.es/en', label: 'Website check', hreflang: 'en' },
+		{ href: 'https://subvenciones.felixcorcoran.es/', label: 'Grants radar (in Spanish)', hreflang: 'es' },
+	],
+}[lang];
+
 // La CTA se queda en la firma: quien llega al final de la página (o salta a
 // él) sigue teniendo a mano la auditoría. En /contacto ya está en ella.
 const showCta = !isCurrent(routes.contact[lang], pathname);
@@ -48,6 +61,9 @@ const showCta = !isCurrent(routes.contact[lang], pathname);
 				</a>
 			)}
 			<a class="mail" href={`mailto:${contact.email}`}>{contact.email}</a>
+			{tools.map(({ href, label, hreflang }) => (
+				<a class="mail" href={href} hreflang={hreflang} data-site-link>{label}</a>
+			))}
 			<span class="legal">
 				<a href="/aviso-legal" hreflang="es" aria-current={isCurrent('/aviso-legal', pathname) ? 'page' : undefined}>{t.legal}</a>
 				<a href="/privacidad" hreflang="es" aria-current={isCurrent('/privacidad', pathname) ? 'page' : undefined}>{t.privacy}</a>
@@ -194,7 +210,8 @@ const showCta = !isCurrent(routes.contact[lang], pathname);
 	}
 
 	/* ---------- 03 · Letra pequeña ----------
-	   La CTA, un poco más grande y en negro; el correo, a su lado */
+	   La CTA, un poco más grande y en negro; el correo y las dos
+	   herramientas gratuitas, a su lado */
 	.fine {
 		grid-area: fine;
 		display: flex;
