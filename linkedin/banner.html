@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Banner de LinkedIn · Félix Corcoran</title>
+<!-- Portada del perfil de LinkedIn: 1584 × 396 (4:1). En el perfil se ve a
+     la mitad de tamaño y la foto tapa la esquina inferior izquierda: texto
+     corto y grande, a la derecha. Mismo estilo que las imágenes de los
+     proyectos (crema, Sora, coral). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600&display=block" rel="stylesheet">
+<style>
+	html, body { margin: 0; background: #faf9f6; }
+	.banner {
+		position: relative;
+		width: 1584px;
+		height: 396px;
+		overflow: hidden;
+		background: #f7f4ef;
+		font-family: 'Sora', sans-serif;
+		color: #171717;
+	}
+	/* Textura: una rejilla de puntos muy suave que se desvanece hacia el texto */
+	.banner::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background-image: radial-gradient(rgb(23 23 23 / 0.13) 1.3px, transparent 1.4px);
+		background-size: 26px 26px;
+		mask-image: linear-gradient(90deg, #000 0%, rgb(0 0 0 / 0.55) 40%, transparent 72%);
+	}
+	/* El resplandor melocotón, detrás del texto */
+	.banner::after {
+		content: '';
+		position: absolute;
+		right: -120px;
+		top: -300px;
+		width: 1150px;
+		height: 960px;
+		border-radius: 50%;
+		background: radial-gradient(closest-side, rgb(255 214 204 / 0.85), rgb(255 214 204 / 0.3) 55%, rgb(255 214 204 / 0));
+	}
+	.logo {
+		position: absolute;
+		z-index: 1;
+		left: 64px;
+		top: 52px;
+		font-size: 30px;
+		letter-spacing: -0.025em;
+	}
+	.logo .first { font-weight: 300; color: rgb(23 23 23 / 0.82); }
+	.logo .last { font-weight: 600; }
+	.content {
+		position: absolute;
+		z-index: 1;
+		right: 84px;
+		top: 50%;
+		transform: translateY(-52%);
+		white-space: nowrap;
+	}
+	h1 {
+		margin: 0;
+		font-weight: 400;
+		font-size: 78px;
+		line-height: 1.06;
+		letter-spacing: -0.04em;
+	}
+	h1 .second { color: #b4472f; }
+	h1 u {
+		text-decoration: underline;
+		text-decoration-color: #f28c7a;
+		text-decoration-thickness: 4px;
+		text-underline-offset: 14px;
+	}
+	.meta {
+		display: flex;
+		align-items: center;
+		gap: 22px;
+		margin: 30px 0 0;
+		font-size: 24px;
+		font-weight: 300;
+		color: #555;
+	}
+	.meta .dot { width: 6px; height: 6px; border-radius: 50%; background: #f28c7a; }
+	.meta b { font-weight: 600; color: #171717; }
+</style>
+</head>
+<body>
+	<div class="banner">
+		<div class="logo"><span class="first">felix</span><span class="last">corcoran</span></div>
+		<div class="content">
+			<h1>Desarrollador Full Stack<br><span class="second"><u>IA y automatización</u></span></h1>
+			<p class="meta">Java · Spring Boot · Angular · TypeScript · n8n <span class="dot"></span> <b>dev.felixcorcoran.es</b></p>
+		</div>
+	</div>
+</body>
+</html>
