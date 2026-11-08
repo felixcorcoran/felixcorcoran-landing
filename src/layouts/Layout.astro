@@ -22,7 +22,7 @@ const canonical = new URL(Astro.url.pathname.replace(/(.)\/$/, '$1'), Astro.site
 const image = new URL(lang === 'en' ? '/og-en.png' : '/og.png', Astro.site);
 const imageAlt = {
 	es: 'felixcorcoran — Encuentro dónde se le escapan clientes y tiempo a tu negocio.',
-	en: 'felixcorcoran — I find where your business loses customers and time.',
+	en: 'felixcorcoran — I find where your business is losing customers and time.',
 }[lang];
 
 // La misma página en el otro idioma (para buscadores): solo si existe

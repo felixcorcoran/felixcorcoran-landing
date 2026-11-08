@@ -1,7 +1,7 @@
 ---
 import { Picture } from 'astro:assets';
 import { audit, person } from '../data/audit';
-import { langOf, routes } from '../i18n';
+import { langOf, processId, routes } from '../i18n';
 
 const lang = langOf(Astro.currentLocale);
 
@@ -9,32 +9,34 @@ const lang = langOf(Astro.currentLocale);
 // es el trabajo, y solo ocurre si algo merece la pena.
 const t = {
 	es: {
-		eyebrow: 'La auditoría gratuita',
+		eyebrow: 'Cómo trabajo',
 		title: ['Primero miro.', 'Después decido.', 'Luego construyo.'],
 		steps: [
-			{ name: 'Escuchar', text: 'Me cuentas qué te preocupa y dónde se te va el tiempo.' },
-			{ name: 'Observar', text: 'Miro tu web, tu ficha de Google, tus redes y cómo funciona hoy el negocio.' },
+			{ name: 'Conversamos', text: 'Me cuentas cómo funciona tu negocio, qué te preocupa y dónde se te va el tiempo.' },
 			{
-				name: 'Contrastar',
-				text: 'Lo que veo, te lo pregunto. Una observación no es un problema hasta que la contrasto contigo.',
+				name: 'Analizo',
+				text: 'Miro tu web, tu ficha de Google, tus redes y cómo trabajas hoy. Lo que veo, te lo pregunto: una observación no es un problema hasta que la contrasto contigo.',
 			},
-			{ name: 'Priorizar', text: 'Te digo qué merece la pena y qué no.' },
+			{ name: 'Propongo', text: 'Te digo qué merece la pena mejorar, qué no, y por dónde empezaría yo.' },
 		],
 		boundary: 'Hasta aquí, la auditoría. Gratis y sin compromiso.',
-		build: {
-			name: 'Construir',
-			text: 'Solo después, y solo si tiene sentido. Puede ser una web, una automatización, IA, una integración… o nada.',
-		},
-		outcome: 'Lo que te llevas',
+		after: [
+			{
+				name: 'Construyo',
+				text: 'Solo si tiene sentido, y solo lo que acordemos. Puede ser una web, una automatización, IA, una integración… o nada.',
+			},
+			{ name: 'Ajustamos', text: 'Revisamos juntos el resultado con el uso real y ajusto lo que haga falta.' },
+		],
+		outcome: 'Lo que te llevas de la auditoría',
 		promise: 'Hasta 3 oportunidades concretas.',
 		outcomeText:
 			'Solo las que merezcan la pena: qué pasa hoy, por qué importa, qué tipo de solución tendría y por cuál empezaría yo.',
 		ai: 'Si la IA tiene sentido en tu negocio, te digo dónde. Si no lo tiene, también.',
 		small: 'No es un informe de 40 páginas. Es una conversación y una lista corta.',
 		turnaround: 'Plazo',
-		who: 'Quién mira',
-		bio: 'Trabajo solo, desde Málaga. Hablas conmigo desde la primera pregunta hasta lo último que construyamos.',
-		builds: 'Construyo webs, sistemas de reservas, automatizaciones y herramientas con IA.',
+		who: 'Sobre mí',
+		bio: 'Soy desarrollador web, titulado en Desarrollo de Aplicaciones Web, y trabajo por mi cuenta desde Málaga con pequeños negocios. Hablas conmigo desde la primera pregunta hasta lo último que construyamos.',
+		builds: 'Construyo webs, sistemas de citas y presupuestos, automatizaciones, integraciones entre herramientas y aplicaciones con IA. Trabajo en español y en inglés.',
 		check: {
 			label: 'Compruébalo tú',
 			text: 'Antes de pedirla, puedes ver qué se encuentra un cliente al entrar en tu web. Escribes la dirección y solo te dice lo que se puede comprobar.',
@@ -43,35 +45,34 @@ const t = {
 		request: 'Solicitar auditoría gratuita',
 	},
 	en: {
-		eyebrow: 'The free audit',
+		eyebrow: 'How I work',
 		title: ['First, I look.', 'Then, I decide.', 'Only then, I build.'],
 		steps: [
-			{ name: 'Listen', text: 'You tell me what worries you and where your time goes.' },
+			{ name: 'We talk', text: 'You tell me how your business works, what worries you and where your time goes.' },
 			{
-				name: 'Observe',
-				text: 'I look at your website, your Google profile, your social media and how the business works today.',
+				name: 'I analyse',
+				text: "I look at your website, your Google profile, your social media and how you work today. I ask you about what I see: an observation isn't a problem until I've checked it with you.",
 			},
-			{
-				name: 'Check',
-				text: "I ask you about what I see. An observation isn't a problem until I've checked it with you.",
-			},
-			{ name: 'Prioritise', text: "I tell you what's worth doing and what isn't." },
+			{ name: 'I suggest', text: "I tell you what's worth improving, what isn't, and where I'd start." },
 		],
 		boundary: 'Up to here, the audit. Free, no strings attached.',
-		build: {
-			name: 'Build',
-			text: 'Only afterwards, and only if it makes sense. It could be a website, an automation, AI, an integration… or nothing.',
-		},
-		outcome: 'What you get',
+		after: [
+			{
+				name: 'I build',
+				text: 'Only if it makes sense, and only what we agree on. It could be a website, an automation, AI, an integration… or nothing.',
+			},
+			{ name: 'We fine-tune', text: 'We review the result together in real use and I adjust whatever needs adjusting.' },
+		],
+		outcome: 'What you get from the audit',
 		promise: 'Up to 3 concrete opportunities.',
 		outcomeText:
 			"Only the ones worth it: what's happening today, why it matters, what kind of solution it would need and which one I'd start with.",
 		ai: "If AI makes sense for your business, I'll tell you where. If it doesn't, I'll tell you that too.",
 		small: "It isn't a 40-page report. It's a conversation and a short list.",
 		turnaround: 'Turnaround',
-		who: "Who's looking",
-		bio: 'I work on my own, from Málaga. You talk to me from the first question to the last thing we build.',
-		builds: 'I build websites, booking systems, automations and AI tools.',
+		who: 'About me',
+		bio: "I'm a web developer, qualified in Web Application Development, and I work independently from Málaga with small businesses. You talk to me from the first question to the last thing we build.",
+		builds: 'I build websites, booking and quote systems, automations, integrations between tools and AI applications. I work in Spanish and English.',
 		check: {
 			label: 'Check it yourself',
 			text: 'Before you ask, you can see what a customer finds when they open your website. Type the address and it only tells you what can be checked.',
@@ -82,7 +83,7 @@ const t = {
 }[lang];
 
 const steps = t.steps;
-const build = t.build;
+const after = t.after;
 
 // El diagnóstico: una herramienta aparte (otro proyecto), en su subdominio
 const diagnosis = { es: 'https://diagnostico.felixcorcoran.es/', en: 'https://diagnostico.felixcorcoran.es/en' }[lang];
@@ -94,7 +95,7 @@ const facts = [
 ].filter(Boolean);
 ---
 
-<section class="audit" aria-labelledby="audit-title">
+<section id={processId[lang]} class="audit" aria-labelledby="audit-title">
 	<header class="intro" data-reveal>
 		<p class="eyebrow" data-reveal-item>{t.eyebrow}</p>
 		<h2 id="audit-title" class="title">
@@ -120,18 +121,23 @@ const facts = [
 			))
 		}
 
-		<!-- La frontera: hasta aquí, gratis. Una línea oscura en lugar de la fina. -->
-		<li class="row after" data-reveal>
-			<p class="boundary" data-reveal-item>{t.boundary}</p>
-			<h3 class="step-label" data-reveal-item>
-				<span class="numeral" aria-hidden="true">05</span>{' '}
-				<span class="step-name">{build.name}</span>
-			</h3>
-			<div class="body" data-reveal-item>
-				<p class="text">{build.text}</p>
-			</div>
-			<span class="row-rule" data-reveal-line aria-hidden="true"></span>
-		</li>
+		<!-- La frontera: hasta aquí, gratis. Una línea oscura en lugar de la
+		     fina; lo que viene después, en gris (solo ocurre si merece la pena). -->
+		{
+			after.map(({ name, text }, i) => (
+				<li class:list={['row', 'after', { frontier: i === 0 }]} data-reveal>
+					{i === 0 && <p class="boundary" data-reveal-item>{t.boundary}</p>}
+					<h3 class="step-label" data-reveal-item>
+						<span class="numeral" aria-hidden="true">{String(steps.length + i + 1).padStart(2, '0')}</span>{' '}
+						<span class="step-name">{name}</span>
+					</h3>
+					<div class="body" data-reveal-item>
+						<p class="text">{text}</p>
+					</div>
+					<span class="row-rule" data-reveal-line aria-hidden="true" />
+				</li>
+			))
+		}
 	</ol>
 
 	<div class="row outcome" data-reveal>
@@ -304,11 +310,11 @@ const facts = [
 
 	/* ---------- La frontera ---------- */
 
-	.after {
+	.frontier {
 		margin-top: clamp(1rem, 3svh, 2rem);
 	}
 
-	.after .row-rule {
+	.frontier .row-rule {
 		height: 2px;
 		background: var(--text);
 	}
@@ -466,7 +472,7 @@ const facts = [
 			right: auto;
 		}
 
-		.after {
+		.frontier {
 			margin-top: 3rem;
 		}
 	}

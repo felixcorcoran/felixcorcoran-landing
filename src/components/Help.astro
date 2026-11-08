@@ -1,0 +1,260 @@
+---
+import { langOf, routes, workId } from '../i18n';
+
+const lang = langOf(Astro.currentLocale);
+
+// Situaciones en las que un dueño de negocio se reconoce, con sus palabras.
+// Cada una dice qué hago y dónde lo he hecho ya: solo trabajos reales que
+// aparecen en la web (el caso, Más trabajo) o en sus herramientas propias.
+// Sin tecnologías como reclamo: la tecnología sale solo como prueba.
+type Proof = { label: string; href?: string; external?: boolean };
+type Situation = { area: string; problem: string; answer: string; proof: Proof[] };
+
+const diagnosis = { es: 'https://diagnostico.felixcorcoran.es/', en: 'https://diagnostico.felixcorcoran.es/en' }[lang];
+const radar = 'https://subvenciones.felixcorcoran.es/';
+const caseHref = `#${workId[lang]}`;
+const moreHref = `#${{ es: 'mas-trabajo', en: 'more-work' }[lang]}`;
+
+const t: {
+	eyebrow: string;
+	title: string;
+	lead: string;
+	proofLabel: string;
+	newTab: string;
+	situations: Situation[];
+} = {
+	es: {
+		eyebrow: 'Dónde puedo ayudarte',
+		title: '¿Te suena alguna de estas?',
+		lead: 'No hace falta que sepas qué tecnología necesitas. Basta con que me cuentes qué te pasa.',
+		proofLabel: 'Lo he hecho en',
+		newTab: 'se abre en una pestaña nueva',
+		situations: [
+			{
+				area: 'Confianza',
+				problem: 'Quien te busca en internet no acaba de fiarse y se va a otro sitio.',
+				answer: 'Una web clara, en español e inglés, que explica qué haces y cómo contactarte.',
+				proof: [{ label: 'Ávila Secretaria Online', href: moreHref }, { label: 'Reformas y Mantenimientos Paola', href: moreHref }],
+			},
+			{
+				area: 'Citas y presupuestos',
+				problem: 'Las citas y los presupuestos te llegan por teléfono, por WhatsApp, por correo… y alguno se pierde.',
+				answer: 'Un sistema para que tus clientes pidan cita o presupuesto desde la web y te lleguen siempre por el mismo camino.',
+				proof: [{ label: 'Peluquería Pilar', href: moreHref }, { label: 'Reformas y Mantenimientos Paola', href: moreHref }],
+			},
+			{
+				area: 'Tiempo',
+				problem: 'Cada semana repites las mismas tareas a mano, siempre igual.',
+				answer: 'Automatizo la parte repetitiva y dejo en tus manos lo que necesita tu criterio.',
+				proof: [{ label: 'Spain Trading Cards: dar de alta productos desde el móvil', href: caseHref }],
+			},
+			{
+				area: 'Herramientas',
+				problem: 'Tus herramientas no se hablan entre sí y copias datos de una a otra.',
+				answer: 'Conecto lo que ya usas (mensajería, tienda online, correo, datos públicos) para que la información pase sola.',
+				proof: [
+					{ label: 'Telegram, IA y Shopify en Spain Trading Cards', href: caseHref },
+					{ label: 'Radar de subvenciones', href: radar, external: true },
+				],
+			},
+			{
+				area: 'Por dónde empezar',
+				problem: 'Sabes que podrías mejorar (quizá con IA), pero no sabes por dónde empezar.',
+				answer: 'Empiezo mirando, no vendiendo: te digo qué merece la pena, qué no, y si la IA tiene sentido en tu caso.',
+				proof: [
+					{ label: 'La auditoría gratuita', href: routes.contact[lang] },
+					{ label: 'El diagnóstico web', href: diagnosis, external: true },
+				],
+			},
+		],
+	},
+	en: {
+		eyebrow: 'Where I can help',
+		title: 'Does any of this sound familiar?',
+		lead: "You don't need to know what technology you need. Just tell me what's going on.",
+		proofLabel: "I've done it for",
+		newTab: 'opens in a new tab',
+		situations: [
+			{
+				area: 'Trust',
+				problem: "People who find you online aren't quite convinced, and go somewhere else.",
+				answer: 'A clear website, in Spanish and English, that explains what you do and how to reach you.',
+				proof: [{ label: 'Ávila Secretaria Online', href: moreHref }, { label: 'Reformas y Mantenimientos Paola', href: moreHref }],
+			},
+			{
+				area: 'Bookings and quotes',
+				problem: 'Bookings and quote requests arrive by phone, WhatsApp, email… and some get lost.',
+				answer: 'A system so your customers can book or ask for a quote on your website, and requests always reach you the same way.',
+				proof: [{ label: 'Peluquería Pilar', href: moreHref }, { label: 'Reformas y Mantenimientos Paola', href: moreHref }],
+			},
+			{
+				area: 'Time',
+				problem: 'Every week you repeat the same tasks by hand, always the same way.',
+				answer: 'I automate the repetitive part and leave what needs your judgement in your hands.',
+				proof: [{ label: 'Spain Trading Cards: adding products from the phone', href: caseHref }],
+			},
+			{
+				area: 'Tools',
+				problem: "Your tools don't talk to each other, so you copy data from one to another.",
+				answer: 'I connect what you already use (messaging, online store, email, public data) so the information flows on its own.',
+				proof: [
+					{ label: 'Telegram, AI and Shopify at Spain Trading Cards', href: caseHref },
+					{ label: 'Grants radar (in Spanish)', href: radar, external: true },
+				],
+			},
+			{
+				area: 'Where to start',
+				problem: "You know things could be better (maybe with AI), but you don't know where to start.",
+				answer: "I start by looking, not selling: I tell you what's worth doing, what isn't, and whether AI makes sense for you.",
+				proof: [
+					{ label: 'The free audit', href: routes.contact[lang] },
+					{ label: 'The website check', href: diagnosis, external: true },
+				],
+			},
+		],
+	},
+}[lang];
+
+// El último grupo no es «lo he hecho en», sino por dónde se empieza
+const startLabel = { es: 'Empieza por', en: 'Start with' }[lang];
+---
+
+<section class="help" aria-labelledby="help-title">
+	<header class="intro" data-reveal>
+		<p class="eyebrow" data-reveal-item>{t.eyebrow}</p>
+		<h2 id="help-title" class="title" data-reveal-item>{t.title}</h2>
+		<p class="lead" data-reveal-item>{t.lead}</p>
+	</header>
+
+	<ul class="list">
+		{
+			t.situations.map(({ area, problem, answer, proof }, i) => (
+				<li class="row" data-reveal>
+					<p class="eyebrow" data-reveal-item>
+						<span class="index" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span> {area}
+					</p>
+					<div class="body" data-reveal-item>
+						<h3 class="problem">{problem}</h3>
+						<p class="answer">{answer}</p>
+						<p class="proof">
+							<span class="proof-label">{i === t.situations.length - 1 ? startLabel : t.proofLabel}:</span>{' '}
+							{proof.map(({ label, href, external }, j) => (
+								<>
+									{j > 0 && ' · '}
+									{href ? (
+										<a
+											href={href}
+											{...(external && { target: '_blank', rel: 'noopener', 'data-site-link': true })}
+										>
+											{label}
+											{external && <span class="sr-only"> ({t.newTab})</span>}
+										</a>
+									) : (
+										label
+									)}
+								</>
+							))}
+						</p>
+					</div>
+					<span class="row-rule" data-reveal-line aria-hidden="true" />
+				</li>
+			))
+		}
+	</ul>
+</section>
+
+<style>
+	/* Después del Insight («la tecnología adecuada») y antes del caso: las
+	   situaciones en las que un negocio se reconoce. Un índice con la misma
+	   fila que el caso, la auditoría y Más trabajo (global.css): la situación
+	   es el titular; lo que hago, el texto; y dónde lo he hecho, la prueba.
+	   Sin tarjetas ni iconos: la tipografía ordena. */
+
+	.help {
+		width: var(--frame);
+		margin-inline: auto;
+		padding: clamp(3.5rem, 10svh, 6.5rem) var(--frame-pad) clamp(2rem, 6svh, 4rem);
+	}
+
+	.title {
+		margin: clamp(1.25rem, 3svh, 2rem) 0 0;
+		font-size: clamp(1.75rem, 1rem + 2.6vw, 3.5rem);
+		font-weight: 400;
+		line-height: 1.06;
+		letter-spacing: -0.035em;
+		text-wrap: balance;
+	}
+
+	.lead {
+		max-width: 32em;
+		margin: 1rem 0 0;
+		font-size: clamp(1.0625rem, 0.95rem + 0.4vw, 1.3125rem);
+		line-height: 1.5;
+		letter-spacing: -0.01em;
+		color: var(--text-muted);
+		text-wrap: pretty;
+	}
+
+	.list {
+		margin: clamp(2.5rem, 7svh, 4.5rem) 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.index {
+		margin-right: 0.6em;
+		color: var(--text);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.body {
+		max-width: 44rem;
+	}
+
+	/* La situación, con las palabras del cliente: hace de titular */
+	.problem {
+		margin: 0;
+		font-size: clamp(1.25rem, 0.95rem + 0.95vw, 1.875rem);
+		font-weight: 400;
+		line-height: 1.2;
+		letter-spacing: -0.025em;
+		text-wrap: pretty;
+	}
+
+	.answer {
+		margin: 0.75rem 0 0;
+		font-size: clamp(1.0625rem, 0.95rem + 0.4vw, 1.25rem);
+		line-height: 1.5;
+		letter-spacing: -0.01em;
+		color: var(--text-muted);
+		text-wrap: pretty;
+	}
+
+	.proof {
+		margin: 1rem 0 0;
+		font-size: 0.9375rem;
+		line-height: 1.6;
+		color: var(--text-muted);
+	}
+
+	.proof-label {
+		color: var(--text);
+	}
+
+	.proof a {
+		color: var(--text);
+		text-decoration: underline;
+		text-decoration-color: rgb(var(--ink) / 0.25);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.25em;
+		transition: text-decoration-color 0.3s var(--ease-out);
+	}
+
+	.proof a:hover {
+		text-decoration-color: currentColor;
+	}
+
+	:global([data-theme="dark"]) .proof a {
+		text-decoration-color: var(--accent-line);
+	}
+</style>

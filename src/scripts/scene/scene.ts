@@ -160,7 +160,9 @@ export function initScene(scene: HTMLElement) {
 	if (glow) timeline.to(glow, { opacity: 0, ease: 'sine.inOut', duration: 2.8 }, 19.2);
 
 	// ---------- Titular del Hero: se aleja y pierde el foco ----------
-	timeline.to(heroCopy, { y: vh(-0.08), opacity: 0, filter: 'blur(10px)', ease: 'power1.in', duration: 1.6 }, 0);
+	// autoAlpha: al llegar a 0 queda en visibility: hidden, así la CTA del Hero
+	// no sigue recibiendo clics (ni foco) debajo de las preguntas
+	timeline.to(heroCopy, { y: vh(-0.08), autoAlpha: 0, filter: 'blur(10px)', ease: 'power1.in', duration: 1.6 }, 0);
 
 	// ---------- Preguntas: cada mensaje entra en foco, se lee y se desenfoca ----------
 	// Entra en 1.1, pausa de 1 unidad en foco, sale en 0.8

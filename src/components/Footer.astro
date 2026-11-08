@@ -78,7 +78,7 @@ const showCta = !isCurrent(routes.contact[lang], pathname);
 	   niveles:
 	     01  felixcorcoran, gigante: ocupa de eje a eje, apoyada abajo como
 	         la base de la página
-	     02  Inicio · Trabajo · Contacto, una línea tipográfica en la banda
+	     02  Inicio · Trabajo · Cómo trabajo · Contacto, una línea tipográfica en la banda
 	         donde vivía la píldora de navegación, alineada a su borde
 	     03  la letra pequeña bajo la firma: pedir la auditoría y el correo
 
@@ -156,7 +156,7 @@ const showCta = !isCurrent(routes.contact[lang], pathname);
 	}
 
 	/* ---------- 02 · Secciones ----------
-	   Tres palabras en línea, sin caja ni lista a la vista: la navegación de
+	   Cuatro enlaces en línea (si no caben, en dos renglones), sin caja ni lista a la vista: la navegación de
 	   la píldora, ya sin píldora y a mayor escala. Al pasar el ratón se
 	   dibuja bajo la palabra el subrayado coral de «adecuada». */
 	.sections {
@@ -169,7 +169,9 @@ const showCta = !isCurrent(routes.contact[lang], pathname);
 
 	.sections ul {
 		display: flex;
-		gap: clamp(1.5rem, 3vw, 3rem);
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		gap: 0.25rem clamp(1.25rem, 3vw, 3rem);
 		margin: 0;
 		padding: 0;
 		list-style: none;
@@ -312,7 +314,8 @@ const showCta = !isCurrent(routes.contact[lang], pathname);
 		}
 
 		.sections ul {
-			gap: 1.25rem;
+			justify-content: flex-start;
+			gap: 0 1.25rem;
 		}
 
 		.sections a {

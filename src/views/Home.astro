@@ -5,6 +5,7 @@ import Hero from '../components/Hero.astro';
 import Problem from '../components/Problem.astro';
 import Scene from '../components/Scene.astro';
 import Insight from '../components/Insight.astro';
+import Help from '../components/Help.astro';
 import Case from '../components/Case.astro';
 import Audit from '../components/Audit.astro';
 import Work from '../components/Work.astro';
@@ -18,14 +19,14 @@ import { langOf } from '../i18n';
 const lang = langOf(Astro.currentLocale);
 const meta = {
 	es: {
-		title: 'Webs, automatización e IA en Málaga · Félix Corcoran',
+		title: 'Webs, automatización e IA para negocios en Málaga · Félix Corcoran',
 		description:
-			'Miro cómo funciona tu negocio y construyo solo lo que merece la pena: webs, reservas, automatizaciones e IA. Desde Málaga. Auditoría gratuita.',
+			'Primero entiendo cómo funciona tu negocio; después te propongo mejoras y construyo solo lo que merece la pena: webs, citas, automatizaciones e IA. Desde Málaga.',
 	},
 	en: {
-		title: 'Websites, automation and AI in Málaga · Félix Corcoran',
+		title: 'Websites, automation and AI for businesses in Málaga · Félix Corcoran',
 		description:
-			"I look at how your business works and build only what's worth building: websites, bookings, automation and AI. Based in Málaga, Spain. Free audit.",
+			'First I understand how your business works; then I suggest improvements and build only what is worth building: websites, bookings, automation and AI. Málaga, Spain.',
 	},
 }[lang];
 ---
@@ -39,11 +40,13 @@ const meta = {
 			<Problem />
 			<Insight />
 		</Scene>
-		<!-- 03 El caso · 04 La auditoría · 05 Más trabajo: flujo normal -->
+		<!-- 03 Dónde puedo ayudarte · 04 El caso · 05 Cómo trabajo (la
+		     auditoría y quién soy) · 06 Más trabajo: flujo normal -->
+		<Help />
 		<Case />
 		<Audit />
 		<Work />
-		<!-- 06 CTA → 07 Firma: la escena final -->
+		<!-- 07 CTA → 08 Firma: la escena final -->
 		<Action />
 	</main>
 	<Footer />

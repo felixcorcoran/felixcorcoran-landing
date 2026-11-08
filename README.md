@@ -39,7 +39,7 @@ Con agentes de código, el servidor se arranca en segundo plano: `npx astro dev 
 ```text
 src/
 ├── pages/
-│   ├── index.astro            la landing (Escena → Caso → Auditoría → Trabajo → Acción)
+│   ├── index.astro            la landing (Escena → Ayuda → Caso → Cómo trabajo → Trabajo → Acción)
 │   ├── contacto.astro         /contacto: invitación y formulario
 │   ├── aviso-legal.astro      /aviso-legal
 │   ├── privacidad.astro       /privacidad
@@ -50,11 +50,12 @@ src/
 ├── components/
 │   ├── Navbar.astro           píldora flotante (Contacto con punto coral)
 │   ├── Scene.astro            escena fija de scroll: Hero + Problem + Insight
-│   ├── Hero.astro             titular y masa 3D (póster → WebGL)
+│   ├── Hero.astro             titular, CTA y masa 3D (póster → WebGL)
 │   ├── Problem.astro          las tres preguntas
 │   ├── Insight.astro          «No necesitas más tecnología…»
+│   ├── Help.astro             situaciones reconocibles → qué hago → dónde lo he hecho
 │   ├── Case.astro             el caso Spain Trading Cards
-│   ├── Audit.astro            la auditoría gratuita y su CTA
+│   ├── Audit.astro            cómo trabajo: el método, la auditoría gratuita y sobre mí
 │   ├── Work.astro             más trabajo (portfolio)
 │   ├── Action.astro           CTA final (escena final con el footer)
 │   ├── Footer.astro           la firma

@@ -11,15 +11,17 @@ import kaloaiMobile from '../assets/work/kaloai-mobile.jpg';
 import { langOf } from '../i18n';
 
 const lang = langOf(Astro.currentLocale);
+// Destino de los enlaces «Lo he hecho en» de Help.astro
+const sectionId = { es: 'mas-trabajo', en: 'more-work' }[lang];
 
 const t = {
-	es: { eyebrow: 'Más trabajo', title: 'Otras cosas que he construido.', view: 'Ver la web', newTab: 'se abre en una pestaña nueva' },
-	en: { eyebrow: 'More work', title: "Other things I've built.", view: 'View site', newTab: 'opens in a new tab' },
+	es: { eyebrow: 'Más trabajo', title: 'Otros proyectos reales: qué hacía falta y qué construí.', view: 'Ver la web', newTab: 'se abre en una pestaña nueva' },
+	en: { eyebrow: 'More work', title: 'More real projects: what was needed and what I built.', view: 'View site', newTab: 'opens in a new tab' },
 }[lang];
 
 // Prueba de que sé construir (el caso ya ha enseñado cómo decido qué
-// construir). Cada trabajo dice qué es, sin resultados que no estén
-// documentados. Los cuatro, con el mismo peso y el mismo tratamiento.
+// construir). Cada trabajo dice qué hacía falta y qué se construyó, sin
+// resultados que no estén documentados. Los cuatro, con el mismo peso y el mismo tratamiento.
 //
 // Capturas reales, sin retocar: la portada en escritorio (1440 px a 2×,
 // 2880×1620, recortada a 16:10) y, en móvil, la portada en móvil (390 px a 3×,
@@ -29,8 +31,8 @@ const projects = [
 		kind: { es: 'Web + sistema de reservas', en: 'Website + booking system' }[lang],
 		name: 'Peluquería Pilar',
 		text: {
-			es: 'Web bilingüe, servicios y sistema de solicitud y gestión de citas.',
-			en: 'Bilingual website, services and a system for requesting and managing appointments.',
+			es: 'Una peluquería que quería que sus clientes vieran sus servicios y pidieran cita por internet. Web bilingüe con un sistema para solicitar y gestionar las citas.',
+			en: 'A hair salon that wanted its customers to see its services and book online. Bilingual website with a system for requesting and managing appointments.',
 		}[lang],
 		url: 'https://pilarpeluqueria.com/inicio.html',
 		image: pilarDesktop,
@@ -40,8 +42,8 @@ const projects = [
 		kind: { es: 'Web', en: 'Website' }[lang],
 		name: 'Reformas y Mantenimientos Paola',
 		text: {
-			es: 'Web bilingüe y sistema de solicitud de presupuestos.',
-			en: 'Bilingual website and a quote request system.',
+			es: 'Una empresa de reformas que necesitaba una web donde recibir peticiones de presupuesto. Web bilingüe que presenta sus servicios con un sistema de solicitud de presupuestos.',
+			en: 'A renovation business that needed a website to receive quote requests. Bilingual website that presents its services, with a quote request system.',
 		}[lang],
 		url: 'https://reformasymantenimientospaola.com/inicio',
 		image: paolaDesktop,
@@ -51,19 +53,19 @@ const projects = [
 		kind: { es: 'Web', en: 'Website' }[lang],
 		name: 'Ávila Secretaria Online',
 		text: {
-			es: 'Web bilingüe de un servicio de secretaría online: qué hace, cuánto cuesta y consulta gratuita.',
-			en: 'Bilingual website for an online secretarial service: what it does, what it costs and a free consultation.',
+			es: 'Un servicio de secretaría online que tenía que explicarse bien para que alguien lo contrate a distancia. Web bilingüe con qué hace, cuánto cuesta y una consulta gratuita.',
+			en: 'An online secretarial service that needed to explain itself clearly to be hired remotely. Bilingual website with what it does, what it costs and a free consultation.',
 		}[lang],
 		url: 'https://avilasecretariaonline.com/inicio.html',
 		image: avilaDesktop,
 		mobile: avilaMobile,
 	},
 	{
-		kind: { es: 'Aplicación web con IA', en: 'AI web app' }[lang],
+		kind: { es: 'Proyecto propio · Aplicación web con IA', en: 'Own project · AI web app' }[lang],
 		name: 'KaloAI',
 		text: {
-			es: 'Aplicación web con IA de nutrición: usuarios, nutricionistas, administración, seguimiento, planificación y generación personalizada de recetas.',
-			en: 'AI nutrition web app: users, nutritionists, admin, tracking, planning and personalised recipe generation.',
+			es: 'Planificar comidas según calorías, objetivos e intolerancias lleva tiempo. Aplicación de nutrición que genera recetas y planes semanales con IA, con lista de la compra y perfiles de usuario, nutricionista y administración.',
+			en: 'Planning meals around calories, goals and intolerances takes time. Nutrition app that generates recipes and weekly plans with AI, with a shopping list and user, nutritionist and admin profiles.',
 		}[lang],
 		url: 'https://kaloai.infinityfreeapp.com/index.php',
 		image: kaloaiDesktop,
@@ -84,7 +86,7 @@ const previews = await Promise.all(
 );
 ---
 
-<section class="work" aria-labelledby="work-title">
+<section id={sectionId} class="work" aria-labelledby="work-title">
 	<header class="intro" data-reveal>
 		<p class="eyebrow" data-reveal-item>{t.eyebrow}</p>
 		<h2 id="work-title" class="title" data-reveal-item>{t.title}</h2>

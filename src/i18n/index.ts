@@ -18,10 +18,15 @@ export const routes = {
 	contact: { es: '/contacto', en: '/en/contact' },
 	/** El caso: el trabajo que mejor enseña cómo trabajo */
 	work: { es: '/#trabajo', en: '/en#work' },
+	/** Cómo trabajo: el método, la auditoría y quién soy */
+	process: { es: '/#como-trabajo', en: '/en#how-i-work' },
 } as const;
 
 /** El id de la sección del caso (destino de «Trabajo» / «Work»). */
 export const workId = { es: 'trabajo', en: 'work' } as const;
+
+/** El id de la sección del método (destino de «Cómo trabajo» / «How I work»). */
+export const processId = { es: 'como-trabajo', en: 'how-i-work' } as const;
 
 const normalize = (path: string) => path.replace(/(.)\/$/, '$1');
 

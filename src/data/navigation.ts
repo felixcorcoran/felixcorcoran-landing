@@ -9,8 +9,8 @@ import { routes, type Lang } from '../i18n';
  */
 
 const labels = {
-	es: { home: 'Inicio', work: 'Trabajo', contact: 'Contacto' },
-	en: { home: 'Home', work: 'Work', contact: 'Contact' },
+	es: { home: 'Inicio', work: 'Trabajo', process: 'Cómo trabajo', contact: 'Contacto' },
+	en: { home: 'Home', work: 'Work', process: 'How I work', contact: 'Contact' },
 };
 
 /** Navbar flotante. El logo ya lleva al inicio. */
@@ -23,8 +23,19 @@ export const primary = (lang: Lang) => [
 	{ href: routes.contact[lang], label: labels[lang].contact, highlight: true },
 ];
 
-/** Footer: la misma navegación, más la vuelta al principio. */
-export const footer = (lang: Lang) => [{ href: routes.home[lang], label: labels[lang].home }, ...primary(lang)];
+/**
+ * Footer: la misma navegación, más la vuelta al principio y el método (en
+ * la píldora no cabe en móvil; aquí sí).
+ */
+export const footer = (lang: Lang) => {
+	const [work, contact] = primary(lang);
+	return [
+		{ href: routes.home[lang], label: labels[lang].home },
+		work,
+		{ href: routes.process[lang], label: labels[lang].process },
+		contact,
+	];
+};
 
 /** ¿Es este enlace la página actual? (para aria-current) */
 export const isCurrent = (href: string, pathname: string) =>
